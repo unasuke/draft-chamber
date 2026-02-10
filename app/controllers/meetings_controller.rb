@@ -2,6 +2,6 @@
 
 class MeetingsController < ApplicationController
   def index
-    @meetings = Meeting.recent
+    @pagy, @meetings = pagy(Meeting.recent)
   end
 end

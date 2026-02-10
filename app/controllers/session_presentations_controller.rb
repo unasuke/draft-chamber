@@ -2,6 +2,6 @@
 
 class SessionPresentationsController < ApplicationController
   def index
-    @session_presentations = SessionPresentation.includes({ session: :meeting }, :document).ordered
+    @pagy, @session_presentations = pagy(SessionPresentation.includes({ session: :meeting }, :document).ordered)
   end
 end

@@ -2,6 +2,6 @@
 
 class GroupsController < ApplicationController
   def index
-    @groups = Group.includes(:parent).order(:acronym)
+    @pagy, @groups = pagy(Group.includes(:parent).order(:acronym))
   end
 end
