@@ -1,0 +1,30 @@
+<h1>Meetings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>Type</th>
+      <th>Date</th>
+      <th>Days</th>
+      <th>City</th>
+      <th>Country</th>
+      <th>Venue</th>
+      <th>Attendees</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @meetings.each do |meeting| %>
+      <tr>
+        <td><%= meeting.number %></td>
+        <td><%= meeting.meeting_type %></td>
+        <td><%= meeting.date %></td>
+        <td><%= meeting.days %></td>
+        <td><%= meeting.city %></td>
+        <td><%= meeting.country %></td>
+        <td><%= meeting.venue_name %></td>
+        <td><%= meeting.attendees %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
