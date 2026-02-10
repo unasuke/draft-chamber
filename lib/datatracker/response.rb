@@ -11,7 +11,7 @@ module Datatracker
     end
 
     def objects
-      data["objects"] || [data]
+      data["objects"] || [ data ]
     end
 
     def total_count

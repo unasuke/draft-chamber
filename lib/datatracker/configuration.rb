@@ -12,7 +12,7 @@ module Datatracker
         max: 2,
         interval: 0.5,
         backoff_factor: 2,
-        exceptions: [Faraday::TimeoutError, Faraday::ConnectionFailed]
+        exceptions: [ Faraday::TimeoutError, Faraday::ConnectionFailed ]
       }
     end
   end
