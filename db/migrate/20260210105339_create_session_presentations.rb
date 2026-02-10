@@ -13,6 +13,6 @@ class CreateSessionPresentations < ActiveRecord::Migration[8.1]
     end
 
     add_index :session_presentations, :resource_uri, unique: true
-    add_index :session_presentations, [:session_id, :document_id], unique: true
+    add_index :session_presentations, [ :session_id, :document_id ], unique: true
   end
 end
