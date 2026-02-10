@@ -1,0 +1,31 @@
+art:
+  acronym: art
+  name: Applications and Real-Time Area
+  group_type: area
+  state: active
+  resource_uri: /api/v1/group/group/1008/
+
+tls:
+  acronym: tls
+  name: Transport Layer Security
+  group_type: wg
+  state: active
+  description: The TLS working group
+  list_email: tls@ietf.org
+  parent: art
+  resource_uri: /api/v1/group/group/2161/
+
+quic:
+  acronym: quic
+  name: QUIC
+  group_type: wg
+  state: active
+  parent: art
+  resource_uri: /api/v1/group/group/2367/
+
+closed_wg:
+  acronym: closedwg
+  name: A Closed Working Group
+  group_type: wg
+  state: closed
+  resource_uri: /api/v1/group/group/9999/
