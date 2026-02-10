@@ -8,8 +8,10 @@ class Document < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :resource_uri, presence: true, uniqueness: true
 
-  scope :slides, -> { where(document_type: "slides") }
-  scope :drafts, -> { where(document_type: "draft") }
-  scope :agendas, -> { where(document_type: "agenda") }
-  scope :minutes, -> { where(document_type: "minutes") }
+  enum :document_type, {
+    slides: "slides",
+    draft: "draft",
+    agenda: "agenda",
+    minutes: "minutes"
+  }
 end

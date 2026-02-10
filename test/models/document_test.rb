@@ -47,14 +47,14 @@ class DocumentTest < ActiveSupport::TestCase
     assert_not_includes slides, documents(:tls_draft)
   end
 
-  test "drafts scope" do
-    drafts = Document.drafts
+  test "draft scope" do
+    drafts = Document.draft
     assert_includes drafts, documents(:tls_draft)
     assert_not_includes drafts, documents(:tls_chairs_slides)
   end
 
-  test "agendas scope" do
-    agendas = Document.agendas
+  test "agenda scope" do
+    agendas = Document.agenda
     assert_includes agendas, documents(:tls_agenda)
     assert_not_includes agendas, documents(:tls_chairs_slides)
   end
