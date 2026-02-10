@@ -1,0 +1,26 @@
+<h1>Documents</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Title</th>
+      <th>Type</th>
+      <th>Rev</th>
+      <th>Pages</th>
+      <th>Group</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @documents.each do |document| %>
+      <tr>
+        <td><%= document.name %></td>
+        <td><%= document.title %></td>
+        <td><%= document.document_type %></td>
+        <td><%= document.rev %></td>
+        <td><%= document.pages %></td>
+        <td><%= document.group&.acronym %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
