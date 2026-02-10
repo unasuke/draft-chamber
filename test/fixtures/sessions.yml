@@ -1,0 +1,29 @@
+tls_at_124:
+  meeting: ietf124
+  group: tls
+  name: tls
+  purpose: regular
+  requested_duration: "2:00:00"
+  on_agenda: true
+  datatracker_id: 34365
+  resource_uri: /api/v1/meeting/session/34365/
+
+quic_at_124:
+  meeting: ietf124
+  group: quic
+  name: quic
+  purpose: regular
+  requested_duration: "1:30:00"
+  on_agenda: true
+  datatracker_id: 34400
+  resource_uri: /api/v1/meeting/session/34400/
+
+tls_at_123:
+  meeting: ietf123
+  group: tls
+  name: tls
+  purpose: regular
+  requested_duration: "1:00:00"
+  on_agenda: true
+  datatracker_id: 33000
+  resource_uri: /api/v1/meeting/session/33000/
