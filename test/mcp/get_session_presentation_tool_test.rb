@@ -92,7 +92,7 @@ class GetSessionPresentationToolTest < ActiveSupport::TestCase
     assert_equal "image/png", response.content.second[:mimeType]
   end
 
-  test "returns resource content when material is attached with binary content type" do
+  test "returns resource URI text when material is attached with binary content type" do
     document = documents(:tls_chairs_slides)
     material = document.create_document_material!(download_status: :pending)
     pdf_data = "%PDF-1.4 sample content"
@@ -108,11 +108,10 @@ class GetSessionPresentationToolTest < ActiveSupport::TestCase
     )
 
     assert_equal 2, response.content.size
-    resource_content = response.content.second
-    assert_equal "resource", resource_content[:type]
-    assert_equal "application/pdf", resource_content[:resource][:mimeType]
-    assert_equal Base64.strict_encode64(pdf_data), resource_content[:resource][:blob]
-    assert_includes resource_content[:resource][:uri], "slides-124-tls-chairs"
+    text_content = response.content.second
+    assert_equal "text", text_content[:type]
+    assert_includes text_content[:text], "file:///slides-124-tls-chairs/slides.pdf"
+    assert_includes text_content[:text], "application/pdf"
   end
 
   test "does not return file content when material is not attached" do

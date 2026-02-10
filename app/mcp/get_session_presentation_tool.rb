@@ -62,14 +62,8 @@ class GetSessionPresentationTool < MCP::Tool
       elsif IMAGE_CONTENT_TYPES.include?(content_type)
         [ { type: "image", data: Base64.strict_encode64(material.file.download), mimeType: content_type } ]
       else
-        [ {
-          type: "resource",
-          resource: {
-            uri: "document:///#{document.name}/#{blob.filename}",
-            mimeType: content_type,
-            blob: Base64.strict_encode64(material.file.download)
-          }
-        } ]
+        uri = "file:///#{document.name}/#{blob.filename}"
+        [ { type: "text", text: "File available as MCP resource: #{uri} (#{content_type}). Use resources/read to retrieve the content." } ]
       end
     end
 
