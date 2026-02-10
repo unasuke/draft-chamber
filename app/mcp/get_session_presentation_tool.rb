@@ -13,6 +13,9 @@ class GetSessionPresentationTool < MCP::Tool
     required: %w[document_name]
   )
 
+  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown].freeze
+  IMAGE_CONTENT_TYPES = %w[image/png image/jpeg].freeze
+
   class << self
     def call(server_context:, **params)
       document = Document.find_by(name: params[:document_name])
@@ -31,10 +34,13 @@ class GetSessionPresentationTool < MCP::Tool
 
       result = presentations.map { |sp| presentation_to_hash(sp, document) }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      content = [ { type: "text", text: JSON.generate(result) } ]
+
+      if document.material_attached?
+        content.concat(file_content_items(document))
+      end
+
+      MCP::Tool::Response.new(content)
     end
 
     private
@@ -44,6 +50,27 @@ class GetSessionPresentationTool < MCP::Tool
         [ { type: "text", text: message } ],
         error: true
       )
+    end
+
+    def file_content_items(document)
+      material = document.document_material
+      blob = material.file.blob
+      content_type = blob.content_type
+
+      if TEXT_CONTENT_TYPES.include?(content_type)
+        [ { type: "text", text: material.file.download.force_encoding("UTF-8") } ]
+      elsif IMAGE_CONTENT_TYPES.include?(content_type)
+        [ { type: "image", data: Base64.strict_encode64(material.file.download), mimeType: content_type } ]
+      else
+        [ {
+          type: "resource",
+          resource: {
+            uri: "document:///#{document.name}/#{blob.filename}",
+            mimeType: content_type,
+            blob: Base64.strict_encode64(material.file.download)
+          }
+        } ]
+      end
     end
 
     def presentation_to_hash(presentation, document)
