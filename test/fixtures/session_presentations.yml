@@ -1,0 +1,20 @@
+tls_chairs_at_124:
+  session: tls_at_124
+  document: tls_chairs_slides
+  order: 1
+  rev: "01"
+  resource_uri: /api/v1/meeting/sessionpresentation/50001/
+
+tls_agenda_at_124:
+  session: tls_at_124
+  document: tls_agenda
+  order: 0
+  rev: "01"
+  resource_uri: /api/v1/meeting/sessionpresentation/50002/
+
+tls_minutes_at_124:
+  session: tls_at_124
+  document: tls_minutes
+  order: 0
+  rev: "00"
+  resource_uri: /api/v1/meeting/sessionpresentation/50003/
