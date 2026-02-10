@@ -3,6 +3,8 @@
 require "test_helper"
 
 class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @mock_client = Minitest::Mock.new
     @mock_sp_resource = Minitest::Mock.new
@@ -53,8 +55,10 @@ class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCa
 
     assert_difference "SessionPresentation.count", 1 do
       assert_difference "Document.count", 1 do
-        stats = @importer.import(meeting_number: "124")
-        assert_equal 1, stats[:created]
+        assert_enqueued_with(job: DownloadDocumentMaterialJob) do
+          stats = @importer.import(meeting_number: "124")
+          assert_equal 1, stats[:created]
+        end
       end
     end
 
@@ -62,6 +66,10 @@ class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCa
     assert_equal sessions(:tls_at_124), sp.session
     assert_equal 5, sp.order
     assert_equal "slides-124-tls-newslides", sp.document.name
+
+    # DocumentMaterial record should have been created
+    assert_not_nil sp.document.document_material
+    assert_equal "pending", sp.document.document_material.download_status
   end
 
   test "skips presentation when session not found" do

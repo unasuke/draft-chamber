@@ -34,6 +34,18 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
     assert_includes doc_names, "minutes-124-tls"
   end
 
+  test "includes file availability in document details" do
+    response = ListSessionPresentationsTool.call(
+      server_context: {}, meeting_number: "124", group_acronym: "tls"
+    )
+    result = JSON.parse(response.content.first[:text])
+    presentation = result.first
+
+    assert_includes presentation["document"].keys, "file_available"
+    assert_includes presentation["document"].keys, "file_download_status"
+    assert_equal false, presentation["document"]["file_available"]
+  end
+
   test "returns error for non-existent meeting" do
     response = ListSessionPresentationsTool.call(
       server_context: {}, meeting_number: "999", group_acronym: "tls"
