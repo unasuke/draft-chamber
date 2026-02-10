@@ -1,0 +1,26 @@
+ietf124:
+  number: "124"
+  meeting_type: ietf
+  date: "2025-11-01"
+  days: 7
+  city: Montreal
+  country: CA
+  time_zone: America/Montreal
+  venue_name: Palais des Congres
+  attendees: 1200
+  resource_uri: /api/v1/meeting/meeting/124/
+
+ietf123:
+  number: "123"
+  meeting_type: ietf
+  date: "2025-07-19"
+  city: Madrid
+  country: ES
+  resource_uri: /api/v1/meeting/meeting/123/
+
+interim_tls:
+  number: interim-2025-tls-01
+  meeting_type: interim
+  date: "2025-05-15"
+  days: 1
+  resource_uri: /api/v1/meeting/meeting/interim-2025-tls-01/
