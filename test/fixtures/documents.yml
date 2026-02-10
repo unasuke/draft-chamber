@@ -1,0 +1,40 @@
+tls_chairs_slides:
+  name: slides-124-tls-chairs
+  title: TLS Chairs Slides
+  document_type: slides
+  rev: "01"
+  group: tls
+  resource_uri: /api/v1/doc/document/slides-124-tls-chairs/
+
+tls_agenda:
+  name: agenda-124-tls
+  title: Agenda for TLS at IETF 124
+  document_type: agenda
+  rev: "01"
+  group: tls
+  resource_uri: /api/v1/doc/document/agenda-124-tls/
+
+tls_minutes:
+  name: minutes-124-tls
+  title: Minutes for TLS at IETF 124
+  document_type: minutes
+  rev: "00"
+  group: tls
+  resource_uri: /api/v1/doc/document/minutes-124-tls/
+
+tls_draft:
+  name: draft-ietf-tls-esni
+  title: TLS Encrypted Client Hello
+  document_type: draft
+  abstract: This document describes a mechanism for encrypting the ClientHello.
+  rev: "22"
+  pages: 45
+  group: tls
+  resource_uri: /api/v1/doc/document/draft-ietf-tls-esni/
+
+ungrouped_doc:
+  name: slides-124-plenary
+  title: Plenary Slides
+  document_type: slides
+  rev: "00"
+  resource_uri: /api/v1/doc/document/slides-124-plenary/
