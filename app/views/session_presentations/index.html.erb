@@ -1,0 +1,24 @@
+<h1>Session Presentations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order</th>
+      <th>Session</th>
+      <th>Meeting</th>
+      <th>Document</th>
+      <th>Rev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @session_presentations.each do |sp| %>
+      <tr>
+        <td><%= sp.order %></td>
+        <td><%= sp.session.name %></td>
+        <td><%= sp.session.meeting.number %></td>
+        <td><%= sp.document.name %></td>
+        <td><%= sp.rev %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
