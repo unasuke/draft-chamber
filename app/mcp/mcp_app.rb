@@ -14,7 +14,7 @@ class McpApp
         name: "draft-chamber",
         version: "0.1.0",
         tools: [ ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
-                 ListSessionPresentationsTool ]
+                 ListSessionPresentationsTool, GetSessionPresentationTool ]
       )
       transport = MCP::Server::Transports::StreamableHTTPTransport.new(server, stateless: true)
       server.transport = transport

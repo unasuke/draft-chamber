@@ -31,7 +31,7 @@ class ListSessionPresentationsTool < MCP::Tool
 
       presentations = SessionPresentation
         .joins(:session)
-        .includes(:document)
+        .includes(document: { document_material: { file_attachment: :blob } })
         .where(sessions: { meeting_id: meeting.id, group_id: group.id })
         .ordered
 
@@ -62,7 +62,9 @@ class ListSessionPresentationsTool < MCP::Tool
           title: doc.title,
           type: doc.document_type,
           rev: doc.rev,
-          pages: doc.pages
+          pages: doc.pages,
+          file_available: doc.material_attached?,
+          file_download_status: doc.document_material&.download_status
         }
       }
     end
