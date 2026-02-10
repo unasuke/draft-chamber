@@ -11,6 +11,7 @@ module Attachable
     application/vnd.openxmlformats-officedocument.presentationml.presentation
     application/vnd.ms-powerpoint
     application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    application/json
     video/mp4
     video/webm
     audio/mpeg
