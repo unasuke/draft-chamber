@@ -2,6 +2,7 @@
 
 class Document < ApplicationRecord
   belongs_to :group, optional: true
+  has_one :document_material, dependent: :destroy
   has_many :session_presentations, dependent: :destroy
   has_many :sessions, through: :session_presentations
 
@@ -14,4 +15,8 @@ class Document < ApplicationRecord
     agenda: "agenda",
     minutes: "minutes"
   }
+
+  def material_attached?
+    document_material&.file&.attached? || false
+  end
 end
