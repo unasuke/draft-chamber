@@ -32,7 +32,7 @@ module DatatrackerImport
           next
         end
 
-        upsert_record(SessionPresentation,
+        record = upsert_record(SessionPresentation,
           resource_uri: obj["resource_uri"],
           attributes: {
             session: session,
@@ -41,6 +41,11 @@ module DatatrackerImport
             rev: obj["rev"]
           }
         )
+
+        if record && document.document_material.nil?
+          document.create_document_material!(download_status: :pending)
+          DownloadDocumentMaterialJob.perform_later(document.id, session.meeting.number)
+        end
       end
 
       log("Session presentations import complete: #{stats}")
