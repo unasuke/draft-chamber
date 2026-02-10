@@ -1,0 +1,28 @@
+<h1>Sessions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Meeting</th>
+      <th>Group</th>
+      <th>Purpose</th>
+      <th>Duration</th>
+      <th>On Agenda</th>
+      <th>Attendees</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sessions.each do |session| %>
+      <tr>
+        <td><%= session.name %></td>
+        <td><%= session.meeting.number %></td>
+        <td><%= session.group&.acronym %></td>
+        <td><%= session.purpose %></td>
+        <td><%= session.requested_duration %></td>
+        <td><%= session.on_agenda ? "Yes" : "No" %></td>
+        <td><%= session.attendees %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
