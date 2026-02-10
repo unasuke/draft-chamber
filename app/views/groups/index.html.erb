@@ -1,0 +1,26 @@
+<h1>Groups</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Acronym</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>State</th>
+      <th>Parent</th>
+      <th>List Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @groups.each do |group| %>
+      <tr>
+        <td><%= group.acronym %></td>
+        <td><%= group.name %></td>
+        <td><%= group.group_type %></td>
+        <td><%= group.state %></td>
+        <td><%= group.parent&.acronym %></td>
+        <td><%= group.list_email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
