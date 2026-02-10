@@ -13,7 +13,8 @@ class McpApp
       server = MCP::Server.new(
         name: "draft-chamber",
         version: "0.1.0",
-        tools: [ ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool ]
+        tools: [ ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
+                 ListSessionPresentationsTool ]
       )
       transport = MCP::Server::Transports::StreamableHTTPTransport.new(server, stateless: true)
       server.transport = transport
