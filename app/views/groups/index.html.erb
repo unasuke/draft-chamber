@@ -1,28 +1,32 @@
-<h1>Groups</h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Groups</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Acronym</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>State</th>
-      <th>Parent</th>
-      <th>List Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @groups.each do |group| %>
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-ietf-blue">
       <tr>
-        <td><%= group.acronym %></td>
-        <td><%= group.name %></td>
-        <td><%= group.group_type %></td>
-        <td><%= group.state %></td>
-        <td><%= group.parent&.acronym %></td>
-        <td><%= group.list_email %></td>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Acronym</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">State</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Parent</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">List Email</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white">
+      <% @groups.each do |group| %>
+        <tr class="hover:bg-ietf-light">
+          <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= group.acronym %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.name %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.group_type %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.state %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.parent&.acronym %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.list_email %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<%== @pagy.series_nav %>
+<div class="mt-4">
+  <%== @pagy.series_nav %>
+</div>
