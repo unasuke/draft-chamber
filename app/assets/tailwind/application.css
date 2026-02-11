@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ietf-blue: #003b71;
+  --color-ietf-dark: #002347;
+  --color-ietf-light: #e8f0fe;
+  --color-ietf-accent: #1a73e8;
+}
