@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import BulkDownloadController from "./bulk_download_controller"
+application.register("bulk-download", BulkDownloadController)
+
 import FileUploadController from "./file_upload_controller"
 application.register("file-upload", FileUploadController)
 
