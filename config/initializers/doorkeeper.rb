@@ -29,6 +29,14 @@ Doorkeeper.configure do
       context.pre_auth.error = :invalid_request
       context.pre_auth.missing_param = :code_challenge
     end
+
+    # RFC 8707: Auto-populate resource for audience binding.
+    # MCP clients MUST send the resource parameter per the MCP Authorization spec,
+    # but as a fallback for clients that don't yet implement RFC 8707, default to
+    # this server's MCP endpoint URI.
+    if context.pre_auth.custom_access_token_attributes[:resource].blank?
+      context.pre_auth.custom_access_token_attributes[:resource] = "#{controller.request.base_url}/mcp"
+    end
   end
 
   # Security: Hash tokens and application secrets
