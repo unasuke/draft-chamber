@@ -1,30 +1,34 @@
-<h1>Documents</h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Documents</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Title</th>
-      <th>Type</th>
-      <th>Rev</th>
-      <th>Pages</th>
-      <th>Group</th>
-      <th>Material</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @documents.each do |document| %>
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-ietf-blue">
       <tr>
-        <td><%= link_to document.name, document_path(document) %></td>
-        <td><%= document.title %></td>
-        <td><%= document.document_type %></td>
-        <td><%= document.rev %></td>
-        <td><%= document.pages %></td>
-        <td><%= document.group&.acronym %></td>
-        <td><%= document.material_attached? ? "Yes" : "No" %></td>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Title</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Pages</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Group</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Material</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white">
+      <% @documents.each do |document| %>
+        <tr class="hover:bg-ietf-light">
+          <td class="px-4 py-3 text-sm"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.title %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.document_type %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.rev %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.pages %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.group&.acronym %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= document.material_attached? ? "Yes" : "No" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<%== @pagy.series_nav %>
+<div class="mt-4">
+  <%== @pagy.series_nav %>
+</div>
