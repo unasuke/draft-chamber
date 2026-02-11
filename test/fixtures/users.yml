@@ -1,3 +1,4 @@
-alice: {}
+alice:
+  role: admin
 
 bob: {}
