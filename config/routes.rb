@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   get  "/login",                   to: "auth/sessions#new", as: :login
   delete "/logout",                to: "auth/sessions#destroy", as: :logout
 
+  # OAuth 2.0 Well-Known Metadata (RFC 9728 / RFC 8414)
+  get "/.well-known/oauth-protected-resource",   to: "well_known/oauth_metadata#protected_resource"
+  get "/.well-known/oauth-authorization-server", to: "well_known/oauth_metadata#authorization_server"
+
   mount McpApp.new => "/mcp"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
