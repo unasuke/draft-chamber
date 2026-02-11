@@ -1,76 +1,85 @@
-<p>
-  <%= link_to "Meetings", meetings_path %> &gt;
-  <%= link_to "Meeting #{@meeting.number}", meeting_path(@meeting) %> &gt;
-  <%= @group.acronym %>
-</p>
+<nav class="mb-4 text-sm text-gray-500">
+  <%= link_to "Meetings", meetings_path, class: "text-ietf-accent hover:underline" %>
+  <span class="mx-1">&gt;</span>
+  <%= link_to "Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-ietf-accent hover:underline" %>
+  <span class="mx-1">&gt;</span>
+  <span class="text-gray-700"><%= @group.acronym %></span>
+</nav>
 
-<h1><%= @group.name %> (<%= @group.acronym %>)</h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900"><%= @group.name %> (<%= @group.acronym %>)</h1>
 
-<table>
-  <tbody>
-    <tr>
-      <th>Type</th>
-      <td><%= @group.group_type %></td>
-    </tr>
-    <tr>
-      <th>State</th>
-      <td><%= @group.state %></td>
-    </tr>
-    <% if @group.description.present? %>
+<div class="mb-8 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <tbody class="divide-y divide-gray-200 bg-white">
       <tr>
-        <th>Description</th>
-        <td><%= @group.description %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @group.group_type %></td>
       </tr>
-    <% end %>
-    <% if @group.list_email.present? %>
       <tr>
-        <th>Mailing list</th>
-        <td><%= @group.list_email %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">State</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @group.state %></td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<h2>Documents</h2>
-
-<div data-controller="bulk-download">
-  <% if @documents.any? { |d| d.material_attached? } %>
-    <p>
-      <button type="button" data-action="click->bulk-download#downloadAll">
-        Download All Materials
-      </button>
-    </p>
-  <% end %>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Rev</th>
-        <th>Material</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @documents.each do |document| %>
+      <% if @group.description.present? %>
         <tr>
-          <td><%= link_to document.name, document_path(document) %></td>
-          <td><%= document.title %></td>
-          <td><%= document.document_type %></td>
-          <td><%= document.rev %></td>
-          <td>
-            <% if document.material_attached? %>
-              <%= link_to "Download", rails_blob_path(document.document_material.file, disposition: "attachment"),
-                    data: { bulk_download_target: "link" } %>
-            <% else %>
-              -
-            <% end %>
-          </td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @group.description %></td>
+        </tr>
+      <% end %>
+      <% if @group.list_email.present? %>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Mailing list</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @group.list_email %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
 
-<p><%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting) %></p>
+<h2 class="mb-4 text-xl font-bold text-gray-900">Documents</h2>
+
+<div data-controller="bulk-download">
+  <% if @documents.any? { |d| d.material_attached? } %>
+    <div class="mb-4">
+      <button type="button" data-action="click->bulk-download#downloadAll" class="rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue">
+        Download All Materials
+      </button>
+    </div>
+  <% end %>
+
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Title</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Material</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @documents.each do |document| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-sm"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= document.title %></td>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= document.document_type %></td>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= document.rev %></td>
+            <td class="px-4 py-3 text-sm">
+              <% if document.material_attached? %>
+                <%= link_to "Download", rails_blob_path(document.document_material.file, disposition: "attachment"),
+                      class: "text-ietf-accent hover:underline",
+                      data: { bulk_download_target: "link" } %>
+              <% else %>
+                <span class="text-gray-400">-</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<p class="mt-4">
+  <%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-sm text-ietf-accent hover:underline" %>
+</p>
