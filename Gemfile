@@ -60,6 +60,9 @@ gem "omniauth-github"
 # OAuth 2.1 Authorization Server
 gem "doorkeeper"
 
+# CORS support for browser-based MCP clients
+gem "rack-cors"
+
 # HTML-aware ERB engine
 gem "reactionview"
 
