@@ -7,6 +7,7 @@ class User < ApplicationRecord
   }
 
   has_one :github_authentication, dependent: :destroy
+  has_many :document_material_uploaded_bys, dependent: :destroy
 
   delegate :nickname, :name, :email, :avatar_url, to: :github_authentication, allow_nil: true
 

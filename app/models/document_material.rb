@@ -5,6 +5,8 @@ class DocumentMaterial < ApplicationRecord
 
   belongs_to :document
 
+  has_many :document_material_uploaded_bys, dependent: :destroy
+
   enum :download_status, {
     pending: "pending",
     downloading: "downloading",
