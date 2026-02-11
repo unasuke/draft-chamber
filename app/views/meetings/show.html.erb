@@ -1,61 +1,67 @@
-<h1>Meeting <%= @meeting.number %></h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Meeting <%= @meeting.number %></h1>
 
-<table>
-  <tbody>
-    <tr>
-      <th>Type</th>
-      <td><%= @meeting.meeting_type %></td>
-    </tr>
-    <tr>
-      <th>Date</th>
-      <td><%= @meeting.date %></td>
-    </tr>
-    <% if @meeting.city.present? %>
+<div class="mb-8 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <tbody class="divide-y divide-gray-200 bg-white">
       <tr>
-        <th>City</th>
-        <td><%= @meeting.city %>, <%= @meeting.country %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.meeting_type %></td>
       </tr>
-    <% end %>
-    <% if @meeting.venue_name.present? %>
       <tr>
-        <th>Venue</th>
-        <td><%= @meeting.venue_name %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.date %></td>
       </tr>
-    <% end %>
-    <tr>
-      <th>Days</th>
-      <td><%= @meeting.days %></td>
-    </tr>
-    <% if @meeting.attendees.present? %>
+      <% if @meeting.city.present? %>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">City</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.city %>, <%= @meeting.country %></td>
+        </tr>
+      <% end %>
+      <% if @meeting.venue_name.present? %>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Venue</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.venue_name %></td>
+        </tr>
+      <% end %>
       <tr>
-        <th>Attendees</th>
-        <td><%= @meeting.attendees %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Days</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.days %></td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      <% if @meeting.attendees.present? %>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Attendees</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @meeting.attendees %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<h2>Groups</h2>
+<h2 class="mb-4 text-xl font-bold text-gray-900">Groups</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Acronym</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>State</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @groups.each do |group| %>
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-ietf-blue">
       <tr>
-        <td><%= link_to group.acronym, meeting_group_path(@meeting, group) %></td>
-        <td><%= group.name %></td>
-        <td><%= group.group_type %></td>
-        <td><%= group.state %></td>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Acronym</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">State</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white">
+      <% @groups.each do |group| %>
+        <tr class="hover:bg-ietf-light">
+          <td class="px-4 py-3 text-sm"><%= link_to group.acronym, meeting_group_path(@meeting, group), class: "font-medium text-ietf-accent hover:underline" %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.name %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.group_type %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= group.state %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<p><%= link_to "Back to meetings", meetings_path %></p>
+<p class="mt-4">
+  <%= link_to "Back to meetings", meetings_path, class: "text-sm text-ietf-accent hover:underline" %>
+</p>
