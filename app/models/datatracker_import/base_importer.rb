@@ -17,7 +17,7 @@ module DatatrackerImport
 
     def log(message)
       Rails.logger.info("[DatatrackerImport] #{message}")
-      puts "[DatatrackerImport] #{message}" if $stdout.tty?
+      puts "[DatatrackerImport] #{message}" if $stdout.tty? && !Rails.env.test?
     end
 
     def fetch_all_pages(resource, params = {})
