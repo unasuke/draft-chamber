@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   get "/.well-known/oauth-protected-resource",   to: "well_known/oauth_metadata#protected_resource"
   get "/.well-known/oauth-authorization-server", to: "well_known/oauth_metadata#authorization_server"
 
+  # OAuth 2.0 Dynamic Client Registration (RFC 7591)
+  post "/oauth/register", to: "oauth/registrations#create"
+
   mount McpApp.new => "/mcp"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
