@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  enum :role, {
+    general: "general",
+    admin: "admin"
+  }
+
   has_one :github_authentication, dependent: :destroy
 
   delegate :nickname, :name, :email, :avatar_url, to: :github_authentication, allow_nil: true
