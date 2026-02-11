@@ -1,26 +1,30 @@
-<h1>Session Presentations</h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Session Presentations</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Order</th>
-      <th>Session</th>
-      <th>Meeting</th>
-      <th>Document</th>
-      <th>Rev</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @session_presentations.each do |sp| %>
+<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-ietf-blue">
       <tr>
-        <td><%= sp.order %></td>
-        <td><%= sp.session.name %></td>
-        <td><%= sp.session.meeting.number %></td>
-        <td><%= sp.document.name %></td>
-        <td><%= sp.rev %></td>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Order</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Session</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Meeting</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Document</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white">
+      <% @session_presentations.each do |sp| %>
+        <tr class="hover:bg-ietf-light">
+          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.order %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.session.name %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.session.meeting.number %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.document.name %></td>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.rev %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<%== @pagy.series_nav %>
+<div class="mt-4">
+  <%== @pagy.series_nav %>
+</div>
