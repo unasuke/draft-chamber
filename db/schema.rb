@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_090022) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_11_110715) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -140,6 +140,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_090022) do
     t.datetime "created_at", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
+    t.string "resource"
     t.integer "resource_owner_id", null: false
     t.datetime "revoked_at"
     t.string "scopes", default: "", null: false
@@ -155,6 +156,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_090022) do
     t.integer "expires_in"
     t.string "previous_refresh_token", default: "", null: false
     t.string "refresh_token"
+    t.string "resource"
     t.integer "resource_owner_id"
     t.datetime "revoked_at"
     t.string "scopes"

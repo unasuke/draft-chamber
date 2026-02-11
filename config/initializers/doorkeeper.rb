@@ -45,4 +45,9 @@ Doorkeeper.configure do
 
   # Default scope for MCP access
   default_scopes :mcp
+
+  # RFC 8707: Resource Indicators for OAuth 2.0
+  # The resource parameter binds tokens to their intended resource server (audience).
+  # Flows through: authorization request -> access grant -> access token -> refresh token
+  custom_access_token_attributes [ :resource ]
 end
