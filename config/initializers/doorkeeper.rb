@@ -23,7 +23,9 @@ Doorkeeper.configure do
   # Note: This hook is also called from TokensController with context=nil,
   # so we must guard against that.
   before_successful_authorization do |controller, context|
-    if context&.pre_auth&.code_challenge.blank?
+    next unless context&.pre_auth
+
+    if context.pre_auth.code_challenge.blank?
       context.pre_auth.error = :invalid_request
       context.pre_auth.missing_param = :code_challenge
     end
