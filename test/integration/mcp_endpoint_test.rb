@@ -6,7 +6,7 @@ class McpEndpointTest < ActionDispatch::IntegrationTest
   include OAuthTestHelper
 
   setup do
-    @token = create_access_token(user: users(:alice))
+    @token = create_access_token(user: users(:alice), resource: "http://www.example.com/mcp")
   end
 
   test "initialize handshake returns server info" do

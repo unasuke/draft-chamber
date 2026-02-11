@@ -23,7 +23,7 @@ module AuthTestHelper
 end
 
 module OAuthTestHelper
-  def create_access_token(user:, scopes: "mcp")
+  def create_access_token(user:, scopes: "mcp", resource: nil)
     app = Doorkeeper::Application.create!(
       name: "Test Client",
       redirect_uri: "https://example.com/callback",
@@ -34,7 +34,8 @@ module OAuthTestHelper
       application: app,
       resource_owner_id: user.id,
       scopes: scopes,
-      expires_in: 1.hour
+      expires_in: 1.hour,
+      resource: resource
     )
     token.plaintext_token
   end
