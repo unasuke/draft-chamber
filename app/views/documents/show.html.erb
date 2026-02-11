@@ -97,9 +97,11 @@
   </div>
 <% end %>
 
-<%= form_with url: document_document_material_path(@document) do |f| %>
+<%= form_with url: document_document_material_path(@document), data: { controller: "file-upload" } do |f| %>
   <div>
-    <%= f.file_field :file, name: :file, accept: Attachable::ALLOWED_CONTENT_TYPES.join(",") %>
+    <%= f.file_field :file, name: :file, accept: Attachable::ALLOWED_CONTENT_TYPES.join(","),
+          data: { file_upload_target: "input", action: "change->file-upload#select" } %>
+    <span data-file-upload-target="info"></span>
   </div>
   <div>
     <%= f.submit "Upload" %>
