@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   resources :documents, only: :index
   resources :session_presentations, only: :index
 
+  # GitHub OAuth
+  get  "/auth/:provider/callback", to: "auth/sessions#create"
+  get  "/auth/failure",            to: "auth/sessions#failure"
+  get  "/login",                   to: "auth/sessions#new", as: :login
+  delete "/logout",                to: "auth/sessions#destroy", as: :logout
+
   mount McpApp.new => "/mcp"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
