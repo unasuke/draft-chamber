@@ -13,6 +13,10 @@ class Group < ApplicationRecord
   scope :active, -> { where(state: "active") }
   scope :working_groups, -> { where(group_type: "wg") }
 
+  def to_param
+    acronym
+  end
+
   def to_s
     acronym
   end

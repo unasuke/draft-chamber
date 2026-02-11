@@ -13,6 +13,10 @@ class Meeting < ApplicationRecord
 
   scope :recent, -> { order(date: :desc) }
 
+  def to_param
+    number
+  end
+
   def to_s
     number
   end

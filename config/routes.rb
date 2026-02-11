@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   use_doorkeeper
   root "meetings#index"
 
-  resources :meetings, only: :index
+  resources :meetings, only: [ :index, :show ] do
+    resources :groups, only: [ :show ], controller: "meetings/groups"
+  end
   resources :groups, only: :index
   resources :sessions, only: :index
   resources :documents, only: [ :index, :show ] do

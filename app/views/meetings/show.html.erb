@@ -1,0 +1,61 @@
+<h1>Meeting <%= @meeting.number %></h1>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Type</th>
+      <td><%= @meeting.meeting_type %></td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td><%= @meeting.date %></td>
+    </tr>
+    <% if @meeting.city.present? %>
+      <tr>
+        <th>City</th>
+        <td><%= @meeting.city %>, <%= @meeting.country %></td>
+      </tr>
+    <% end %>
+    <% if @meeting.venue_name.present? %>
+      <tr>
+        <th>Venue</th>
+        <td><%= @meeting.venue_name %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <th>Days</th>
+      <td><%= @meeting.days %></td>
+    </tr>
+    <% if @meeting.attendees.present? %>
+      <tr>
+        <th>Attendees</th>
+        <td><%= @meeting.attendees %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Groups</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Acronym</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @groups.each do |group| %>
+      <tr>
+        <td><%= link_to group.acronym, meeting_group_path(@meeting, group) %></td>
+        <td><%= group.name %></td>
+        <td><%= group.group_type %></td>
+        <td><%= group.state %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to meetings", meetings_path %></p>
