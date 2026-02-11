@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   resources :meetings, only: :index
   resources :groups, only: :index
   resources :sessions, only: :index
-  resources :documents, only: [:index, :show] do
-    resource :document_material, only: [:create, :destroy]
+  resources :documents, only: [ :index, :show ] do
+    resource :document_material, only: [ :create, :destroy ]
   end
   resources :session_presentations, only: :index
 
