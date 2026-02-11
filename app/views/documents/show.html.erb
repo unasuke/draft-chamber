@@ -1,0 +1,109 @@
+<h1><%= @document.title %></h1>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Name</th>
+      <td><%= @document.name %></td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <td><%= @document.document_type %></td>
+    </tr>
+    <tr>
+      <th>Rev</th>
+      <td><%= @document.rev %></td>
+    </tr>
+    <tr>
+      <th>Pages</th>
+      <td><%= @document.pages %></td>
+    </tr>
+    <tr>
+      <th>Group</th>
+      <td><%= @document.group&.acronym %></td>
+    </tr>
+    <% if @document.abstract.present? %>
+      <tr>
+        <th>Abstract</th>
+        <td><%= @document.abstract %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Material</h2>
+
+<% if @document.material_attached? %>
+  <table>
+    <tbody>
+      <tr>
+        <th>Filename</th>
+        <td><%= @document.document_material.filename %></td>
+      </tr>
+      <tr>
+        <th>Content type</th>
+        <td><%= @document.document_material.content_type %></td>
+      </tr>
+      <tr>
+        <th>Size</th>
+        <td><%= number_to_human_size(@document.document_material.byte_size) %></td>
+      </tr>
+      <tr>
+        <th>Uploaded at</th>
+        <td><%= @document.document_material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <%= link_to "Download", rails_blob_path(@document.document_material.file, disposition: "attachment") %>
+  </p>
+
+  <%= button_to "Delete material", document_document_material_path(@document),
+        method: :delete,
+        data: { turbo_confirm: "Are you sure you want to delete this material?" } %>
+<% end %>
+
+<% if @document.document_material&.document_material_uploaded_bys&.any? %>
+  <h3>Upload history</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Uploaded at</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @document.document_material.document_material_uploaded_bys.includes(:user).order(created_at: :desc).each do |uploaded_by| %>
+        <tr>
+          <td><%= uploaded_by.user.nickname %></td>
+          <td><%= uploaded_by.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<h3>Upload file</h3>
+
+<% if @document_material.errors.any? %>
+  <div>
+    <ul>
+      <% @document_material.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with url: document_document_material_path(@document) do |f| %>
+  <div>
+    <%= f.file_field :file, name: :file, accept: Attachable::ALLOWED_CONTENT_TYPES.join(",") %>
+  </div>
+  <div>
+    <%= f.submit "Upload" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to documents", documents_path %></p>
