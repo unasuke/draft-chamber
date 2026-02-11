@@ -33,27 +33,44 @@
 
 <h2>Documents</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Title</th>
-      <th>Type</th>
-      <th>Rev</th>
-      <th>Material</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @documents.each do |document| %>
+<div data-controller="bulk-download">
+  <% if @documents.any? { |d| d.material_attached? } %>
+    <p>
+      <button type="button" data-action="click->bulk-download#downloadAll">
+        Download All Materials
+      </button>
+    </p>
+  <% end %>
+
+  <table>
+    <thead>
       <tr>
-        <td><%= link_to document.name, document_path(document) %></td>
-        <td><%= document.title %></td>
-        <td><%= document.document_type %></td>
-        <td><%= document.rev %></td>
-        <td><%= document.material_attached? ? "Yes" : "No" %></td>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Type</th>
+        <th>Rev</th>
+        <th>Material</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @documents.each do |document| %>
+        <tr>
+          <td><%= link_to document.name, document_path(document) %></td>
+          <td><%= document.title %></td>
+          <td><%= document.document_type %></td>
+          <td><%= document.rev %></td>
+          <td>
+            <% if document.material_attached? %>
+              <%= link_to "Download", rails_blob_path(document.document_material.file, disposition: "attachment"),
+                    data: { bulk_download_target: "link" } %>
+            <% else %>
+              -
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <p><%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting) %></p>

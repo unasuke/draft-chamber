@@ -7,7 +7,7 @@ module Meetings
       @group = Group.find_by!(acronym: params[:id])
       @documents = Document.joins(session_presentations: :session)
         .where(sessions: { meeting_id: @meeting.id, group_id: @group.id })
-        .includes(:document_material)
+        .includes(document_material: { file_attachment: :blob })
         .distinct
         .order(:name)
     end
