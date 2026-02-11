@@ -19,9 +19,11 @@ Doorkeeper.configure do
 
   # OAuth 2.1: Enforce PKCE for all clients including confidential
   # force_pkce only applies to non-confidential clients, so we use
-  # before_successful_authorization to enforce PKCE for all clients
+  # before_successful_authorization to enforce PKCE for all clients.
+  # Note: This hook is also called from TokensController with context=nil,
+  # so we must guard against that.
   before_successful_authorization do |controller, context|
-    if context.pre_auth.code_challenge.blank?
+    if context&.pre_auth&.code_challenge.blank?
       context.pre_auth.error = :invalid_request
       context.pre_auth.missing_param = :code_challenge
     end
