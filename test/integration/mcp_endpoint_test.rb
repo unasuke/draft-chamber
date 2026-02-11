@@ -3,6 +3,12 @@
 require "test_helper"
 
 class McpEndpointTest < ActionDispatch::IntegrationTest
+  include OAuthTestHelper
+
+  setup do
+    @token = create_access_token(user: users(:alice))
+  end
+
   test "initialize handshake returns server info" do
     post "/mcp",
       params: {
@@ -15,10 +21,7 @@ class McpEndpointTest < ActionDispatch::IntegrationTest
           clientInfo: { name: "test", version: "1.0" }
         }
       }.to_json,
-      headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json, text/event-stream"
-      }
+      headers: bearer_headers(@token)
 
     assert_response :success
   end
@@ -36,10 +39,7 @@ class McpEndpointTest < ActionDispatch::IntegrationTest
           clientInfo: { name: "test", version: "1.0" }
         }
       }.to_json,
-      headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json, text/event-stream"
-      }
+      headers: bearer_headers(@token)
 
     assert_response :success
 
@@ -51,10 +51,7 @@ class McpEndpointTest < ActionDispatch::IntegrationTest
         method: "tools/list",
         params: {}
       }.to_json,
-      headers: {
-        "Content-Type" => "application/json",
-        "Accept" => "application/json, text/event-stream"
-      }
+      headers: bearer_headers(@token)
 
     assert_response :success
   end

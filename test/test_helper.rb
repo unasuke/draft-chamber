@@ -22,6 +22,32 @@ module AuthTestHelper
   end
 end
 
+module OAuthTestHelper
+  def create_access_token(user:, scopes: "mcp")
+    app = Doorkeeper::Application.create!(
+      name: "Test Client",
+      redirect_uri: "https://example.com/callback",
+      confidential: false,
+      scopes: scopes
+    )
+    token = Doorkeeper::AccessToken.create!(
+      application: app,
+      resource_owner_id: user.id,
+      scopes: scopes,
+      expires_in: 1.hour
+    )
+    token.plaintext_token
+  end
+
+  def bearer_headers(token)
+    {
+      "Content-Type" => "application/json",
+      "Accept" => "application/json, text/event-stream",
+      "Authorization" => "Bearer #{token}"
+    }
+  end
+end
+
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers
