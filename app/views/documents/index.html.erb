@@ -9,17 +9,19 @@
       <th>Rev</th>
       <th>Pages</th>
       <th>Group</th>
+      <th>Material</th>
     </tr>
   </thead>
   <tbody>
     <% @documents.each do |document| %>
       <tr>
-        <td><%= document.name %></td>
+        <td><%= link_to document.name, document_path(document) %></td>
         <td><%= document.title %></td>
         <td><%= document.document_type %></td>
         <td><%= document.rev %></td>
         <td><%= document.pages %></td>
         <td><%= document.group&.acronym %></td>
+        <td><%= document.material_attached? ? "Yes" : "No" %></td>
       </tr>
     <% end %>
   </tbody>
