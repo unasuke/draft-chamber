@@ -1,1 +1,3 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+tls_draft_upload:
+  document_material: tls_draft_material
+  user: alice

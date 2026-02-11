@@ -1,0 +1,7 @@
+tls_draft_material:
+  document: tls_draft
+  download_status: completed
+  downloaded_at: <%= 1.day.ago.to_fs(:db) %>
+  content_type: application/pdf
+  filename: draft-ietf-tls-esni.pdf
+  byte_size: 12345
