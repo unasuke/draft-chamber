@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class McpApp
+  REQUIRED_SCOPE = "mcp"
+
   def call(env)
     request = Rack::Request.new(env)
 
@@ -11,6 +13,15 @@ class McpApp
 
     access_token = Doorkeeper::AccessToken.by_token(token)
     unless access_token&.accessible?
+      return unauthorized_response(request)
+    end
+
+    unless access_token.scopes.include?(REQUIRED_SCOPE)
+      return forbidden_response(request)
+    end
+
+    # RFC 8707: Validate that the token was issued for this resource server.
+    unless access_token.resource == resource_uri(request)
       return unauthorized_response(request)
     end
 
@@ -28,15 +39,37 @@ class McpApp
   end
 
   def unauthorized_response(request)
-    resource_metadata_url = "#{request.base_url}/.well-known/oauth-protected-resource"
     [
       401,
       {
         "Content-Type" => "application/json",
-        "WWW-Authenticate" => %(Bearer resource_metadata="#{resource_metadata_url}")
+        "WWW-Authenticate" => www_authenticate_header(request)
       },
       [ { error: "unauthorized", error_description: "Valid Bearer token required" }.to_json ]
     ]
+  end
+
+  def forbidden_response(request)
+    [
+      403,
+      {
+        "Content-Type" => "application/json",
+        "WWW-Authenticate" => www_authenticate_header(request, error: "insufficient_scope")
+      },
+      [ { error: "forbidden", error_description: "Insufficient scope" }.to_json ]
+    ]
+  end
+
+  def resource_uri(request)
+    "#{request.base_url}/mcp"
+  end
+
+  def www_authenticate_header(request, error: nil)
+    resource_metadata_url = "#{request.base_url}/.well-known/oauth-protected-resource"
+    parts = [ %(Bearer resource_metadata="#{resource_metadata_url}") ]
+    parts << %(error="#{error}") if error
+    parts << %(scope="#{REQUIRED_SCOPE}")
+    parts.join(", ")
   end
 
   def transport
