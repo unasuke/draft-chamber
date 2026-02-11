@@ -1,95 +1,102 @@
-<h1><%= @document.title %></h1>
+<h1 class="mb-6 text-2xl font-bold text-gray-900"><%= @document.title %></h1>
 
-<table>
-  <tbody>
-    <tr>
-      <th>Name</th>
-      <td><%= @document.name %></td>
-    </tr>
-    <tr>
-      <th>Type</th>
-      <td><%= @document.document_type %></td>
-    </tr>
-    <tr>
-      <th>Rev</th>
-      <td><%= @document.rev %></td>
-    </tr>
-    <tr>
-      <th>Pages</th>
-      <td><%= @document.pages %></td>
-    </tr>
-    <tr>
-      <th>Group</th>
-      <td><%= @document.group&.acronym %></td>
-    </tr>
-    <% if @document.abstract.present? %>
+<div class="mb-8 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+  <table class="min-w-full divide-y divide-gray-200">
+    <tbody class="divide-y divide-gray-200 bg-white">
       <tr>
-        <th>Abstract</th>
-        <td><%= @document.abstract %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<h2>Material</h2>
-
-<% if @document.material_attached? %>
-  <table>
-    <tbody>
-      <tr>
-        <th>Filename</th>
-        <td><%= @document.document_material.filename %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.name %></td>
       </tr>
       <tr>
-        <th>Content type</th>
-        <td><%= @document.document_material.content_type %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_type %></td>
       </tr>
       <tr>
-        <th>Size</th>
-        <td><%= number_to_human_size(@document.document_material.byte_size) %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Rev</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.rev %></td>
       </tr>
       <tr>
-        <th>Uploaded at</th>
-        <td><%= @document.document_material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Pages</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.pages %></td>
       </tr>
-    </tbody>
-  </table>
-
-  <p>
-    <%= link_to "Download", rails_blob_path(@document.document_material.file, disposition: "attachment") %>
-  </p>
-
-  <%= button_to "Delete material", document_document_material_path(@document),
-        method: :delete,
-        data: { turbo_confirm: "Are you sure you want to delete this material?" } %>
-<% end %>
-
-<% if @document.document_material&.document_material_uploaded_bys&.any? %>
-  <h3>Upload history</h3>
-
-  <table>
-    <thead>
       <tr>
-        <th>User</th>
-        <th>Uploaded at</th>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Group</th>
+        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.group&.acronym %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% @document.document_material.document_material_uploaded_bys.includes(:user).order(created_at: :desc).each do |uploaded_by| %>
+      <% if @document.abstract.present? %>
         <tr>
-          <td><%= uploaded_by.user.nickname %></td>
-          <td><%= uploaded_by.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Abstract</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.abstract %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
+</div>
+
+<h2 class="mb-4 text-xl font-bold text-gray-900">Material</h2>
+
+<% if @document.material_attached? %>
+  <div class="mb-6 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Filename</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.filename %></td>
+        </tr>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Content type</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.content_type %></td>
+        </tr>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Size</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= number_to_human_size(@document.document_material.byte_size) %></td>
+        </tr>
+        <tr>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Uploaded at</th>
+          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mb-6 flex items-center gap-4">
+    <%= link_to "Download", rails_blob_path(@document.document_material.file, disposition: "attachment"), class: "rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+
+    <%= button_to "Delete material", document_document_material_path(@document),
+          method: :delete,
+          data: { turbo_confirm: "Are you sure you want to delete this material?" },
+          class: "rounded bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700" %>
+  </div>
 <% end %>
 
-<h3>Upload file</h3>
+<% if @document.document_material&.document_material_uploaded_bys&.any? %>
+  <h3 class="mb-3 text-lg font-semibold text-gray-900">Upload history</h3>
+
+  <div class="mb-6 overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">User</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Uploaded at</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @document.document_material.document_material_uploaded_bys.includes(:user).order(created_at: :desc).each do |uploaded_by| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-sm text-gray-600"><%= uploaded_by.user.nickname %></td>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= uploaded_by.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<h3 class="mb-3 text-lg font-semibold text-gray-900">Upload file</h3>
 
 <% if @document_material.errors.any? %>
-  <div>
-    <ul>
+  <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+    <ul class="list-inside list-disc text-sm text-red-700">
       <% @document_material.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
@@ -97,15 +104,18 @@
   </div>
 <% end %>
 
-<%= form_with url: document_document_material_path(@document), data: { controller: "file-upload" } do |f| %>
-  <div>
+<%= form_with url: document_document_material_path(@document), data: { controller: "file-upload" }, class: "mb-6 space-y-4" do |f| %>
+  <div class="flex items-center gap-3">
     <%= f.file_field :file, name: :file, accept: Attachable::ALLOWED_CONTENT_TYPES.join(","),
-          data: { file_upload_target: "input", action: "change->file-upload#select" } %>
-    <span data-file-upload-target="info"></span>
+          data: { file_upload_target: "input", action: "change->file-upload#select" },
+          class: "block text-sm text-gray-600 file:mr-4 file:rounded file:border-0 file:bg-ietf-accent file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-ietf-blue" %>
+    <span data-file-upload-target="info" class="text-sm text-gray-500"></span>
   </div>
   <div>
-    <%= f.submit "Upload" %>
+    <%= f.submit "Upload", class: "rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue cursor-pointer" %>
   </div>
 <% end %>
 
-<p><%= link_to "Back to documents", documents_path %></p>
+<p>
+  <%= link_to "Back to documents", documents_path, class: "text-sm text-ietf-accent hover:underline" %>
+</p>
