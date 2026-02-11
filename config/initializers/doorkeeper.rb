@@ -3,6 +3,9 @@
 Doorkeeper.configure do
   orm :active_record
 
+  # Use ApplicationController as the base so current_user helper is available
+  base_controller "ApplicationController"
+
   # Authenticate resource owner via GitHub session
   resource_owner_authenticator do
     User.find_by(id: session[:user_id]) || redirect_to(login_path)
