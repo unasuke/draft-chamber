@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_10_140019) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_11_065852) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -71,6 +71,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_140019) do
     t.index ["group_id"], name: "index_documents_on_group_id"
     t.index ["name"], name: "index_documents_on_name", unique: true
     t.index ["resource_uri"], name: "index_documents_on_resource_uri", unique: true
+  end
+
+  create_table "github_authentications", force: :cascade do |t|
+    t.string "avatar_url"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.string "nickname", null: false
+    t.string "uid", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["uid"], name: "index_github_authentications_on_uid", unique: true
+    t.index ["user_id"], name: "index_github_authentications_on_user_id", unique: true
   end
 
   create_table "groups", force: :cascade do |t|
@@ -144,10 +157,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_10_140019) do
     t.index ["resource_uri"], name: "index_sessions_on_resource_uri", unique: true
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "document_materials", "documents"
   add_foreign_key "documents", "groups"
+  add_foreign_key "github_authentications", "users"
   add_foreign_key "groups", "groups", column: "parent_id"
   add_foreign_key "session_presentations", "documents"
   add_foreign_key "session_presentations", "sessions"
