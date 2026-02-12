@@ -39,27 +39,38 @@
 
 <h2 class="mb-4 text-xl font-bold text-gray-900">Groups</h2>
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-ietf-blue">
-      <tr>
-        <th class="px-4 py-3 text-left text-md font-semibold text-white">Acronym</th>
-        <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
-        <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
-        <th class="px-4 py-3 text-left text-md font-semibold text-white">State</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200 bg-white">
-      <% @groups.each do |group| %>
-        <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-md"><%= link_to group.acronym, meeting_group_path(@meeting, group), class: "font-medium text-ietf-accent hover:underline" %></td>
-          <td class="px-4 py-3 text-md text-gray-600"><%= group.name %></td>
-          <td class="px-4 py-3 text-md text-gray-600"><%= group.group_type %></td>
-          <td class="px-4 py-3 text-md text-gray-600"><%= group.state %></td>
+<div data-controller="filter">
+  <div class="mb-4">
+    <input type="search"
+           placeholder="Filter by acronym..."
+           autocomplete="off"
+           data-filter-target="input"
+           data-action="input->filter#filter"
+           class="w-64 rounded-md border border-gray-300 px-3 py-2 text-md text-gray-900 placeholder-gray-400 shadow-sm focus:border-ietf-accent focus:outline-none focus:ring-1 focus:ring-ietf-accent">
+  </div>
+
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Acronym</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">State</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @groups.each do |group| %>
+          <tr class="hover:bg-ietf-light" data-filter-target="row">
+            <td class="px-4 py-3 text-md"><%= link_to group.acronym, meeting_group_path(@meeting, group), class: "font-medium text-ietf-accent hover:underline" %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= group.name %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= group.group_type %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= group.state %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <p class="mt-4">

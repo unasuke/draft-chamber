@@ -10,5 +10,8 @@ application.register("bulk-download", BulkDownloadController)
 import FileUploadController from "./file_upload_controller"
 application.register("file-upload", FileUploadController)
 
+import FilterController from "./filter_controller"
+application.register("filter", FilterController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
