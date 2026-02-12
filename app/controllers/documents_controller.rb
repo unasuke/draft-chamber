@@ -6,7 +6,7 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    @document = Document.find(params[:id])
+    @document = Document.includes(document_material: { converted_document_materials: { file_attachment: :blob } }).find(params[:id])
     @document_material = @document.document_material || @document.build_document_material
   end
 end
