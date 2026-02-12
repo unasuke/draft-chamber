@@ -3,6 +3,8 @@
 require "test_helper"
 
 class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @document = documents(:tls_chairs_slides)
     @meeting_number = "124"
@@ -30,7 +32,48 @@ class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
     assert_equal "slides-124-tls-chairs.pdf", material.filename
     assert_equal "application/pdf", material.content_type
     assert_not_nil material.downloaded_at
+    assert_equal "processing_pending", material.processing_status
     mock_downloader.verify
+  end
+
+  test "enqueues ProcessDocumentMaterialJob for processable content types" do
+    material = @document.create_document_material!(download_status: :pending)
+
+    mock_result = {
+      io: StringIO.new("test PDF content"),
+      filename: "slides-124-tls-chairs.pdf",
+      content_type: "application/pdf"
+    }
+
+    mock_downloader = Minitest::Mock.new
+    mock_downloader.expect(:download, mock_result, [ String ])
+
+    MaterialDownloader.stub(:new, mock_downloader) do
+      assert_enqueued_with(job: ProcessDocumentMaterialJob) do
+        DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
+      end
+    end
+  end
+
+  test "does not enqueue ProcessDocumentMaterialJob for text content" do
+    material = @document.create_document_material!(download_status: :pending)
+
+    mock_result = {
+      io: StringIO.new("plain text content"),
+      filename: "slides.txt",
+      content_type: "text/plain"
+    }
+
+    mock_downloader = Minitest::Mock.new
+    mock_downloader.expect(:download, mock_result, [ String ])
+
+    MaterialDownloader.stub(:new, mock_downloader) do
+      assert_no_enqueued_jobs(only: ProcessDocumentMaterialJob) do
+        DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
+      end
+    end
+
+    assert_equal "not_applicable", material.reload.processing_status
   end
 
   test "skips if material already attached" do

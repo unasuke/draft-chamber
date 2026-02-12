@@ -34,6 +34,11 @@ class DownloadDocumentMaterialJob < ApplicationJob
       filename: result[:filename],
       byte_size: result[:io].size
     )
+
+    if material.processable?
+      material.update!(processing_status: :processing_pending)
+      ProcessDocumentMaterialJob.perform_later(material.id)
+    end
   rescue MaterialDownloader::DownloadError => e
     material&.update!(download_status: :failed, download_error: e.message)
     raise
