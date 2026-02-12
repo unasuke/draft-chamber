@@ -12,6 +12,7 @@ class Meeting < ApplicationRecord
   }
 
   scope :recent, -> { order(date: :desc) }
+  scope :syncable, -> { where("date(date, '+' || days || ' days') >= ?", 30.days.ago.to_date.iso8601) }
 
   def to_param
     number

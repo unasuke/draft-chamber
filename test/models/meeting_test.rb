@@ -51,4 +51,22 @@ class MeetingTest < ActiveSupport::TestCase
   test "to_s returns number" do
     assert_equal "124", meetings(:ietf124).to_s
   end
+
+  test "syncable includes meetings that ended recently" do
+    travel_to Date.new(2025, 11, 20) do
+      assert_includes Meeting.syncable, meetings(:ietf124)
+    end
+  end
+
+  test "syncable includes future meetings" do
+    travel_to Date.new(2025, 10, 1) do
+      assert_includes Meeting.syncable, meetings(:ietf124)
+    end
+  end
+
+  test "syncable excludes meetings that ended more than 30 days ago" do
+    travel_to Date.new(2026, 1, 1) do
+      assert_not_includes Meeting.syncable, meetings(:ietf124)
+    end
+  end
 end
