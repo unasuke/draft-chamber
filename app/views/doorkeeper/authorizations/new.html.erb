@@ -4,14 +4,14 @@
       <h1 class="text-2xl font-bold text-gray-900"><%= t('.title') %></h1>
     </header>
 
-    <p class="mb-4 text-sm text-gray-600">
+    <p class="mb-4 text-md text-gray-600">
       <%= raw t('.prompt', client_name: content_tag(:strong, class: 'font-semibold text-gray-900') { @pre_auth.client.name }) %>
     </p>
 
     <% if @pre_auth.scopes.count > 0 %>
       <div class="mb-6">
-        <p class="mb-2 text-sm font-medium text-gray-700"><%= t('.able_to') %>:</p>
-        <ul class="list-inside list-disc space-y-1 text-sm text-ietf-accent">
+        <p class="mb-2 text-md font-medium text-gray-700"><%= t('.able_to') %>:</p>
+        <ul class="list-inside list-disc space-y-1 text-md text-ietf-accent">
           <% @pre_auth.scopes.each do |scope| %>
             <li><%= t scope, scope: [:doorkeeper, :scopes] %></li>
           <% end %>
@@ -32,7 +32,7 @@
         <% @pre_auth.custom_access_token_attributes.each do |key, value| %>
           <%= hidden_field_tag key, value, id: nil %>
         <% end %>
-        <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "w-full rounded bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 cursor-pointer" %>
+        <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "w-full rounded bg-green-600 px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-green-700 cursor-pointer" %>
       <% end %>
       <%= form_tag oauth_authorization_path, method: :delete, class: "flex-1" do %>
         <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
@@ -46,7 +46,7 @@
         <% @pre_auth.custom_access_token_attributes.each do |key, value| %>
           <%= hidden_field_tag key, value, id: nil %>
         <% end %>
-        <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "w-full rounded bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 cursor-pointer" %>
+        <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "w-full rounded bg-red-600 px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-red-700 cursor-pointer" %>
       <% end %>
     </div>
   </div>

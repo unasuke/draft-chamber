@@ -4,23 +4,23 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">
       <tr>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Acronym</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">State</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Parent</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">List Email</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Acronym</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">State</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Parent</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">List Email</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white">
       <% @groups.each do |group| %>
         <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= group.acronym %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= group.name %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= group.group_type %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= group.state %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= group.parent&.acronym %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= group.list_email %></td>
+          <td class="px-4 py-3 text-md font-medium text-gray-900"><%= group.acronym %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= group.name %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= group.group_type %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= group.state %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= group.parent&.acronym %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= group.list_email %></td>
         </tr>
       <% end %>
     </tbody>

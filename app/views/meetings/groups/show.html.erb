@@ -1,4 +1,4 @@
-<nav class="mb-4 text-sm text-gray-500">
+<nav class="mb-4 text-md text-gray-500">
   <%= link_to "Meetings", meetings_path, class: "text-ietf-accent hover:underline" %>
   <span class="mx-1">&gt;</span>
   <%= link_to "Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-ietf-accent hover:underline" %>
@@ -12,23 +12,23 @@
   <table class="min-w-full divide-y divide-gray-200">
     <tbody class="divide-y divide-gray-200 bg-white">
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @group.group_type %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Type</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @group.group_type %></td>
       </tr>
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">State</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @group.state %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">State</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @group.state %></td>
       </tr>
       <% if @group.description.present? %>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @group.description %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Description</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @group.description %></td>
         </tr>
       <% end %>
       <% if @group.list_email.present? %>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Mailing list</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @group.list_email %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Mailing list</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @group.list_email %></td>
         </tr>
       <% end %>
     </tbody>
@@ -40,7 +40,7 @@
 <div data-controller="bulk-download">
   <% if @documents.any? { |d| d.material_attached? } %>
     <div class="mb-4">
-      <button type="button" data-action="click->bulk-download#downloadAll" class="rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue">
+      <button type="button" data-action="click->bulk-download#downloadAll" class="rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue">
         Download All Materials
       </button>
     </div>
@@ -50,21 +50,21 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-ietf-blue">
         <tr>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Title</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Material</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Title</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Rev</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Material</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
         <% @documents.each do |document| %>
           <tr class="hover:bg-ietf-light">
-            <td class="px-4 py-3 text-sm"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
-            <td class="px-4 py-3 text-sm text-gray-600"><%= document.title %></td>
-            <td class="px-4 py-3 text-sm text-gray-600"><%= document.document_type %></td>
-            <td class="px-4 py-3 text-sm text-gray-600"><%= document.rev %></td>
-            <td class="px-4 py-3 text-sm">
+            <td class="px-4 py-3 text-md"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= document.title %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= document.document_type %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= document.rev %></td>
+            <td class="px-4 py-3 text-md">
               <% if document.material_attached? %>
                 <%= link_to "Download", rails_blob_path(document.document_material.file, disposition: "attachment"),
                       class: "text-ietf-accent hover:underline",
@@ -81,5 +81,5 @@
 </div>
 
 <p class="mt-4">
-  <%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-sm text-ietf-accent hover:underline" %>
+  <%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-md text-ietf-accent hover:underline" %>
 </p>

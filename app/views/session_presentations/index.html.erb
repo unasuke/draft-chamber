@@ -4,21 +4,21 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">
       <tr>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Order</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Session</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Meeting</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Document</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Order</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Session</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Meeting</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Document</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Rev</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white">
       <% @session_presentations.each do |sp| %>
         <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.order %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.session.name %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.session.meeting.number %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.document.name %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= sp.rev %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= sp.order %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= sp.session.name %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= sp.session.meeting.number %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= sp.document.name %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= sp.rev %></td>
         </tr>
       <% end %>
     </tbody>

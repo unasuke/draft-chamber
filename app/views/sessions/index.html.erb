@@ -4,25 +4,25 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">
       <tr>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Meeting</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Group</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Purpose</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Duration</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">On Agenda</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Attendees</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Meeting</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Group</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Purpose</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Duration</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">On Agenda</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Attendees</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white">
       <% @sessions.each do |session| %>
         <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= session.name %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.meeting.number %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.group&.acronym %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.purpose %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.requested_duration %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.on_agenda ? "Yes" : "No" %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= session.attendees %></td>
+          <td class="px-4 py-3 text-md font-medium text-gray-900"><%= session.name %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.meeting.number %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.group&.acronym %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.purpose %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.requested_duration %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.on_agenda ? "Yes" : "No" %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= session.attendees %></td>
         </tr>
       <% end %>
     </tbody>

@@ -1,11 +1,11 @@
 <nav class="bg-ietf-blue">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
     <div class="flex items-center gap-6">
-      <%= link_to "Meetings", meetings_path, class: "text-sm font-medium text-gray-200 hover:text-white" %>
-      <%= link_to "Groups", groups_path, class: "text-sm font-medium text-gray-200 hover:text-white" %>
-      <%= link_to "Sessions", sessions_path, class: "text-sm font-medium text-gray-200 hover:text-white" %>
-      <%= link_to "Documents", documents_path, class: "text-sm font-medium text-gray-200 hover:text-white" %>
-      <%= link_to "Session Presentations", session_presentations_path, class: "text-sm font-medium text-gray-200 hover:text-white" %>
+      <%= link_to "Meetings", meetings_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <%= link_to "Groups", groups_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <%= link_to "Sessions", sessions_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <%= link_to "Documents", documents_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <%= link_to "Session Presentations", session_presentations_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
     </div>
 
     <% if current_user %>
@@ -13,8 +13,8 @@
         <% if current_user.avatar_url.present? %>
           <%= image_tag current_user.avatar_url, size: "24x24", class: "rounded-full" %>
         <% end %>
-        <span class="text-sm text-gray-200"><%= current_user.nickname %></span>
-        <%= button_to "Logout", logout_path, method: :delete, data: { turbo: false }, class: "rounded bg-ietf-dark px-3 py-1 text-sm text-gray-200 hover:bg-gray-700 hover:text-white" %>
+        <span class="text-md text-gray-200"><%= current_user.nickname %></span>
+        <%= button_to "Logout", logout_path, method: :delete, data: { turbo: false }, class: "rounded bg-ietf-dark px-3 py-1 text-md text-gray-200 hover:bg-gray-700 hover:text-white" %>
       </div>
     <% end %>
   </div>

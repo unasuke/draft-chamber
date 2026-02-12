@@ -4,25 +4,25 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">
       <tr>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Name</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Title</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Rev</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Pages</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Group</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Material</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Name</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Title</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Rev</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Pages</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Group</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Material</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white">
       <% @documents.each do |document| %>
         <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-sm"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.title %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.document_type %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.rev %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.pages %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.group&.acronym %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= document.material_attached? ? "Yes" : "No" %></td>
+          <td class="px-4 py-3 text-md"><%= link_to document.name, document_path(document), class: "font-medium text-ietf-accent hover:underline" %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.title %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.document_type %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.rev %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.pages %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.group&.acronym %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= document.material_attached? ? "Yes" : "No" %></td>
         </tr>
       <% end %>
     </tbody>

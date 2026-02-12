@@ -4,29 +4,29 @@
   <table class="min-w-full divide-y divide-gray-200">
     <tbody class="divide-y divide-gray-200 bg-white">
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.name %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Name</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @document.name %></td>
       </tr>
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_type %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Type</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @document.document_type %></td>
       </tr>
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Rev</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.rev %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Rev</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @document.rev %></td>
       </tr>
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Pages</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.pages %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Pages</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @document.pages %></td>
       </tr>
       <tr>
-        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Group</th>
-        <td class="px-4 py-3 text-sm text-gray-600"><%= @document.group&.acronym %></td>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Group</th>
+        <td class="px-4 py-3 text-md text-gray-600"><%= @document.group&.acronym %></td>
       </tr>
       <% if @document.abstract.present? %>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Abstract</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.abstract %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Abstract</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @document.abstract %></td>
         </tr>
       <% end %>
     </tbody>
@@ -40,32 +40,32 @@
     <table class="min-w-full divide-y divide-gray-200">
       <tbody class="divide-y divide-gray-200 bg-white">
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Filename</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.filename %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Filename</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @document.document_material.filename %></td>
         </tr>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Content type</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.content_type %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Content type</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @document.document_material.content_type %></td>
         </tr>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Size</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= number_to_human_size(@document.document_material.byte_size) %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Size</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= number_to_human_size(@document.document_material.byte_size) %></td>
         </tr>
         <tr>
-          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-700">Uploaded at</th>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= @document.document_material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+          <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Uploaded at</th>
+          <td class="px-4 py-3 text-md text-gray-600"><%= @document.document_material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="mb-6 flex items-center gap-4">
-    <%= link_to "Download", rails_blob_path(@document.document_material.file, disposition: "attachment"), class: "rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+    <%= link_to "Download", rails_blob_path(@document.document_material.file, disposition: "attachment"), class: "rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
 
     <%= button_to "Delete material", document_document_material_path(@document),
           method: :delete,
           data: { turbo_confirm: "Are you sure you want to delete this material?" },
-          class: "rounded bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700" %>
+          class: "rounded bg-red-600 px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-red-700" %>
   </div>
 <% end %>
 
@@ -76,15 +76,15 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-ietf-blue">
         <tr>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">User</th>
-          <th class="px-4 py-3 text-left text-sm font-semibold text-white">Uploaded at</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">User</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Uploaded at</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
         <% @document.document_material.document_material_uploaded_bys.includes(:user).order(created_at: :desc).each do |uploaded_by| %>
           <tr class="hover:bg-ietf-light">
-            <td class="px-4 py-3 text-sm text-gray-600"><%= uploaded_by.user.nickname %></td>
-            <td class="px-4 py-3 text-sm text-gray-600"><%= uploaded_by.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= uploaded_by.user.nickname %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= uploaded_by.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
           </tr>
         <% end %>
       </tbody>
@@ -96,7 +96,7 @@
 
 <% if @document_material.errors.any? %>
   <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-    <ul class="list-inside list-disc text-sm text-red-700">
+    <ul class="list-inside list-disc text-md text-red-700">
       <% @document_material.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
@@ -108,14 +108,14 @@
   <div class="flex items-center gap-3">
     <%= f.file_field :file, name: :file, accept: Attachable::ALLOWED_CONTENT_TYPES.join(","),
           data: { file_upload_target: "input", action: "change->file-upload#select" },
-          class: "block text-sm text-gray-600 file:mr-4 file:rounded file:border-0 file:bg-ietf-accent file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-ietf-blue" %>
-    <span data-file-upload-target="info" class="text-sm text-gray-500"></span>
+          class: "block text-md text-gray-600 file:mr-4 file:rounded file:border-0 file:bg-ietf-accent file:px-4 file:py-2 file:text-md file:font-medium file:text-white hover:file:bg-ietf-blue" %>
+    <span data-file-upload-target="info" class="text-md text-gray-500"></span>
   </div>
   <div>
-    <%= f.submit "Upload", class: "rounded bg-ietf-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-ietf-blue cursor-pointer" %>
+    <%= f.submit "Upload", class: "rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue cursor-pointer" %>
   </div>
 <% end %>
 
 <p>
-  <%= link_to "Back to documents", documents_path, class: "text-sm text-ietf-accent hover:underline" %>
+  <%= link_to "Back to documents", documents_path, class: "text-md text-ietf-accent hover:underline" %>
 </p>

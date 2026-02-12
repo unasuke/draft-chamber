@@ -4,27 +4,27 @@
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">
       <tr>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Number</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Type</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Date</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Days</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">City</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Country</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Venue</th>
-        <th class="px-4 py-3 text-left text-sm font-semibold text-white">Attendees</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Number</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Type</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Date</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Days</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">City</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Country</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Venue</th>
+        <th class="px-4 py-3 text-left text-md font-semibold text-white">Attendees</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white">
       <% @meetings.each do |meeting| %>
         <tr class="hover:bg-ietf-light">
-          <td class="px-4 py-3 text-sm"><%= link_to meeting.number, meeting_path(meeting), class: "font-medium text-ietf-accent hover:underline" %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.meeting_type %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.date %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.days %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.city %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.country %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.venue_name %></td>
-          <td class="px-4 py-3 text-sm text-gray-600"><%= meeting.attendees %></td>
+          <td class="px-4 py-3 text-md"><%= link_to meeting.number, meeting_path(meeting), class: "font-medium text-ietf-accent hover:underline" %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.meeting_type %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.date %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.days %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.city %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.country %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.venue_name %></td>
+          <td class="px-4 py-3 text-md text-gray-600"><%= meeting.attendees %></td>
         </tr>
       <% end %>
     </tbody>
