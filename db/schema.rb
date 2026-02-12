@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_110715) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_12_154910) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -39,6 +39,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_110715) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "converted_document_materials", force: :cascade do |t|
+    t.integer "byte_size", null: false
+    t.string "content_type", null: false
+    t.datetime "created_at", null: false
+    t.integer "document_material_id", null: false
+    t.text "extracted_text", default: "", null: false
+    t.integer "page_number", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_material_id"], name: "index_converted_document_materials_on_document_material_id"
+  end
+
   create_table "document_material_uploaded_bies", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "document_material_id", null: false
@@ -57,6 +68,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_110715) do
     t.string "download_status", default: "pending", null: false
     t.datetime "downloaded_at"
     t.string "filename"
+    t.text "processing_error", default: "", null: false
+    t.string "processing_status", default: "not_applicable", null: false
     t.datetime "updated_at", null: false
     t.index ["document_id"], name: "index_document_materials_on_document_id", unique: true
     t.index ["download_status"], name: "index_document_materials_on_download_status"
@@ -220,6 +233,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_110715) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "converted_document_materials", "document_materials"
   add_foreign_key "document_material_uploaded_bies", "document_materials"
   add_foreign_key "document_material_uploaded_bies", "users"
   add_foreign_key "document_materials", "documents"
