@@ -1,0 +1,32 @@
+<h1 class="mb-6 text-2xl font-bold text-gray-900"><%= t('doorkeeper.authorized_applications.index.title') %></h1>
+
+<% if @applications.any? %>
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white"><%= t('doorkeeper.authorized_applications.index.application') %></th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white"><%= t('doorkeeper.authorized_applications.index.created_at') %></th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @applications.each do |application| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md font-medium text-gray-900"><%= application.name %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= l(application.created_at, format: t('doorkeeper.authorized_applications.index.date_format')) %></td>
+            <td class="px-4 py-3 text-right">
+              <%= button_to t('doorkeeper.authorized_applications.buttons.revoke'),
+                    oauth_authorized_application_path(application),
+                    method: :delete,
+                    data: { turbo_confirm: t('doorkeeper.authorized_applications.confirmations.revoke') },
+                    class: "rounded bg-red-600 px-3 py-1 text-md font-medium text-white shadow-sm hover:bg-red-700 cursor-pointer" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-md text-gray-600">No authorized applications.</p>
+<% end %>
