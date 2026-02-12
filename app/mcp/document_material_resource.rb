@@ -33,6 +33,28 @@ module DocumentMaterialResource
     material = document.document_material
     raise "Material not available for document: #{document_name}" unless material&.completed? && material.file.attached?
 
+    if material.processable?
+      converted_resource_content(material, uri)
+    else
+      original_resource_content(material, uri)
+    end
+  end
+
+  def converted_resource_content(material, uri)
+    unless material.processing_completed?
+      return [ { uri: uri, mimeType: "text/plain", text: "Document is still being processed. Please try again later." } ]
+    end
+
+    material.converted_document_materials.ordered.map do |converted|
+      if converted.extracted_text.present?
+        { uri: uri, mimeType: "text/plain", text: converted.extracted_text }
+      elsif converted.file.attached?
+        { uri: uri, mimeType: converted.content_type, blob: Base64.strict_encode64(converted.file.download) }
+      end
+    end.compact
+  end
+
+  def original_resource_content(material, uri)
     blob = material.file.blob
     content_type = blob.content_type
 

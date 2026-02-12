@@ -4,14 +4,8 @@ require "test_helper"
 
 class DocumentMaterialResourceTest < ActiveSupport::TestCase
   test "list_resources returns only completed materials" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    material.file.attach(
-      io: StringIO.new("content"),
-      filename: "slides.txt",
-      content_type: "text/plain"
-    )
-    material.update!(download_status: :completed)
+    create_material(documents(:tls_chairs_slides),
+      content: "content", filename: "slides.txt", content_type: "text/plain")
 
     # Create a pending material that should not appear
     pending_doc = documents(:tls_agenda)
@@ -39,14 +33,8 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
   end
 
   test "list_resources includes size and description" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    material.file.attach(
-      io: StringIO.new("Hello, IETF!"),
-      filename: "slides.txt",
-      content_type: "text/plain"
-    )
-    material.update!(download_status: :completed)
+    create_material(documents(:tls_chairs_slides),
+      content: "Hello, IETF!", filename: "slides.txt", content_type: "text/plain")
 
     resource = DocumentMaterialResource.list_resources({}).first
 
@@ -55,14 +43,8 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
   end
 
   test "read_resource returns text content for text files" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    material.file.attach(
-      io: StringIO.new("Hello, IETF!"),
-      filename: "slides.txt",
-      content_type: "text/plain"
-    )
-    material.update!(download_status: :completed)
+    create_material(documents(:tls_chairs_slides),
+      content: "Hello, IETF!", filename: "slides.txt", content_type: "text/plain")
 
     uri = "file:///slides-124-tls-chairs/slides.txt"
     contents = DocumentMaterialResource.read_resource(uri: uri)
@@ -74,25 +56,55 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
     assert_nil contents.first[:blob]
   end
 
-  test "read_resource returns blob content for binary files" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    pdf_data = "%PDF-1.4 sample content"
-    material.file.attach(
-      io: StringIO.new(pdf_data),
-      filename: "slides.pdf",
-      content_type: "application/pdf"
+  test "read_resource returns converted text for processed PDF" do
+    material = create_material(documents(:tls_agenda),
+      content: "%PDF", filename: "agenda.pdf", content_type: "application/pdf",
+      processing_status: :processing_completed)
+    material.converted_document_materials.create!(
+      page_number: 1, content_type: "text/plain",
+      byte_size: 18, extracted_text: "Extracted PDF text"
     )
-    material.update!(download_status: :completed)
+
+    uri = "file:///agenda-124-tls/agenda.pdf"
+    contents = DocumentMaterialResource.read_resource(uri: uri)
+
+    assert_equal 1, contents.size
+    assert_equal uri, contents.first[:uri]
+    assert_equal "text/plain", contents.first[:mimeType]
+    assert_equal "Extracted PDF text", contents.first[:text]
+  end
+
+  test "read_resource returns converted images for processed slide PDF" do
+    material = create_material(documents(:tls_chairs_slides),
+      content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
+      processing_status: :processing_completed)
+
+    converted = material.converted_document_materials.create!(
+      page_number: 1, content_type: "image/png", byte_size: 4
+    )
+    converted.file.attach(
+      io: StringIO.new("IMG1"), filename: "page-1.png", content_type: "image/png"
+    )
 
     uri = "file:///slides-124-tls-chairs/slides.pdf"
     contents = DocumentMaterialResource.read_resource(uri: uri)
 
     assert_equal 1, contents.size
     assert_equal uri, contents.first[:uri]
-    assert_equal "application/pdf", contents.first[:mimeType]
-    assert_equal Base64.strict_encode64(pdf_data), contents.first[:blob]
-    assert_nil contents.first[:text]
+    assert_equal "image/png", contents.first[:mimeType]
+    assert_equal Base64.strict_encode64("IMG1"), contents.first[:blob]
+  end
+
+  test "read_resource returns processing message for unfinished PDF" do
+    create_material(documents(:tls_chairs_slides),
+      content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
+      processing_status: :processing)
+
+    uri = "file:///slides-124-tls-chairs/slides.pdf"
+    contents = DocumentMaterialResource.read_resource(uri: uri)
+
+    assert_equal 1, contents.size
+    assert_includes contents.first[:text], "still being processed"
   end
 
   test "read_resource raises error for invalid URI" do
@@ -108,8 +120,7 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
   end
 
   test "read_resource raises error when material is not completed" do
-    document = documents(:tls_chairs_slides)
-    document.create_document_material!(download_status: :pending)
+    documents(:tls_chairs_slides).create_document_material!(download_status: :pending)
 
     assert_raises(RuntimeError, "Material not available") do
       DocumentMaterialResource.read_resource(uri: "file:///slides-124-tls-chairs/file.pdf")
@@ -123,5 +134,14 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
     template = templates.first
     assert_equal "file:///{document_name}/{filename}", template.uri_template
     assert_equal "document-material", template.name
+  end
+
+  private
+
+  def create_material(document, content:, filename:, content_type:, processing_status: :not_applicable)
+    material = document.create_document_material!(download_status: :pending)
+    material.file.attach(io: StringIO.new(content), filename: filename, content_type: content_type)
+    material.update!(download_status: :completed, content_type: content_type, processing_status: processing_status)
+    material
   end
 end
