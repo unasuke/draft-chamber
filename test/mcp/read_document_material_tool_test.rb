@@ -4,14 +4,8 @@ require "test_helper"
 
 class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
   test "returns text content for text file" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    material.file.attach(
-      io: StringIO.new("Hello, IETF!"),
-      filename: "slides.txt",
-      content_type: "text/plain"
-    )
-    material.update!(download_status: :completed)
+    material = create_material(documents(:tls_chairs_slides),
+      content: "Hello, IETF!", filename: "slides.txt", content_type: "text/plain")
 
     response = ReadDocumentMaterialTool.call(
       server_context: {}, document_name: "slides-124-tls-chairs"
@@ -23,15 +17,9 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
   end
 
   test "returns image content for image file" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
     image_data = "\x89PNG\r\n\x1a\n" + ("x" * 100)
-    material.file.attach(
-      io: StringIO.new(image_data),
-      filename: "slides.png",
-      content_type: "image/png"
-    )
-    material.update!(download_status: :completed)
+    material = create_material(documents(:tls_chairs_slides),
+      content: image_data, filename: "slides.png", content_type: "image/png")
 
     response = ReadDocumentMaterialTool.call(
       server_context: {}, document_name: "slides-124-tls-chairs"
@@ -43,27 +31,63 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
     assert_equal "image/png", response.content.first[:mimeType]
   end
 
-  test "returns resource content for binary file" do
-    document = documents(:tls_chairs_slides)
-    material = document.create_document_material!(download_status: :pending)
-    pdf_data = "%PDF-1.4 sample content"
-    material.file.attach(
-      io: StringIO.new(pdf_data),
-      filename: "slides.pdf",
-      content_type: "application/pdf"
+  test "returns converted text for processed text PDF" do
+    material = create_material(documents(:tls_agenda),
+      content: "%PDF", filename: "agenda.pdf", content_type: "application/pdf",
+      processing_status: :processing_completed)
+    material.converted_document_materials.create!(
+      page_number: 1, content_type: "text/plain",
+      byte_size: 18, extracted_text: "Extracted PDF text"
     )
-    material.update!(download_status: :completed)
+
+    response = ReadDocumentMaterialTool.call(
+      server_context: {}, document_name: "agenda-124-tls"
+    )
+
+    assert_equal 1, response.content.size
+    assert_equal "text", response.content.first[:type]
+    assert_equal "Extracted PDF text", response.content.first[:text]
+  end
+
+  test "returns converted images for processed slide PDF" do
+    material = create_material(documents(:tls_chairs_slides),
+      content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
+      processing_status: :processing_completed)
+
+    2.times do |i|
+      converted = material.converted_document_materials.create!(
+        page_number: i + 1, content_type: "image/png", byte_size: 5
+      )
+      converted.file.attach(
+        io: StringIO.new("IMG#{i + 1}"),
+        filename: "page-#{i + 1}.png",
+        content_type: "image/png"
+      )
+    end
+
+    response = ReadDocumentMaterialTool.call(
+      server_context: {}, document_name: "slides-124-tls-chairs"
+    )
+
+    assert_equal 2, response.content.size
+    assert_equal "image", response.content[0][:type]
+    assert_equal "image/png", response.content[0][:mimeType]
+    assert_equal Base64.strict_encode64("IMG1"), response.content[0][:data]
+    assert_equal "image", response.content[1][:type]
+    assert_equal Base64.strict_encode64("IMG2"), response.content[1][:data]
+  end
+
+  test "returns processing message for PDF still being processed" do
+    create_material(documents(:tls_chairs_slides),
+      content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
+      processing_status: :processing)
 
     response = ReadDocumentMaterialTool.call(
       server_context: {}, document_name: "slides-124-tls-chairs"
     )
 
     assert_equal 1, response.content.size
-    resource_content = response.content.first
-    assert_equal "resource", resource_content[:type]
-    assert_equal "application/pdf", resource_content[:resource][:mimeType]
-    assert_equal Base64.strict_encode64(pdf_data), resource_content[:resource][:blob]
-    assert_includes resource_content[:resource][:uri], "slides-124-tls-chairs"
+    assert_includes response.content.first[:text], "still being processed"
   end
 
   test "returns error for non-existent document" do
@@ -76,8 +100,7 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
   end
 
   test "returns error when material is not available" do
-    document = documents(:tls_chairs_slides)
-    document.create_document_material!(download_status: :pending)
+    documents(:tls_chairs_slides).create_document_material!(download_status: :pending)
 
     response = ReadDocumentMaterialTool.call(
       server_context: {}, document_name: "slides-124-tls-chairs"
@@ -94,5 +117,14 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
 
     assert response.error?
     assert_includes response.content.first[:text], "not available"
+  end
+
+  private
+
+  def create_material(document, content:, filename:, content_type:, processing_status: :not_applicable)
+    material = document.create_document_material!(download_status: :pending)
+    material.file.attach(io: StringIO.new(content), filename: filename, content_type: content_type)
+    material.update!(download_status: :completed, content_type: content_type, processing_status: processing_status)
+    material
   end
 end

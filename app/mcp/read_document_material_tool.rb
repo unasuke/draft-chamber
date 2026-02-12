@@ -28,10 +28,36 @@ class ReadDocumentMaterialTool < MCP::Tool
         return error_response("Material not available for document '#{params[:document_name]}'")
       end
 
+      content = if material.processable?
+        converted_content(material)
+      else
+        original_content(material)
+      end
+
+      MCP::Tool::Response.new(content)
+    end
+
+    private
+
+    def converted_content(material)
+      unless material.processing_completed?
+        return [ { type: "text", text: "Document is still being processed. Please try again later." } ]
+      end
+
+      material.converted_document_materials.ordered.flat_map do |converted|
+        if converted.extracted_text.present?
+          { type: "text", text: converted.extracted_text }
+        elsif converted.file.attached?
+          { type: "image", data: Base64.strict_encode64(converted.file.download), mimeType: converted.content_type }
+        end
+      end.compact
+    end
+
+    def original_content(material)
       blob = material.file.blob
       content_type = blob.content_type
 
-      content = if TEXT_CONTENT_TYPES.include?(content_type)
+      if TEXT_CONTENT_TYPES.include?(content_type)
         [ { type: "text", text: material.file.download.force_encoding("UTF-8") } ]
       elsif IMAGE_CONTENT_TYPES.include?(content_type)
         [ { type: "image", data: Base64.strict_encode64(material.file.download), mimeType: content_type } ]
@@ -39,17 +65,13 @@ class ReadDocumentMaterialTool < MCP::Tool
         [ {
           type: "resource",
           resource: {
-            uri: "file:///#{document.name}/#{blob.filename}",
+            uri: "file:///#{material.document.name}/#{blob.filename}",
             mimeType: content_type,
             blob: Base64.strict_encode64(material.file.download)
           }
         } ]
       end
-
-      MCP::Tool::Response.new(content)
     end
-
-    private
 
     def error_response(message)
       MCP::Tool::Response.new(
