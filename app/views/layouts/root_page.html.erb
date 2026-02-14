@@ -9,6 +9,15 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <meta property="og:title" content="Draft Chamber">
+    <meta property="og:description" content="An MCP server for IETF meeting materials">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="<%= image_url("icon.png") %>">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Draft Chamber">
+    <meta name="twitter:description" content="An MCP server for IETF meeting materials">
+    <meta name="twitter:image" content="<%= image_url("icon.png") %>">
+
     <%= yield :head %>
 
     <%= favicon_link_tag "icon.png" %>
