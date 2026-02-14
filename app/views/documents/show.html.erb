@@ -72,22 +72,24 @@
 <% if @document.document_material&.processing_completed? && @document.document_material.converted_document_materials.any? %>
   <h3 class="mb-3 text-lg font-semibold text-gray-900">Converted pages</h3>
 
-  <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    <% @document.document_material.converted_document_materials.ordered.each do |converted| %>
-      <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-        <% if converted.file.attached? && converted.content_type&.start_with?("image/") %>
-          <%= image_tag rails_blob_path(converted.file), alt: "Page #{converted.page_number}", class: "w-full object-contain" %>
-        <% end %>
-        <div class="bg-white px-4 py-3">
-          <p class="text-md font-medium text-gray-900">Page <%= converted.page_number %></p>
-          <p class="text-md text-gray-500"><%= converted.content_type %> · <%= number_to_human_size(converted.byte_size) %></p>
-          <% if converted.extracted_text.present? %>
-            <p class="mt-2 line-clamp-3 text-md text-gray-600"><%= converted.extracted_text %></p>
+  <% cache @document.document_material do %>
+    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @document.document_material.converted_document_materials.ordered.each do |converted| %>
+        <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <% if converted.file.attached? && converted.content_type&.start_with?("image/") %>
+            <%= image_tag rails_blob_path(converted.file), alt: "Page #{converted.page_number}", class: "w-full object-contain" %>
           <% end %>
+          <div class="bg-white px-4 py-3">
+            <p class="text-md font-medium text-gray-900">Page <%= converted.page_number %></p>
+            <p class="text-md text-gray-500"><%= converted.content_type %> · <%= number_to_human_size(converted.byte_size) %></p>
+            <% if converted.extracted_text.present? %>
+              <p class="mt-2 line-clamp-3 text-md text-gray-600"><%= converted.extracted_text %></p>
+            <% end %>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
 
 <% if @document.document_material&.document_material_uploaded_bys&.any? %>
