@@ -2,6 +2,11 @@
 
 class McpApp
   REQUIRED_SCOPE = "mcp"
+  TOOLS = [
+    ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
+    ListSessionPresentationsTool, GetSessionPresentationTool, ReadDocumentMaterialTool,
+    CreateStaleReportTool
+  ].freeze
 
   def call(env)
     request = Rack::Request.new(env)
@@ -25,7 +30,8 @@ class McpApp
       return unauthorized_response(request)
     end
 
-    transport.handle_request(request)
+    user = User.find(access_token.resource_owner_id)
+    build_transport(user: user).handle_request(request)
   end
 
   private
@@ -72,27 +78,25 @@ class McpApp
     parts.join(", ")
   end
 
-  def transport
-    @transport ||= begin
-      server = MCP::Server.new(
-        name: "draft-chamber",
-        version: "0.1.0",
-        tools: [ ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
-                 ListSessionPresentationsTool, GetSessionPresentationTool, ReadDocumentMaterialTool ],
-        resource_templates: DocumentMaterialResource.resource_templates
-      )
+  def build_transport(user:)
+    server = MCP::Server.new(
+      name: "draft-chamber",
+      version: "0.1.0",
+      tools: TOOLS,
+      resource_templates: DocumentMaterialResource.resource_templates,
+      server_context: { user: user }
+    )
 
-      server.resources_list_handler do |params|
-        DocumentMaterialResource.list_resources(params)
-      end
-
-      server.resources_read_handler do |params|
-        DocumentMaterialResource.read_resource(params)
-      end
-
-      transport = MCP::Server::Transports::StreamableHTTPTransport.new(server, stateless: true)
-      server.transport = transport
-      transport
+    server.resources_list_handler do |params|
+      DocumentMaterialResource.list_resources(params)
     end
+
+    server.resources_read_handler do |params|
+      DocumentMaterialResource.read_resource(params)
+    end
+
+    transport = MCP::Server::Transports::StreamableHTTPTransport.new(server, stateless: true)
+    server.transport = transport
+    transport
   end
 end
