@@ -6,6 +6,9 @@
       <%= link_to "Sessions", sessions_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
       <%= link_to "Documents", documents_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
       <%= link_to "Session Presentations", session_presentations_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <% if current_user&.admin? %>
+        <%= link_to "Admin", admin_root_path, class: "text-md font-medium text-gray-200 hover:text-white" %>
+      <% end %>
     </div>
 
     <% if current_user %>

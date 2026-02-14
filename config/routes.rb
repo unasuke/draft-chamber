@@ -27,6 +27,11 @@ Rails.application.routes.draw do
 
   mount McpApp.new => "/mcp"
 
+  # Admin
+  namespace :admin do
+    root to: "dashboard#index"
+  end
+
   # Job monitoring dashboard (admin only)
   mount MissionControl::Jobs::Engine, at: "/admin/jobs"
 

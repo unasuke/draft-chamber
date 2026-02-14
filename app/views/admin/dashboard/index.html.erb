@@ -1,0 +1,83 @@
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+
+<h2 class="mb-4 text-xl font-bold text-gray-900">Overview</h2>
+<div class="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+  <% @stats.each do |name, count| %>
+    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <p class="text-3xl font-bold text-ietf-accent"><%= count %></p>
+      <p class="text-md text-gray-600"><%= name.to_s.titleize %></p>
+    </div>
+  <% end %>
+</div>
+
+<h2 class="mb-4 text-xl font-bold text-gray-900">Data Sync Status</h2>
+<div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Download Status</th>
+          <th class="px-4 py-3 text-right text-md font-semibold text-white">Count</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% %w[pending downloading completed failed].each do |status| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md text-gray-600"><%= status %></td>
+            <td class="px-4 py-3 text-right text-md text-gray-600"><%= @download_status_counts[status] || 0 %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Processing Status</th>
+          <th class="px-4 py-3 text-right text-md font-semibold text-white">Count</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% %w[not_applicable processing_pending processing processing_completed processing_failed].each do |status| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md text-gray-600"><%= status.humanize %></td>
+            <td class="px-4 py-3 text-right text-md text-gray-600"><%= @processing_status_counts[status] || 0 %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 class="mb-4 text-xl font-bold text-gray-900">Quick Links</h2>
+<div class="mb-8 flex flex-wrap gap-3">
+  <%= link_to "Jobs Dashboard", "/admin/jobs", class: "rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+</div>
+
+<h2 class="mb-4 text-xl font-bold text-gray-900">Recent Activity</h2>
+<% if @recent_materials.any? %>
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Document</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Status</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Downloaded At</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @recent_materials.each do |material| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md"><%= link_to material.document.name, document_path(material.document), class: "font-medium text-ietf-accent hover:underline" %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= material.download_status %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= material.downloaded_at&.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-md text-gray-500">No recent activity.</p>
+<% end %>
