@@ -1,24 +1,40 @@
-# README
+# draft-chamber
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails application that serves as an MCP (Model Context Protocol) server for IETF meeting materials.
+It fetches data from the IETF Datatracker API and controls access via GitHub authentication.
 
-Things you may want to cover:
+## Tech Stack
 
-* Ruby version
+- Ruby 4.0.1 / Rails 8.1.2
+- SQLite3
+- Propshaft (asset pipeline)
+- esbuild + Hotwire (Turbo + Stimulus)
+- Tailwind CSS
+- Faraday (HTTP client for IETF Datatracker API)
+- Solid Cache / Solid Queue / Solid Cable
+- OmniAuth (GitHub authentication)
+- Doorkeeper (OAuth 2.1 Authorization Server)
+- Kamal (deployment)
 
-* System dependencies
+## Setup
 
-* Configuration
+```bash
+bin/setup
+```
 
-* Database creation
+## Development
 
-* Database initialization
+```bash
+# Start the server (Rails + JS build)
+bin/dev
 
-* How to run the test suite
+# Run tests
+bin/rails test
 
-* Services (job queues, cache servers, search engines, etc.)
+# Lint
+bin/rubocop
 
-* Deployment instructions
-
-* ...
+# Security audit
+bin/brakeman
+bundle exec bundler-audit check
+```
