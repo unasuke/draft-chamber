@@ -73,6 +73,8 @@
   </div>
 </div>
 
+<%= render "stale_reports/report_button", url: meeting_stale_report_path(@meeting) %>
+
 <p class="mt-4">
   <%= link_to "Back to meetings", meetings_path, class: "text-md text-ietf-accent hover:underline" %>
 </p>

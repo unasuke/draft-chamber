@@ -139,6 +139,8 @@
   </div>
 <% end %>
 
+<%= render "stale_reports/report_button", url: document_stale_report_path(@document) %>
+
 <p>
   <%= link_to "Back to documents", documents_path, class: "text-md text-ietf-accent hover:underline" %>
 </p>

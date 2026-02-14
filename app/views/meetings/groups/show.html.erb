@@ -80,6 +80,8 @@
   </div>
 </div>
 
+<%= render "stale_reports/report_button", url: meeting_group_stale_report_path(@meeting, @group) %>
+
 <p class="mt-4">
   <%= link_to "Back to Meeting #{@meeting.number}", meeting_path(@meeting), class: "text-md text-ietf-accent hover:underline" %>
 </p>

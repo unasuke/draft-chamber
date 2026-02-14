@@ -4,13 +4,19 @@ Rails.application.routes.draw do
 
   resources :meetings, only: [ :index, :show ] do
     resources :groups, only: [ :show ], controller: "meetings/groups"
+    resource :stale_report, only: [ :create ]
   end
   resources :groups, only: :index
   resources :sessions, only: :index
   resources :documents, only: [ :index, :show ] do
     resource :document_material, only: [ :create, :destroy ]
+    resource :stale_report, only: [ :create ]
   end
   resources :session_presentations, only: :index
+
+  # Stale report for meetings/groups show page
+  post "/meetings/:meeting_id/groups/:group_id/stale_report",
+       to: "stale_reports#create", as: :meeting_group_stale_report
 
   # GitHub OAuth
   get  "/auth/:provider/callback", to: "auth/sessions#create"
@@ -30,6 +36,12 @@ Rails.application.routes.draw do
   # Admin
   namespace :admin do
     root to: "dashboard#index"
+    resources :stale_reports, only: [ :index ] do
+      member do
+        patch :acknowledge
+        patch :resolve
+      end
+    end
   end
 
   # Job monitoring dashboard (admin only)
