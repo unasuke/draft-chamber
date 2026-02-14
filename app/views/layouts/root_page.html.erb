@@ -22,18 +22,19 @@
     <% if current_user %>
       <%= render "layouts/navigation" %>
     <% end %>
-    <% if flash[:notice].present? %>
-      <div class="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
-        <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-md text-blue-700">
-          <%= flash[:notice] %>
-        </div>
-      </div>
-    <% end %>
-    <% if flash[:alert].present? %>
-      <div class="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
-        <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-md text-red-700">
-          <%= flash[:alert] %>
-        </div>
+
+    <% if flash[:notice].present? || flash[:alert].present? %>
+      <div class="fixed top-4 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 px-4">
+        <% if flash[:notice].present? %>
+          <div class="mb-2 rounded-lg border border-green-200 bg-green-50 p-4 text-md text-green-700 shadow-lg">
+            <%= flash[:notice] %>
+          </div>
+        <% end %>
+        <% if flash[:alert].present? %>
+          <div class="mb-2 rounded-lg border border-red-200 bg-red-50 p-4 text-md text-red-700 shadow-lg">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
       </div>
     <% end %>
 
