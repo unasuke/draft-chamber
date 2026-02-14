@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_154910) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_14_135549) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -225,6 +225,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_154910) do
     t.index ["resource_uri"], name: "index_sessions_on_resource_uri", unique: true
   end
 
+  create_table "stale_reports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "message"
+    t.integer "reportable_id", null: false
+    t.string "reportable_type", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["reportable_type", "reportable_id", "user_id", "status"], name: "index_stale_reports_on_reportable_user_status"
+    t.index ["reportable_type", "reportable_id"], name: "index_stale_reports_on_reportable"
+    t.index ["status"], name: "index_stale_reports_on_status"
+    t.index ["user_id"], name: "index_stale_reports_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "role", default: "general", null: false
@@ -246,4 +260,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_154910) do
   add_foreign_key "session_presentations", "sessions"
   add_foreign_key "sessions", "groups"
   add_foreign_key "sessions", "meetings"
+  add_foreign_key "stale_reports", "users"
 end
