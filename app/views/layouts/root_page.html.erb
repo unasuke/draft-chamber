@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Draft Chamber" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Draft Chamber">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= favicon_link_tag "icon.png" %>
+    <link rel="apple-touch-icon" href="<%= path_to_image("icon.png") %>">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="bg-gray-50 text-gray-900 antialiased">
+    <% if flash[:notice].present? %>
+      <div class="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
+        <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-md text-blue-700">
+          <%= flash[:notice] %>
+        </div>
+      </div>
+    <% end %>
+    <% if flash[:alert].present? %>
+      <div class="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
+        <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-md text-red-700">
+          <%= flash[:alert] %>
+        </div>
+      </div>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
+    <%= render "layouts/footer" %>
+  </body>
+</html>

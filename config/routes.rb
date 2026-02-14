@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   use_doorkeeper
-  root "meetings#index"
+  root "root_page#index"
 
   resources :meetings, only: [ :index, :show ] do
     resources :groups, only: [ :show ], controller: "meetings/groups"
