@@ -16,7 +16,7 @@
     <%= render "layouts/navigation" %>
     <main class="mx-auto w-full max-w-7xl grow px-4 py-6 sm:px-6 lg:px-8">
       <% if flash[:notice].present? %>
-        <div class="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 text-md text-green-700">
+        <div class="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 text-md text-green-700" data-controller="flash">
           <%= flash[:notice] %>
         </div>
       <% end %>

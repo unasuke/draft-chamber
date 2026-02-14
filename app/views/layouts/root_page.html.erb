@@ -24,7 +24,7 @@
     <% end %>
 
     <% if flash[:notice].present? || flash[:alert].present? %>
-      <div class="fixed top-4 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 px-4">
+      <div class="fixed top-4 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 px-4" data-controller="flash">
         <% if flash[:notice].present? %>
           <div class="mb-2 rounded-lg border border-green-200 bg-green-50 p-4 text-md text-green-700 shadow-lg">
             <%= flash[:notice] %>
