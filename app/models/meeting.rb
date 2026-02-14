@@ -2,6 +2,7 @@
 
 class Meeting < ApplicationRecord
   has_many :sessions, dependent: :destroy
+  has_many :stale_reports, as: :reportable, dependent: :destroy
 
   validates :number, presence: true, uniqueness: true
   validates :resource_uri, presence: true, uniqueness: true

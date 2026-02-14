@@ -6,6 +6,7 @@ class Group < ApplicationRecord
            inverse_of: :parent, dependent: :nullify
   has_many :sessions, dependent: :destroy
   has_many :documents, dependent: :nullify
+  has_many :stale_reports, as: :reportable, dependent: :destroy
 
   validates :acronym, presence: true, uniqueness: true
   validates :resource_uri, presence: true, uniqueness: true
