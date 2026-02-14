@@ -34,8 +34,14 @@ class RootPageControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", "https://trustee.ietf.org/"
   end
 
-  test "uses root_page layout without navigation bar" do
+  test "hides navigation bar when not logged in" do
     get root_url
     assert_select "nav.bg-ietf-blue", count: 0
+  end
+
+  test "shows navigation bar when logged in" do
+    sign_in_as(users(:alice))
+    get root_url
+    assert_select "nav.bg-ietf-blue"
   end
 end

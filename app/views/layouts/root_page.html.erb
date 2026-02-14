@@ -19,6 +19,9 @@
   </head>
 
   <body class="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased">
+    <% if current_user %>
+      <%= render "layouts/navigation" %>
+    <% end %>
     <% if flash[:notice].present? %>
       <div class="mx-auto max-w-4xl px-4 pt-6 sm:px-6 lg:px-8">
         <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-md text-blue-700">
