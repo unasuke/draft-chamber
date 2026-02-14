@@ -51,9 +51,18 @@
   </div>
 </div>
 
+<h2 class="mb-4 text-xl font-bold text-gray-900">Stale Reports</h2>
+<div class="mb-8">
+  <div class="overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <p class="text-3xl font-bold text-ietf-accent"><%= @pending_stale_reports_count %></p>
+    <p class="text-md text-gray-600">Pending Reports</p>
+  </div>
+</div>
+
 <h2 class="mb-4 text-xl font-bold text-gray-900">Quick Links</h2>
 <div class="mb-8 flex flex-wrap gap-3">
   <%= link_to "Jobs Dashboard", "/admin/jobs", class: "rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+  <%= link_to "Stale Reports", admin_stale_reports_path, class: "rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
 </div>
 
 <h2 class="mb-4 text-xl font-bold text-gray-900">Recent Activity</h2>

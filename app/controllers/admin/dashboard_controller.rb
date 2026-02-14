@@ -18,6 +18,8 @@ module Admin
         .where.not(downloaded_at: nil)
         .order(downloaded_at: :desc)
         .limit(10)
+
+      @pending_stale_reports_count = StaleReport.pending.count
     end
   end
 end
