@@ -24,6 +24,11 @@ resource "aws_iam_role" "push_ecr" {
   assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
 }
 
+resource "aws_iam_role_policy" "push_ecr" {
+  role   = aws_iam_role.push_ecr.id
+  policy = data.aws_iam_policy_document.push_ecr.json
+}
+
 data "aws_iam_policy_document" "push_ecr" {
   statement {
     effect = "Allow"
