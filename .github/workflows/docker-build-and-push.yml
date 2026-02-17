@@ -5,6 +5,7 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write
 
 jobs:
   build-and-push:
@@ -19,6 +20,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::297776507902:role/PushECRFromGitHubActions
+          aws-region: ap-northeast-1
+
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr-login
+
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/build-push-action@v6
@@ -28,5 +37,7 @@ jobs:
           tags: |
             ghcr.io/unasuke/draft-chamber:${{ github.sha }}
             ghcr.io/unasuke/draft-chamber:latest
+            ${{ steps.ecr-login.outputs.registry }}/draft-chamber:${{ github.sha }}
+            ${{ steps.ecr-login.outputs.registry }}/draft-chamber:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
