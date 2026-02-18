@@ -3,7 +3,6 @@
 require "faraday"
 require "faraday/retry"
 
-require_relative "datatracker/version"
 require_relative "datatracker/configuration"
 require_relative "datatracker/error"
 require_relative "datatracker/response"
