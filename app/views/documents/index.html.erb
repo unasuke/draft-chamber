@@ -1,5 +1,10 @@
 <h1 class="mb-6 text-2xl font-bold text-gray-900">Documents</h1>
 
+<%= form_with url: documents_path, method: :get, class: "mb-4 flex items-center gap-2" do |f| %>
+  <%= f.text_field :q, value: @query, placeholder: "Search by name...", class: "w-96 rounded-md border border-gray-300 px-3 py-2 text-md focus:border-ietf-accent focus:outline-none focus:ring-1 focus:ring-ietf-accent" %>
+  <%= f.submit "Search", class: "rounded-md bg-ietf-blue px-4 py-2 text-md font-medium text-white hover:bg-ietf-dark cursor-pointer" %>
+<% end %>
+
 <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-ietf-blue">

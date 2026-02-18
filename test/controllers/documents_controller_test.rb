@@ -14,6 +14,13 @@ class DocumentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get index with search query" do
+    get documents_url, params: { q: "agenda" }
+    assert_response :success
+    assert_select "td", text: /agenda-124-tls/
+    assert_select "td", text: /slides-124-tls-chairs/, count: 0
+  end
+
   test "should get show" do
     get document_url(documents(:tls_agenda))
     assert_response :success

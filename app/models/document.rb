@@ -10,6 +10,8 @@ class Document < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :resource_uri, presence: true, uniqueness: true
 
+  scope :search_by_name, ->(query) { where("name LIKE ?", "%#{sanitize_sql_like(query)}%") }
+
   enum :document_type, {
     slides: "slides",
     draft: "draft",

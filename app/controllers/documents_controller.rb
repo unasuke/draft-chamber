@@ -2,7 +2,10 @@
 
 class DocumentsController < ApplicationController
   def index
-    @pagy, @documents = pagy(Document.includes(:group, :document_material).order(created_at: :desc))
+    documents = Document.includes(:group, :document_material)
+    documents = documents.search_by_name(params[:q]) if params[:q].present?
+    @query = params[:q]
+    @pagy, @documents = pagy(documents.order(created_at: :desc))
   end
 
   def show
