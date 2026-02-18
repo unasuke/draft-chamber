@@ -57,4 +57,7 @@ data "aws_iam_policy_document" "push_ecr" {
     ]
   }
 }
-    
+
+resource "aws_iam_user" "lightsail" {
+  name = "Lightsail"
+}
