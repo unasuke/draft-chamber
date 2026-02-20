@@ -70,7 +70,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          corepack: true
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Set up Yarn cache
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
           cache: yarn
 
       - name: Install JavaScript dependencies
@@ -108,7 +115,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          corepack: true
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Set up Yarn cache
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
           cache: yarn
 
       - name: Install JavaScript dependencies
