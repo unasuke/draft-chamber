@@ -61,3 +61,37 @@ data "aws_iam_policy_document" "push_ecr" {
 resource "aws_iam_user" "lightsail" {
   name = "Lightsail"
 }
+
+resource "aws_iam_user" "draft_chamber_app_production" {
+  name = "DraftChamberAppProduction"
+}
+
+resource "aws_iam_user_policy" "draft_chamber_app_production" {
+  user   = aws_iam_user.draft_chamber_app_production.name
+  policy = data.aws_iam_policy_document.draft_chamber_app_production.json
+}
+
+data "aws_iam_policy_document" "draft_chamber_app_production" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      aws_s3_bucket.draft_chamber_production.arn,
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:AbortMultipartUpload",
+      "s3:ListMultipartUploadParts",
+    ]
+    resources = [
+      "${aws_s3_bucket.draft_chamber_production.arn}/*",
+    ]
+  }
+}
