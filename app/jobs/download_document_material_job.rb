@@ -3,6 +3,10 @@
 class DownloadDocumentMaterialJob < ApplicationJob
   queue_as :default
 
+  limits_concurrency to: 1, key: "datatracker_download", duration: 5.minutes
+
+  THROTTLE_DURATION = 0.5
+
   discard_on ActiveRecord::RecordNotFound
 
   def perform(document_id, meeting_number)
@@ -42,5 +46,7 @@ class DownloadDocumentMaterialJob < ApplicationJob
   rescue MaterialDownloader::DownloadError => e
     material&.update!(download_status: :failed, download_error: e.message)
     raise
+  ensure
+    sleep THROTTLE_DURATION
   end
 end

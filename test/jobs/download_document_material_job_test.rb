@@ -8,6 +8,14 @@ class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
   setup do
     @document = documents(:tls_chairs_slides)
     @meeting_number = "124"
+    @original_throttle_duration = DownloadDocumentMaterialJob::THROTTLE_DURATION
+    DownloadDocumentMaterialJob.send(:remove_const, :THROTTLE_DURATION)
+    DownloadDocumentMaterialJob.const_set(:THROTTLE_DURATION, 0)
+  end
+
+  teardown do
+    DownloadDocumentMaterialJob.send(:remove_const, :THROTTLE_DURATION)
+    DownloadDocumentMaterialJob.const_set(:THROTTLE_DURATION, @original_throttle_duration)
   end
 
   test "downloads and attaches material to document" do
