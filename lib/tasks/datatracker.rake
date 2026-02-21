@@ -40,4 +40,31 @@ namespace :datatracker do
     results = DatatrackerImport::FullImport.new.import_meeting(meeting_number: number)
     results.each { |k, v| puts "#{k}: #{v.inspect}" }
   end
+
+  desc "Delete all resources for a meeting. Usage: rake datatracker:delete_meeting MEETING=124"
+  task delete_meeting: :environment do
+    number = ENV.fetch("MEETING") { abort "Set MEETING=<number> (e.g., MEETING=124)" }
+    meeting = Meeting.find_by!(number: number)
+
+    document_ids = Document.joins(:session_presentations)
+      .where(session_presentations: { session_id: meeting.session_ids })
+      .distinct
+      .pluck(:id)
+
+    sessions_count = meeting.sessions.count
+    presentations_count = SessionPresentation.where(session_id: meeting.session_ids).count
+
+    # Destroying the meeting cascades to sessions and session_presentations
+    meeting.destroy!
+
+    # Delete documents that are now orphaned (no remaining session_presentations)
+    orphaned_ids = document_ids - SessionPresentation.where(document_id: document_ids).distinct.pluck(:document_id)
+    orphaned_documents_count = Document.where(id: orphaned_ids).destroy_all.count
+
+    puts "Deleted meeting #{number}:"
+    puts "  Sessions: #{sessions_count}"
+    puts "  Session presentations: #{presentations_count}"
+    puts "  Orphaned documents removed: #{orphaned_documents_count}"
+    puts "  Documents retained (shared with other meetings): #{document_ids.size - orphaned_documents_count}"
+  end
 end
