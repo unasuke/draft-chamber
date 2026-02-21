@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-        <% %w[pending downloading completed failed].each do |status| %>
+        <% %w[pending downloading completed failed not_downloadable].each do |status| %>
           <tr class="hover:bg-ietf-light">
             <td class="px-4 py-3 text-md text-gray-600"><%= status %></td>
             <td class="px-4 py-3 text-right text-md text-gray-600"><%= @download_status_counts[status] || 0 %></td>
