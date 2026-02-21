@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class DownloadDocumentMaterialJob < ApplicationJob
-  queue_as :default
-
-  limits_concurrency to: 1, key: "datatracker_download", duration: 5.minutes
+  queue_as :download
 
   THROTTLE_DURATION = 0.5
 
