@@ -13,10 +13,29 @@ class Document < ApplicationRecord
   scope :search_by_name, ->(query) { where("name LIKE ?", "%#{sanitize_sql_like(query)}%") }
 
   enum :document_type, {
-    slides: "slides",
-    draft: "draft",
     agenda: "agenda",
-    minutes: "minutes"
+    bcp: "bcp",
+    bluesheets: "bluesheets",
+    bofreq: "bofreq",
+    charter: "charter",
+    chatlog: "chatlog",
+    conflrev: "conflrev",
+    draft: "draft",
+    fyi: "fyi",
+    liaison: "liaison",
+    liai_att: "liai-att",
+    minutes: "minutes",
+    narrativeminutes: "narrativeminutes",
+    polls: "polls",
+    procmaterials: "procmaterials",
+    recording: "recording",
+    review: "review",
+    rfc: "rfc",
+    shepwrit: "shepwrit",
+    slides: "slides",
+    statchg: "statchg",
+    statement: "statement",
+    std: "std"
   }
 
   def material_attached?
