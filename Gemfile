@@ -43,6 +43,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Active Storage S3 backend
+gem "aws-sdk-s3", require: false
+
 # HTTP client for IETF Datatracker API
 gem "faraday"
 gem "faraday-retry"
