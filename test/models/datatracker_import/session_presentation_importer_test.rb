@@ -72,6 +72,57 @@ class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCa
     assert_equal "pending", sp.document.document_material.download_status
   end
 
+  test "does not create document material for non-meeting material types" do
+    doc_uri = "/api/v1/doc/document/draft-ietf-tls-newdraft/"
+    session_uri = sessions(:tls_at_124).resource_uri
+
+    sp_objects = [
+      {
+        "session" => session_uri,
+        "document" => doc_uri,
+        "order" => 1,
+        "rev" => "00",
+        "resource_uri" => "/api/v1/meeting/sessionpresentation/60002/"
+      }
+    ]
+
+    doc_api_object = {
+      "name" => "draft-ietf-tls-newdraft",
+      "title" => "New TLS Draft",
+      "type" => "/api/v1/name/doctypename/draft/",
+      "abstract" => nil,
+      "rev" => "00",
+      "pages" => nil,
+      "uploaded_filename" => nil,
+      "group" => groups(:tls).resource_uri,
+      "time" => "2025-11-01T10:00:00",
+      "expires" => nil,
+      "resource_uri" => doc_uri
+    }
+
+    @mock_client.expect(:session_presentations, @mock_sp_resource)
+    mock_sp_response = Minitest::Mock.new
+    mock_sp_response.expect(:objects, sp_objects)
+    mock_sp_response.expect(:next_page?, false)
+    @mock_sp_resource.expect(:list, mock_sp_response) { true }
+
+    @mock_client.expect(:documents, @mock_docs_resource)
+    mock_doc_response = Minitest::Mock.new
+    mock_doc_response.expect(:objects, [ doc_api_object ])
+    @mock_docs_resource.expect(:find_by_name, mock_doc_response) { true }
+
+    assert_difference "SessionPresentation.count", 1 do
+      assert_difference "Document.count", 1 do
+        assert_no_enqueued_jobs(only: DownloadDocumentMaterialJob) do
+          @importer.import(meeting_number: "124")
+        end
+      end
+    end
+
+    doc = Document.find_by(name: "draft-ietf-tls-newdraft")
+    assert_nil doc.document_material
+  end
+
   test "skips presentation when session not found" do
     sp_objects = [
       {

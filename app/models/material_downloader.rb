@@ -19,6 +19,7 @@ class MaterialDownloader
   MAX_REDIRECTS = 5
 
   class DownloadError < StandardError; end
+  class NotFoundError < DownloadError; end
 
   attr_reader :connection
 
@@ -60,6 +61,8 @@ class MaterialDownloader
       follow_redirects(response.headers["location"], redirect_count + 1)
     elsif (200..299).cover?(response.status)
       response
+    elsif response.status == 404
+      raise NotFoundError, "Download failed: HTTP 404"
     else
       raise DownloadError, "Download failed: HTTP #{response.status}"
     end

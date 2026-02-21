@@ -8,15 +8,23 @@ class DownloadDocumentMaterialJob < ApplicationJob
   THROTTLE_DURATION = 0.5
 
   discard_on ActiveRecord::RecordNotFound
+  discard_on MaterialDownloader::NotFoundError
 
   def perform(document_id, meeting_number)
     document = Document.find(document_id)
+
+    unless document.meeting_material_type?
+      document.document_material&.update!(download_status: :not_downloadable)
+      return
+    end
+
     return if document.material_attached?
 
     material = document.document_material
     return unless material
 
     material.update!(download_status: :downloading)
+    @downloaded = true
 
     url = Datatracker::Resources::Document
       .new(Datatracker::Client.new)
@@ -47,6 +55,6 @@ class DownloadDocumentMaterialJob < ApplicationJob
     material&.update!(download_status: :failed, download_error: e.message)
     raise
   ensure
-    sleep THROTTLE_DURATION
+    sleep THROTTLE_DURATION if @downloaded
   end
 end

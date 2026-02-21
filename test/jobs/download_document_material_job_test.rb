@@ -129,4 +129,32 @@ class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
       DownloadDocumentMaterialJob.perform_now(-1, @meeting_number)
     end
   end
+
+  test "marks material as not_downloadable for non-meeting material types" do
+    recording = documents(:tls_recording)
+    material = recording.create_document_material!(download_status: :pending)
+
+    DownloadDocumentMaterialJob.perform_now(recording.id, @meeting_number)
+
+    assert_equal "not_downloadable", material.reload.download_status
+  end
+
+  test "discards job on NotFoundError" do
+    material = @document.create_document_material!(download_status: :pending)
+
+    failing_downloader = Object.new
+    def failing_downloader.download(_url)
+      raise MaterialDownloader::NotFoundError, "Download failed: HTTP 404"
+    end
+
+    assert_nothing_raised do
+      MaterialDownloader.stub(:new, failing_downloader) do
+        DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
+      end
+    end
+
+    material.reload
+    assert_equal "failed", material.download_status
+    assert_equal "Download failed: HTTP 404", material.download_error
+  end
 end

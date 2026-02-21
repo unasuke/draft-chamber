@@ -46,7 +46,7 @@ class MaterialDownloaderTest < ActiveSupport::TestCase
     stubs.verify_stubbed_calls
   end
 
-  test "raises DownloadError on HTTP error" do
+  test "raises NotFoundError on HTTP 404" do
     stubs = Faraday::Adapter::Test::Stubs.new do |stub|
       stub.get("/meeting/124/materials/nonexistent/") do
         [ 404, {}, "Not Found" ]
@@ -55,9 +55,27 @@ class MaterialDownloaderTest < ActiveSupport::TestCase
     conn = Faraday.new("https://datatracker.ietf.org") { |f| f.adapter :test, stubs }
     downloader = MaterialDownloader.new(connection: conn)
 
-    assert_raises(MaterialDownloader::DownloadError) do
+    error = assert_raises(MaterialDownloader::NotFoundError) do
       downloader.download("https://datatracker.ietf.org/meeting/124/materials/nonexistent/")
     end
+    assert_equal "Download failed: HTTP 404", error.message
+    stubs.verify_stubbed_calls
+  end
+
+  test "raises DownloadError on non-404 HTTP error" do
+    stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+      stub.get("/meeting/124/materials/server-error/") do
+        [ 500, {}, "Internal Server Error" ]
+      end
+    end
+    conn = Faraday.new("https://datatracker.ietf.org") { |f| f.adapter :test, stubs }
+    downloader = MaterialDownloader.new(connection: conn)
+
+    error = assert_raises(MaterialDownloader::DownloadError) do
+      downloader.download("https://datatracker.ietf.org/meeting/124/materials/server-error/")
+    end
+    assert_equal "Download failed: HTTP 500", error.message
+    assert_not_kind_of MaterialDownloader::NotFoundError, error
     stubs.verify_stubbed_calls
   end
 

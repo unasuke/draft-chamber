@@ -64,4 +64,20 @@ class DocumentTest < ActiveSupport::TestCase
     assert_includes minutes, documents(:tls_minutes)
     assert_not_includes minutes, documents(:tls_chairs_slides)
   end
+
+  test "meeting_material_type? returns true for meeting material types" do
+    Document::MEETING_MATERIAL_TYPES.each do |type|
+      doc = Document.new(name: "#{type}-124-test", document_type: type,
+                         resource_uri: "/api/v1/doc/document/#{type}-124-test/")
+      assert doc.meeting_material_type?, "Expected #{type} to be a meeting material type"
+    end
+  end
+
+  test "meeting_material_type? returns false for non-meeting material types" do
+    %w[draft rfc recording bcp bofreq charter conflrev fyi liaison review shepwrit statchg statement std].each do |type|
+      doc = Document.new(name: "#{type}-124-test", document_type: type,
+                         resource_uri: "/api/v1/doc/document/#{type}-124-test/")
+      assert_not doc.meeting_material_type?, "Expected #{type} not to be a meeting material type"
+    end
+  end
 end

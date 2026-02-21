@@ -42,7 +42,7 @@ module DatatrackerImport
           }
         )
 
-        if record && document.document_material.nil?
+        if record && document.meeting_material_type? && document.document_material.nil?
           document.create_document_material!(download_status: :pending)
           DownloadDocumentMaterialJob.perform_later(document.id, session.meeting.number)
         end

@@ -17,7 +17,8 @@ class DocumentMaterial < ApplicationRecord
     pending: "pending",
     downloading: "downloading",
     completed: "completed",
-    failed: "failed"
+    failed: "failed",
+    not_downloadable: "not_downloadable"
   }
 
   enum :processing_status, {

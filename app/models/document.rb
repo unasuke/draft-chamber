@@ -38,6 +38,21 @@ class Document < ApplicationRecord
     std: "std"
   }
 
+  MEETING_MATERIAL_TYPES = %w[
+    agenda
+    bluesheets
+    chatlog
+    minutes
+    narrativeminutes
+    polls
+    procmaterials
+    slides
+  ].freeze
+
+  def meeting_material_type?
+    document_type.in?(MEETING_MATERIAL_TYPES)
+  end
+
   def material_attached?
     document_material&.file&.attached? || false
   end

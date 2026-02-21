@@ -32,6 +32,14 @@ tls_draft:
   group: tls
   resource_uri: /api/v1/doc/document/draft-ietf-tls-esni/
 
+tls_recording:
+  name: recording-124-tls-1
+  title: TLS Session Recording
+  document_type: recording
+  rev: "00"
+  group: tls
+  resource_uri: /api/v1/doc/document/recording-124-tls-1/
+
 ungrouped_doc:
   name: slides-124-plenary
   title: Plenary Slides
