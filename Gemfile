@@ -101,3 +101,9 @@ group :test do
   gem "selenium-webdriver"
   gem "minitest-mock"
 end
+
+group :provisioning do
+  gem "itamae"
+  gem "itamae-plugin-recipe-docker"
+  gem "rubocop-itamae"
+end
