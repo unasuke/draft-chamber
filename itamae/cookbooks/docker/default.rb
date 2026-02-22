@@ -4,6 +4,8 @@ service "docker"
 
 remote_file "/etc/docker/daemon.json" do
   notifies :restart, "service[docker]"
+  owner "root"
+  group "root"
 end
 
 execute "ensure kamal network with ipv6 enabled" do
