@@ -47,6 +47,15 @@ Rails.application.routes.draw do
   # Job monitoring dashboard (admin only)
   mount MissionControl::Jobs::Engine, at: "/admin/jobs"
 
+  # CDN URL for Active Storage files
+  direct :public_cdn do |representation, options|
+    if Rails.configuration.active_storage.service == :amazon
+      "https://#{ENV["CDN_HOST"]}/#{representation.key}"
+    else
+      url_for(representation)
+    end
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
