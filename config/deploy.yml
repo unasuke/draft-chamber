@@ -52,6 +52,7 @@ env:
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
     APP_HOST: draft-chamber.unasuke.dev
+    APP_ORIGIN_HOST: draft-chamber-app.unasuke.dev
     CDN_HOST: "d30kpo81n8oc2w.cloudfront.net"
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
