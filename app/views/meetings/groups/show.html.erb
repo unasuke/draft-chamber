@@ -66,7 +66,8 @@
             <td class="px-4 py-3 text-md text-gray-600"><%= document.rev %></td>
             <td class="px-4 py-3 text-md">
               <% if document.material_attached? %>
-                <%= link_to "Download", rails_blob_path(document.document_material.file, disposition: "attachment"),
+                <%= link_to "Download", public_cdn_url(document.document_material.file),
+                      download: document.document_material.filename,
                       class: "text-ietf-accent hover:underline",
                       data: { bulk_download_target: "link" } %>
               <% else %>
