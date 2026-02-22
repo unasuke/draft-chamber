@@ -69,6 +69,11 @@ resource "aws_cloudfront_distribution" "draft_chamber_app" {
       name  = "X-Origin-Verify"
       value = var.cloudfront_origin_verify_secret
     }
+
+    custom_header {
+      name  = "X-Forwarded-Host"
+      value = "draft-chamber.unasuke.dev"
+    }
   }
 
   # Default behavior: dynamic content (no cache)
