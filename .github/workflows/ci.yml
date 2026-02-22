@@ -200,6 +200,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:ci
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -221,11 +228,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "$DEPLOY_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          echo "$DEPLOY_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan -p 9922 "$KAMAL_WEB_SERVER_ADDRESS" >> ~/.ssh/known_hosts
         env:
           DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+          KAMAL_WEB_SERVER_ADDRESS: ${{ secrets.KAMAL_WEB_SERVER_ADDRESS }}
 
       - name: Deploy with Kamal
         env:
