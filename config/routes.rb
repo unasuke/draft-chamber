@@ -25,10 +25,8 @@ Rails.application.routes.draw do
   delete "/logout",                to: "auth/sessions#destroy", as: :logout
 
   # OAuth 2.0 Well-Known Metadata (RFC 9728 / RFC 8414)
-  # RFC 9728 §3: path-suffix form for resource-specific metadata
-  get "/.well-known/oauth-protected-resource/*resource_path", to: "well_known/oauth_metadata#protected_resource"
-  get "/.well-known/oauth-protected-resource",                to: "well_known/oauth_metadata#protected_resource"
-  get "/.well-known/oauth-authorization-server",              to: "well_known/oauth_metadata#authorization_server"
+  get "/.well-known/oauth-protected-resource",   to: "well_known/oauth_metadata#protected_resource"
+  get "/.well-known/oauth-authorization-server", to: "well_known/oauth_metadata#authorization_server"
 
   # OAuth 2.0 Dynamic Client Registration (RFC 7591)
   post "/oauth/register", to: "oauth/registrations#create"

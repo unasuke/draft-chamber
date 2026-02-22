@@ -36,7 +36,11 @@ module WellKnown
     private
 
     def base_url
-      request.base_url
+      if ENV["APP_HOST"].present?
+        "https://#{ENV["APP_HOST"]}"
+      else
+        request.base_url
+      end
     end
 
     def mcp_resource_uri

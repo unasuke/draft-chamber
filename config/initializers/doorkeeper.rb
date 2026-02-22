@@ -38,7 +38,8 @@ Doorkeeper.configure do
     # but as a fallback for clients that don't yet implement RFC 8707, default to
     # this server's MCP endpoint URI.
     if context.pre_auth.custom_access_token_attributes[:resource].blank?
-      context.pre_auth.custom_access_token_attributes[:resource] = "#{controller.request.base_url}/mcp"
+      base = ENV["APP_HOST"].present? ? "https://#{ENV["APP_HOST"]}" : controller.request.base_url
+      context.pre_auth.custom_access_token_attributes[:resource] = "#{base}/mcp"
     end
   end
 

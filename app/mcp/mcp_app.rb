@@ -66,12 +66,20 @@ class McpApp
     ]
   end
 
+  def public_base_url(request)
+    if ENV["APP_HOST"].present?
+      "https://#{ENV["APP_HOST"]}"
+    else
+      request.base_url
+    end
+  end
+
   def resource_uri(request)
-    "#{request.base_url}/mcp"
+    "#{public_base_url(request)}/mcp"
   end
 
   def www_authenticate_header(request, error: nil)
-    resource_metadata_url = "#{request.base_url}/.well-known/oauth-protected-resource"
+    resource_metadata_url = "#{public_base_url(request)}/.well-known/oauth-protected-resource"
     parts = [ %(Bearer resource_metadata="#{resource_metadata_url}") ]
     parts << %(error="#{error}") if error
     parts << %(scope="#{REQUIRED_SCOPE}")
