@@ -31,8 +31,8 @@ data "aws_cloudfront_cache_policy" "caching_optimized" {
 }
 
 # ========== Managed Origin Request Policies ==========
-data "aws_cloudfront_origin_request_policy" "all_viewer_except_host_header" {
-  name = "Managed-AllViewerExceptHostHeader"
+data "aws_cloudfront_origin_request_policy" "all_viewer" {
+  name = "Managed-AllViewer"
 }
 
 data "aws_cloudfront_origin_request_policy" "cors_s3_origin" {
@@ -80,7 +80,7 @@ resource "aws_cloudfront_distribution" "draft_chamber_app" {
     compress               = true
 
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host_header.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer.id
   }
 
   # Static assets: long-term cache (Propshaft fingerprinted)
