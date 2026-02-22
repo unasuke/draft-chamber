@@ -6,9 +6,18 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
+  before_action :redirect_direct_origin_access
   before_action :require_login
 
   private
+
+  def redirect_direct_origin_access
+    return unless Rails.env.production?
+    return if request.headers["X-Origin-Verify"] == Rails.application.credentials.dig(:cloudfront, :origin_verify_secret)
+
+    redirect_to URI.join("https://draft-chamber.unasuke.dev", request.fullpath).to_s,
+      allow_other_host: true, status: :moved_permanently
+  end
 
   def require_login
     redirect_to login_path, alert: "Please log in" unless current_user
