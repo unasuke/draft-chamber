@@ -5,4 +5,5 @@ Sentry.init do |config|
   config.breadcrumbs_logger = [ :active_support_logger, :http_logger ]
   config.send_default_pii = false
   config.enabled_patches = [ :http, :faraday ]
+  config.enabled_environments = %w[production]
 end
