@@ -16,5 +16,8 @@ application.register("filter", FilterController)
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import MobileMenuController from "./mobile_menu_controller"
+application.register("mobile-menu", MobileMenuController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
