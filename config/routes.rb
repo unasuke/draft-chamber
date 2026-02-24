@@ -42,6 +42,16 @@ Rails.application.routes.draw do
         patch :resolve
       end
     end
+    resources :datatracker_imports, only: [ :index ] do
+      collection do
+        post :import_groups
+        post :import_meeting
+        post :import_sessions
+        post :import_presentations
+        post :import_all
+        post :delete_meeting
+      end
+    end
   end
 
   # Job monitoring dashboard (admin only)

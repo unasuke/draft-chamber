@@ -1,0 +1,115 @@
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Datatracker Imports</h1>
+
+<p class="mb-6 text-md text-gray-600">
+  Enqueue datatracker import jobs. Monitor job progress on the
+  <%= link_to "Jobs Dashboard", "/admin/jobs", class: "text-ietf-accent hover:underline" %>.
+</p>
+
+<%# === Import Groups === %>
+<div class="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+  <h2 class="mb-4 text-xl font-bold text-gray-900">Import Groups</h2>
+  <p class="mb-4 text-md text-gray-600">Import working groups from IETF Datatracker.</p>
+  <%= form_with url: import_groups_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+    <div>
+      <label class="mb-1 block text-md font-medium text-gray-700">State</label>
+      <%= f.text_field :state, value: "active", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+    </div>
+    <div>
+      <label class="mb-1 block text-md font-medium text-gray-700">Type (optional)</label>
+      <%= f.text_field :type, placeholder: "e.g. wg", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+    </div>
+    <%= f.submit "Import Groups", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+  <% end %>
+</div>
+
+<%# === Meeting Imports === %>
+<div class="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+  <h2 class="mb-4 text-xl font-bold text-gray-900">Meeting Imports</h2>
+  <p class="mb-4 text-md text-gray-600">Import data for a specific IETF meeting.</p>
+
+  <%# Import Meeting %>
+  <div class="mb-6 border-b border-gray-100 pb-6">
+    <h3 class="mb-2 text-lg font-semibold text-gray-800">Import Meeting</h3>
+    <%= form_with url: import_meeting_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+      <div>
+        <label class="mb-1 block text-md font-medium text-gray-700">Meeting Number</label>
+        <%= f.text_field :meeting_number, required: true, placeholder: "e.g. 124", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+      </div>
+      <%= f.submit "Import Meeting", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+    <% end %>
+  </div>
+
+  <%# Import Sessions %>
+  <div class="mb-6 border-b border-gray-100 pb-6">
+    <h3 class="mb-2 text-lg font-semibold text-gray-800">Import Sessions</h3>
+    <%= form_with url: import_sessions_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+      <div>
+        <label class="mb-1 block text-md font-medium text-gray-700">Meeting Number</label>
+        <%= f.text_field :meeting_number, required: true, placeholder: "e.g. 124", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+      </div>
+      <%= f.submit "Import Sessions", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+    <% end %>
+  </div>
+
+  <%# Import Presentations %>
+  <div class="mb-6 border-b border-gray-100 pb-6">
+    <h3 class="mb-2 text-lg font-semibold text-gray-800">Import Presentations</h3>
+    <%= form_with url: import_presentations_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+      <div>
+        <label class="mb-1 block text-md font-medium text-gray-700">Meeting Number</label>
+        <%= f.text_field :meeting_number, required: true, placeholder: "e.g. 124", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+      </div>
+      <div>
+        <label class="mb-1 block text-md font-medium text-gray-700">Group (optional)</label>
+        <%= f.text_field :group_acronym, placeholder: "e.g. tls", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+      </div>
+      <%= f.submit "Import Presentations", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+    <% end %>
+  </div>
+
+  <%# Full Import %>
+  <div>
+    <h3 class="mb-2 text-lg font-semibold text-gray-800">Full Import</h3>
+    <p class="mb-2 text-md text-gray-600">Imports groups, meeting, sessions, and presentations in one job.</p>
+    <%= form_with url: import_all_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+      <div>
+        <label class="mb-1 block text-md font-medium text-gray-700">Meeting Number</label>
+        <%= f.text_field :meeting_number, required: true, placeholder: "e.g. 124", class: "rounded border border-gray-300 px-3 py-2 text-md" %>
+      </div>
+      <%= f.submit "Full Import", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
+    <% end %>
+  </div>
+</div>
+
+<%# === Destructive Operations === %>
+<div class="mb-8 rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
+  <h2 class="mb-4 text-xl font-bold text-red-800">Destructive Operations</h2>
+  <p class="mb-4 text-md text-red-700">These operations permanently delete data and cannot be undone.</p>
+
+  <h3 class="mb-2 text-lg font-semibold text-red-800">Delete Meeting</h3>
+  <p class="mb-2 text-md text-red-700">Destroys the meeting, its sessions, presentations, and orphaned documents.</p>
+  <%= form_with url: delete_meeting_admin_datatracker_imports_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+    <div>
+      <label class="mb-1 block text-md font-medium text-red-800">Meeting Number</label>
+      <%= f.text_field :meeting_number, required: true, placeholder: "e.g. 124", class: "rounded border border-red-300 px-3 py-2 text-md" %>
+    </div>
+    <%= f.submit "Delete Meeting",
+      data: { turbo_confirm: "Are you sure? This will permanently delete this meeting and all associated data." },
+      class: "cursor-pointer rounded bg-red-600 px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-red-700" %>
+  <% end %>
+
+  <% if @meetings.any? %>
+    <details class="mt-4">
+      <summary class="cursor-pointer text-md font-medium text-red-800 hover:underline">Existing meetings reference</summary>
+      <ul class="mt-2 list-inside list-disc text-md text-red-700">
+        <% @meetings.each do |meeting| %>
+          <li><%= meeting.number %> — <%= meeting.city %> (<%= meeting.date %>)</li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+</div>
+
+<p class="mt-4">
+  <%= link_to "Back to Admin Dashboard", admin_root_path, class: "text-md text-ietf-accent hover:underline" %>
+</p>
