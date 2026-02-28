@@ -79,6 +79,11 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
+  # Use persistent cookies for sessions to prevent iOS Safari from discarding them.
+  config.session_store :cookie_store,
+    key: "_draft_chamber_session",
+    expire_after: 30.days
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
     ENV["APP_HOST"],
