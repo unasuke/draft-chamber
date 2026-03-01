@@ -17,7 +17,7 @@ servers:
 #
 proxy:
   ssl: true
-  host: draft-chamber.unasuke.dev
+  host: draft-chamber-app.unasuke.dev
   forward_headers: true
   healthcheck:
     interval: 3
@@ -54,7 +54,6 @@ env:
     APP_HOST: draft-chamber.unasuke.dev
     APP_ORIGIN_HOST: draft-chamber-app.unasuke.dev
     CDN_HOST: "d30kpo81n8oc2w.cloudfront.net"
-    CLOUDFRONT_ORIGIN_VERIFY: "true"
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
