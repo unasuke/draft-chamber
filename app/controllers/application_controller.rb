@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_direct_origin_access
     return unless Rails.env.production?
+    return unless ENV["CLOUDFRONT_ORIGIN_VERIFY"] == "true"
     return if request.headers["X-Origin-Verify"] == Rails.application.credentials.dig(:cloudfront, :origin_verify_secret)
 
     redirect_to URI.join("https://draft-chamber.unasuke.dev", request.fullpath).to_s,
