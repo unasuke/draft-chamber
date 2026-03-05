@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_14_135549) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_174624) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -239,6 +239,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_14_135549) do
     t.index ["user_id"], name: "index_stale_reports_on_user_id"
   end
 
+  create_table "tracked_drafts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "document_id"
+    t.string "draft_name", null: false
+    t.datetime "last_checked_at"
+    t.string "last_known_rev"
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_tracked_drafts_on_document_id"
+    t.index ["draft_name"], name: "index_tracked_drafts_on_draft_name", unique: true
+    t.index ["status"], name: "index_tracked_drafts_on_status"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "role", default: "general", null: false
@@ -261,4 +274,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_14_135549) do
   add_foreign_key "sessions", "groups"
   add_foreign_key "sessions", "meetings"
   add_foreign_key "stale_reports", "users"
+  add_foreign_key "tracked_drafts", "documents"
 end
