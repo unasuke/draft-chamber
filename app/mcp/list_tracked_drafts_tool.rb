@@ -16,8 +16,7 @@ class ListTrackedDraftsTool < MCP::Tool
         type: "boolean",
         description: "Include archived (untracked) drafts in the list"
       }
-    },
-    required: []
+    }
   )
 
   class << self
