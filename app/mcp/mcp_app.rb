@@ -5,7 +5,8 @@ class McpApp
   TOOLS = [
     ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
     ListSessionPresentationsTool, GetSessionPresentationTool, ReadDocumentMaterialTool,
-    CreateStaleReportTool
+    CreateStaleReportTool,
+    TrackDraftTool, ListTrackedDraftsTool
   ].freeze
 
   def call(env)
