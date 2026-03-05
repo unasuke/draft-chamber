@@ -29,6 +29,10 @@
           <td class="px-4 py-3 text-md text-gray-600"><%= @document.abstract %></td>
         </tr>
       <% end %>
+      <tr>
+        <th class="w-40 bg-gray-50 px-4 py-3 text-left text-md font-semibold text-gray-700">Datatracker</th>
+        <td class="px-4 py-3 text-md"><%= link_to datatracker_document_url(@document), datatracker_document_url(@document), target: "_blank", rel: "noopener noreferrer", class: "text-ietf-accent hover:underline" %></td>
+      </tr>
     </tbody>
   </table>
 </div>
