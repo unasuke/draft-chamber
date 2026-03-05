@@ -1,0 +1,12 @@
+tls_esni:
+  draft_name: draft-ietf-tls-esni
+  document: tls_draft
+  status: active
+  last_known_rev: "22"
+  last_checked_at: <%= 1.hour.ago.utc.iso8601 %>
+
+archived_draft:
+  draft_name: draft-ietf-quic-transport
+  status: archived
+  last_known_rev: "34"
+  last_checked_at: <%= 1.day.ago.utc.iso8601 %>
