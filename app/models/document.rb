@@ -6,6 +6,7 @@ class Document < ApplicationRecord
   has_many :session_presentations, dependent: :destroy
   has_many :sessions, through: :session_presentations
   has_many :stale_reports, as: :reportable, dependent: :destroy
+  has_one :tracked_draft, dependent: :nullify
 
   validates :name, presence: true, uniqueness: true
   validates :resource_uri, presence: true, uniqueness: true
