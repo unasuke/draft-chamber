@@ -29,6 +29,10 @@ module Datatracker
       Resources::Document.new(self)
     end
 
+    def new_revision_doc_events
+      Resources::NewRevisionDocEvent.new(self)
+    end
+
     def get(path, params = {})
       connection.get(path, params)
     end
