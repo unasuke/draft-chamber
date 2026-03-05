@@ -1,0 +1,39 @@
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Tracked Drafts</h1>
+
+<%= form_with url: tracked_drafts_path, method: :post, class: "mb-4 flex items-center gap-2" do |f| %>
+  <%= f.text_field :draft_name, placeholder: "draft-ietf-tls-esni", class: "w-96 rounded-md border border-gray-300 px-3 py-2 text-md focus:border-ietf-accent focus:outline-none focus:ring-1 focus:ring-ietf-accent" %>
+  <%= f.submit "Track", class: "rounded-md bg-ietf-blue px-4 py-2 text-md font-medium text-white hover:bg-ietf-dark cursor-pointer" %>
+<% end %>
+
+<% if @tracked_drafts.any? %>
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Draft Name</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Title</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Rev</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Group</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Last Checked</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @tracked_drafts.each do |tracked_draft| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md font-medium text-gray-900"><%= tracked_draft.draft_name %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= tracked_draft.document&.title %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= tracked_draft.last_known_rev %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= tracked_draft.document&.group&.acronym %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= tracked_draft.last_checked_at&.strftime("%Y-%m-%d %H:%M") %></td>
+            <td class="px-4 py-3 text-md">
+              <%= button_to "Untrack", tracked_draft_path(tracked_draft), method: :delete, class: "rounded bg-red-600 px-3 py-1 text-md text-white hover:bg-red-700 cursor-pointer" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-md text-gray-500">No drafts are being tracked yet.</p>
+<% end %>
