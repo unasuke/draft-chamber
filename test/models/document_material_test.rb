@@ -82,6 +82,29 @@ class DocumentMaterialTest < ActiveSupport::TestCase
     assert material.errors[:file].any? { |e| e.include?("unsupported content type") }
   end
 
+  test "text? returns true for text content types" do
+    material = DocumentMaterial.new(document: documents(:tls_chairs_slides), download_status: :pending)
+
+    material.content_type = "text/plain"
+    assert material.text?
+
+    material.content_type = "text/html"
+    assert material.text?
+
+    material.content_type = "text/markdown"
+    assert material.text?
+  end
+
+  test "text? returns false for non-text content types" do
+    material = DocumentMaterial.new(document: documents(:tls_chairs_slides), download_status: :pending)
+
+    material.content_type = "application/pdf"
+    assert_not material.text?
+
+    material.content_type = "image/png"
+    assert_not material.text?
+  end
+
   test "belongs to document" do
     material = DocumentMaterial.create!(
       document: documents(:tls_agenda),

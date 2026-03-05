@@ -73,6 +73,13 @@
   </div>
 <% end %>
 
+<% if @document.document_material&.completed? && @document.document_material.text? && @document.document_material.file.attached? %>
+  <details class="mb-6 rounded-lg border border-gray-200 shadow-sm">
+    <summary class="cursor-pointer bg-gray-50 px-4 py-3 text-md font-semibold text-gray-700 hover:bg-gray-100">Content</summary>
+    <pre class="overflow-x-auto whitespace-pre-wrap break-words bg-white px-4 py-3 text-md text-gray-600"><%= @document.document_material.file.download.force_encoding("UTF-8") %></pre>
+  </details>
+<% end %>
+
 <% if @document.document_material&.processing_completed? && @document.document_material.converted_document_materials.any? %>
   <h3 class="mb-3 text-lg font-semibold text-gray-900">Converted pages</h3>
 
