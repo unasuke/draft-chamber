@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-Pagy.options[:limit] = 100
-Pagy.options[:slots] = 13
+Pagy::OPTIONS[:limit] = 100
+Pagy::OPTIONS[:slots] = 13
