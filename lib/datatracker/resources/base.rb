@@ -35,6 +35,8 @@ module Datatracker
           Response.new(response)
         when 400
           raise BadRequestError.new(response: response)
+        when 403
+          raise ForbiddenError.new(response: response)
         when 404
           raise NotFoundError.new(response: response)
         when 429

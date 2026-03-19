@@ -43,6 +43,14 @@ module Datatracker
     end
   end
 
+  class ForbiddenError < APIError
+    private
+
+    def default_message
+      "Forbidden (403)"
+    end
+  end
+
   class RateLimitError < APIError
     private
 
