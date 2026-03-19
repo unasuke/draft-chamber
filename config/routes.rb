@@ -13,8 +13,6 @@ Rails.application.routes.draw do
     resource :stale_report, only: [ :create ]
   end
   resources :session_presentations, only: :index
-  resources :tracked_drafts, only: [ :index, :create, :destroy ]
-
   # Stale report for meetings/groups show page
   post "/meetings/:meeting_id/groups/:group_id/stale_report",
        to: "stale_reports#create", as: :meeting_group_stale_report

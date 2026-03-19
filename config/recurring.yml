@@ -16,20 +16,8 @@ production:
   sync_meetings:
     class: SyncMeetingsJob
     schedule: every 6 hours
-  check_tracked_drafts:
-    class: CheckTrackedDraftsJob
-    schedule: every 2 hours
-  sync_recent_draft_revisions:
-    class: SyncRecentDraftRevisionsJob
-    schedule: every hour
 
 development:
   sync_meetings:
     class: SyncMeetingsJob
     schedule: every 6 hours
-  check_tracked_drafts:
-    class: CheckTrackedDraftsJob
-    schedule: every 2 hours
-  sync_recent_draft_revisions:
-    class: SyncRecentDraftRevisionsJob
-    schedule: every hour
