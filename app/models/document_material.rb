@@ -6,7 +6,7 @@ class DocumentMaterial < ApplicationRecord
   PDF_CONTENT_TYPE = "application/pdf"
   PPTX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
   PPT_CONTENT_TYPE = "application/vnd.ms-powerpoint"
-  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown].freeze
+  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown application/json].freeze
   PROCESSABLE_CONTENT_TYPES = [ PDF_CONTENT_TYPE, PPTX_CONTENT_TYPE, PPT_CONTENT_TYPE ].freeze
 
   belongs_to :document

@@ -71,6 +71,25 @@ class GetSessionPresentationToolTest < ActiveSupport::TestCase
     assert_equal "Hello, IETF!", response.content.second[:text]
   end
 
+  test "returns text content when material is attached with JSON content type" do
+    document = documents(:tls_chairs_slides)
+    material = document.create_document_material!(download_status: :pending)
+    material.file.attach(
+      io: StringIO.new('{"key": "value"}'),
+      filename: "data.json",
+      content_type: "application/json"
+    )
+    material.update!(download_status: :completed)
+
+    response = GetSessionPresentationTool.call(
+      server_context: {}, document_name: "slides-124-tls-chairs"
+    )
+
+    assert_equal 2, response.content.size
+    assert_equal "text", response.content.second[:type]
+    assert_equal '{"key": "value"}', response.content.second[:text]
+  end
+
   test "returns image content when material is attached with image content type" do
     document = documents(:tls_chairs_slides)
     material = document.create_document_material!(download_status: :pending)

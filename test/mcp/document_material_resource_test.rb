@@ -56,6 +56,20 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
     assert_nil contents.first[:blob]
   end
 
+  test "read_resource returns text content for JSON files" do
+    create_material(documents(:tls_chairs_slides),
+      content: '{"key": "value"}', filename: "data.json", content_type: "application/json")
+
+    uri = "file:///slides-124-tls-chairs/data.json"
+    contents = DocumentMaterialResource.read_resource(uri: uri)
+
+    assert_equal 1, contents.size
+    assert_equal uri, contents.first[:uri]
+    assert_equal "application/json", contents.first[:mimeType]
+    assert_equal '{"key": "value"}', contents.first[:text]
+    assert_nil contents.first[:blob]
+  end
+
   test "read_resource returns converted text for processed PDF" do
     material = create_material(documents(:tls_agenda),
       content: "%PDF", filename: "agenda.pdf", content_type: "application/pdf",

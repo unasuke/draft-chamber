@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DocumentMaterialResource
-  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown].freeze
+  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown application/json].freeze
 
   module_function
 

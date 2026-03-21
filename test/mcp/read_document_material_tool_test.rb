@@ -16,6 +16,19 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
     assert_equal "Hello, IETF!", response.content.first[:text]
   end
 
+  test "returns text content for JSON file" do
+    create_material(documents(:tls_chairs_slides),
+      content: '{"key": "value"}', filename: "data.json", content_type: "application/json")
+
+    response = ReadDocumentMaterialTool.call(
+      server_context: {}, document_name: "slides-124-tls-chairs"
+    )
+
+    assert_equal 1, response.content.size
+    assert_equal "text", response.content.first[:type]
+    assert_equal '{"key": "value"}', response.content.first[:text]
+  end
+
   test "returns image content for image file" do
     image_data = "\x89PNG\r\n\x1a\n" + ("x" * 100)
     material = create_material(documents(:tls_chairs_slides),

@@ -13,7 +13,7 @@ class ReadDocumentMaterialTool < MCP::Tool
     required: %w[document_name]
   )
 
-  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown].freeze
+  TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown application/json].freeze
   IMAGE_CONTENT_TYPES = %w[image/png image/jpeg].freeze
 
   class << self

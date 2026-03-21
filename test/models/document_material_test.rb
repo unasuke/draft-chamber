@@ -93,6 +93,9 @@ class DocumentMaterialTest < ActiveSupport::TestCase
 
     material.content_type = "text/markdown"
     assert material.text?
+
+    material.content_type = "application/json"
+    assert material.text?
   end
 
   test "text? returns false for non-text content types" do
