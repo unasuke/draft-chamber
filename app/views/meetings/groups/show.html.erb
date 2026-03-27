@@ -1,3 +1,5 @@
+<% content_for(:title) { "#{@group.acronym} - Meeting #{@meeting.number} - Draft Chamber" } %>
+
 <nav class="mb-4 text-md text-gray-500">
   <%= link_to "Meetings", meetings_path, class: "text-ietf-accent hover:underline" %>
   <span class="mx-1">&gt;</span>
