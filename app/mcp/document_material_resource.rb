@@ -5,6 +5,22 @@ module DocumentMaterialResource
 
   module_function
 
+  def mcp_resources
+    DocumentMaterial.completed.includes(:document, file_attachment: :blob).filter_map do |material|
+      next unless material.file.attached?
+      blob = material.file.blob
+      document = material.document
+
+      MCP::Resource.new(
+        uri: "file:///#{document.name}/#{blob.filename}",
+        name: document.name,
+        title: document.title,
+        description: "#{document.document_type&.capitalize} - #{document.title}",
+        mime_type: blob.content_type
+      )
+    end
+  end
+
   def resource_templates
     [
       MCP::ResourceTemplate.new(

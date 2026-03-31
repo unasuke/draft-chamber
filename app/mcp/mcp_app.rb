@@ -91,13 +91,10 @@ class McpApp
       name: "draft-chamber",
       version: "0.1.0",
       tools: TOOLS,
+      resources: DocumentMaterialResource.mcp_resources,
       resource_templates: DocumentMaterialResource.resource_templates,
       server_context: { user: user }
     )
-
-    server.resources_list_handler do |params|
-      DocumentMaterialResource.list_resources(params)
-    end
 
     server.resources_read_handler do |params|
       DocumentMaterialResource.read_resource(params)
