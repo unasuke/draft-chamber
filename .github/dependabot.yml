@@ -5,6 +5,8 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 3
     groups:
       rails:
         patterns:
@@ -26,8 +28,12 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 3
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 3
