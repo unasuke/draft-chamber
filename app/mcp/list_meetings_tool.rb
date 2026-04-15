@@ -17,18 +17,42 @@ class ListMeetingsTool < MCP::Tool
     }
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      meetings: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            number: { type: "string" },
+            type: { type: "string" },
+            date: { type: "string" },
+            city: { type: "string" },
+            country: { type: "string" },
+            venue_name: { type: "string" },
+            days: { type: "integer" },
+            attendees: { type: "integer" }
+          },
+          required: [ "number", "type" ]
+        }
+      }
+    },
+    required: [ "meetings" ]
+  )
+
   class << self
     def call(server_context:, **params)
       meetings = Meeting.recent
       meetings = meetings.where(meeting_type: params[:meeting_type]) if params[:meeting_type]
       meetings = meetings.limit(params[:limit] || 20)
 
-      result = meetings.map { |m| meeting_to_hash(m) }
+      data = { meetings: meetings.map { |m| meeting_to_hash(m) } }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      MCP::Tool::Response.new(
+        [ { type: "text", text: JSON.generate(data) } ],
+        structured_content: data
+      )
     end
 
     private

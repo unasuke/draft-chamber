@@ -7,37 +7,37 @@ class ListMeetingsToolTest < ActiveSupport::TestCase
     response = ListMeetingsTool.call(server_context: {})
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 3, result.size
-    assert_equal "124", result.first["number"]
+    assert_equal 3, result["meetings"].size
+    assert_equal "124", result["meetings"].first["number"]
   end
 
   test "filters by meeting_type ietf" do
     response = ListMeetingsTool.call(server_context: {}, meeting_type: "ietf")
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 2, result.size
-    assert(result.all? { |m| m["type"] == "ietf" })
+    assert_equal 2, result["meetings"].size
+    assert(result["meetings"].all? { |m| m["type"] == "ietf" })
   end
 
   test "filters by meeting_type interim" do
     response = ListMeetingsTool.call(server_context: {}, meeting_type: "interim")
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 1, result.size
-    assert_equal "interim", result.first["type"]
+    assert_equal 1, result["meetings"].size
+    assert_equal "interim", result["meetings"].first["type"]
   end
 
   test "respects limit parameter" do
     response = ListMeetingsTool.call(server_context: {}, limit: 1)
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 1, result.size
+    assert_equal 1, result["meetings"].size
   end
 
   test "returns expected meeting fields" do
     response = ListMeetingsTool.call(server_context: {}, limit: 1)
     result = JSON.parse(response.content.first[:text])
-    meeting = result.first
+    meeting = result["meetings"].first
 
     assert_equal "124", meeting["number"]
     assert_equal "ietf", meeting["type"]
@@ -47,5 +47,13 @@ class ListMeetingsToolTest < ActiveSupport::TestCase
     assert_equal "Palais des Congres", meeting["venue_name"]
     assert_equal 7, meeting["days"]
     assert_equal 1200, meeting["attendees"]
+  end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = ListMeetingsTool.call(server_context: {}, limit: 1)
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal 1, response.structured_content[:meetings].size
+    assert_equal "124", response.structured_content[:meetings].first[:number]
   end
 end
