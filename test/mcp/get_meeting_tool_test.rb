@@ -28,4 +28,12 @@ class GetMeetingToolTest < ActiveSupport::TestCase
     assert response.error?
     assert_includes response.content.first[:text], "not found"
   end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = GetMeetingTool.call(server_context: {}, number: "124")
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal "124", response.structured_content[:number]
+    assert_equal 2, response.structured_content[:sessions].size
+  end
 end

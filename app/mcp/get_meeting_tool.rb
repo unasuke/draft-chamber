@@ -13,6 +13,37 @@ class GetMeetingTool < MCP::Tool
     required: [ "number" ]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      number: { type: "string" },
+      type: { type: "string" },
+      date: { type: "string" },
+      city: { type: "string" },
+      country: { type: "string" },
+      venue_name: { type: "string" },
+      time_zone: { type: "string" },
+      days: { type: "integer" },
+      attendees: { type: "integer" },
+      sessions: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            name: { type: "string" },
+            group: { type: "string" },
+            purpose: { type: "string" },
+            requested_duration: { type: "integer" },
+            on_agenda: { type: "boolean" }
+          },
+          required: [ "id" ]
+        }
+      }
+    },
+    required: [ "number", "type", "sessions" ]
+  )
+
   class << self
     def call(server_context:, **params)
       meeting = Meeting.includes(sessions: :group).find_by(number: params[:number])
@@ -24,7 +55,7 @@ class GetMeetingTool < MCP::Tool
         )
       end
 
-      result = {
+      data = {
         number: meeting.number,
         type: meeting.meeting_type,
         date: meeting.date&.iso8601,
@@ -37,10 +68,10 @@ class GetMeetingTool < MCP::Tool
         sessions: meeting.sessions.map { |s| session_summary(s) }
       }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      MCP::Tool::Response.new(
+        [ { type: "text", text: JSON.generate(data) } ],
+        structured_content: data
+      )
     end
 
     private
