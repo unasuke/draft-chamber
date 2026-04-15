@@ -39,4 +39,12 @@ class GetSessionDetailToolTest < ActiveSupport::TestCase
     assert response.error?
     assert_includes response.content.first[:text], "not found"
   end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = GetSessionDetailTool.call(server_context: {}, session_id: 34365)
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal 34365, response.structured_content[:id]
+    assert_equal 3, response.structured_content[:presentations].size
+  end
 end

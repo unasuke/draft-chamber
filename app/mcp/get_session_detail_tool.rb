@@ -13,6 +13,45 @@ class GetSessionDetailTool < MCP::Tool
     required: [ "session_id" ]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      id: { type: "integer" },
+      name: { type: "string" },
+      meeting_number: { type: "string" },
+      group: { type: "string" },
+      group_name: { type: "string" },
+      purpose: { type: "string" },
+      requested_duration: { type: "string" },
+      on_agenda: { type: "boolean" },
+      attendees: { type: "integer" },
+      remote_instructions: { type: "string" },
+      presentations: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            order: { type: "integer" },
+            rev: { type: "string" },
+            document: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                title: { type: "string" },
+                type: { type: "string" },
+                rev: { type: "string" },
+                pages: { type: "integer" }
+              },
+              required: [ "name" ]
+            }
+          },
+          required: [ "order", "document" ]
+        }
+      }
+    },
+    required: [ "id", "presentations" ]
+  )
+
   class << self
     def call(server_context:, **params)
       session = Session.includes(:meeting, :group, session_presentations: :document)
@@ -25,7 +64,7 @@ class GetSessionDetailTool < MCP::Tool
         )
       end
 
-      result = {
+      data = {
         id: session.datatracker_id,
         name: session.name,
         meeting_number: session.meeting.number,
@@ -39,10 +78,10 @@ class GetSessionDetailTool < MCP::Tool
         presentations: session.session_presentations.ordered.map { |sp| presentation_to_hash(sp) }
       }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      MCP::Tool::Response.new(
+        [ { type: "text", text: JSON.generate(data) } ],
+        structured_content: data
+      )
     end
 
     private
