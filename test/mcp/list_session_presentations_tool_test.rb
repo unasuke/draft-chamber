@@ -9,7 +9,7 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
     )
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 3, result.size
+    assert_equal 3, result["presentations"].size
   end
 
   test "presentations are ordered by order field" do
@@ -17,7 +17,7 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
       server_context: {}, meeting_number: "124", group_acronym: "tls"
     )
     result = JSON.parse(response.content.first[:text])
-    orders = result.map { |p| p["order"] }
+    orders = result["presentations"].map { |p| p["order"] }
 
     assert_equal orders.sort, orders
   end
@@ -27,7 +27,7 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
       server_context: {}, meeting_number: "124", group_acronym: "tls"
     )
     result = JSON.parse(response.content.first[:text])
-    doc_names = result.map { |p| p["document"]["name"] }
+    doc_names = result["presentations"].map { |p| p["document"]["name"] }
 
     assert_includes doc_names, "slides-124-tls-chairs"
     assert_includes doc_names, "agenda-124-tls"
@@ -39,7 +39,7 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
       server_context: {}, meeting_number: "124", group_acronym: "tls"
     )
     result = JSON.parse(response.content.first[:text])
-    presentation = result.first
+    presentation = result["presentations"].first
 
     assert_includes presentation["document"].keys, "file_available"
     assert_includes presentation["document"].keys, "file_download_status"
@@ -72,6 +72,16 @@ class ListSessionPresentationsToolTest < ActiveSupport::TestCase
     )
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal [], result
+    assert_equal [], result["presentations"]
+  end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = ListSessionPresentationsTool.call(
+      server_context: {}, meeting_number: "124", group_acronym: "tls"
+    )
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal 3, response.structured_content[:presentations].size
+    assert response.structured_content[:presentations].first.key?(:document)
   end
 end

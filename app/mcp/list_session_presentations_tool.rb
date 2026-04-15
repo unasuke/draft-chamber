@@ -17,6 +17,37 @@ class ListSessionPresentationsTool < MCP::Tool
     required: %w[meeting_number group_acronym]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      presentations: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            order: { type: "integer" },
+            rev: { type: "string" },
+            document: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                title: { type: "string" },
+                type: { type: "string" },
+                rev: { type: "string" },
+                pages: { type: "integer" },
+                file_available: { type: "boolean" },
+                file_download_status: { type: "string" }
+              },
+              required: [ "name" ]
+            }
+          },
+          required: [ "order", "document" ]
+        }
+      }
+    },
+    required: [ "presentations" ]
+  )
+
   class << self
     def call(server_context:, **params)
       meeting = Meeting.find_by(number: params[:meeting_number])
@@ -35,12 +66,12 @@ class ListSessionPresentationsTool < MCP::Tool
         .where(sessions: { meeting_id: meeting.id, group_id: group.id })
         .ordered
 
-      result = presentations.map { |sp| presentation_to_hash(sp) }
+      data = { presentations: presentations.map { |sp| presentation_to_hash(sp) } }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      MCP::Tool::Response.new(
+        [ { type: "text", text: JSON.generate(data) } ],
+        structured_content: data
+      )
     end
 
     private
