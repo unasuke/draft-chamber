@@ -86,4 +86,16 @@ class CreateStaleReportToolTest < ActiveSupport::TestCase
     assert response.error?
     assert_includes response.content.first[:text], "already reported"
   end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = CreateStaleReportTool.call(
+      server_context: @server_context,
+      reportable_type: "Meeting",
+      reportable_identifier: "124"
+    )
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal "pending", response.structured_content[:status]
+    assert_equal "Meeting", response.structured_content[:reportable_type]
+  end
 end

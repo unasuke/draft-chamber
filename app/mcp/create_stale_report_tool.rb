@@ -29,6 +29,19 @@ class CreateStaleReportTool < MCP::Tool
     required: %w[reportable_type reportable_identifier]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      id: { type: "integer" },
+      status: { type: "string" },
+      reportable_type: { type: "string" },
+      reportable_id: { type: "integer" },
+      message: { type: "string" },
+      created_at: { type: "string" }
+    },
+    required: [ "id", "status", "reportable_type", "reportable_id" ]
+  )
+
   class << self
     def call(server_context:, **params)
       user = server_context[:user]
@@ -41,17 +54,18 @@ class CreateStaleReportTool < MCP::Tool
       )
 
       if stale_report.save
-        MCP::Tool::Response.new([ {
-          type: "text",
-          text: JSON.generate({
-            id: stale_report.id,
-            status: stale_report.status,
-            reportable_type: stale_report.reportable_type,
-            reportable_id: stale_report.reportable_id,
-            message: stale_report.message,
-            created_at: stale_report.created_at.iso8601
-          })
-        } ])
+        data = {
+          id: stale_report.id,
+          status: stale_report.status,
+          reportable_type: stale_report.reportable_type,
+          reportable_id: stale_report.reportable_id,
+          message: stale_report.message,
+          created_at: stale_report.created_at.iso8601
+        }
+        MCP::Tool::Response.new(
+          [ { type: "text", text: JSON.generate(data) } ],
+          structured_content: data
+        )
       else
         MCP::Tool::Response.new([ {
           type: "text",
