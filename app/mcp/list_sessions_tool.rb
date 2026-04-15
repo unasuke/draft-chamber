@@ -17,6 +17,31 @@ class ListSessionsTool < MCP::Tool
     required: [ "meeting_number" ]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      sessions: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            name: { type: "string" },
+            group: { type: "string" },
+            group_name: { type: "string" },
+            purpose: { type: "string" },
+            requested_duration: { type: "integer" },
+            on_agenda: { type: "boolean" },
+            attendees: { type: "integer" },
+            remote_instructions: { type: "string" }
+          },
+          required: [ "id" ]
+        }
+      }
+    },
+    required: [ "sessions" ]
+  )
+
   class << self
     def call(server_context:, **params)
       meeting = Meeting.find_by(number: params[:meeting_number])
@@ -33,12 +58,12 @@ class ListSessionsTool < MCP::Tool
         sessions = sessions.joins(:group).where(groups: { acronym: params[:group_acronym] })
       end
 
-      result = sessions.map { |s| session_to_hash(s) }
+      data = { sessions: sessions.map { |s| session_to_hash(s) } }
 
-      MCP::Tool::Response.new([ {
-        type: "text",
-        text: JSON.generate(result)
-      } ])
+      MCP::Tool::Response.new(
+        [ { type: "text", text: JSON.generate(data) } ],
+        structured_content: data
+      )
     end
 
     private

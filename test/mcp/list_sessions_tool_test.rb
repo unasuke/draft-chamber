@@ -7,21 +7,21 @@ class ListSessionsToolTest < ActiveSupport::TestCase
     response = ListSessionsTool.call(server_context: {}, meeting_number: "124")
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 2, result.size
+    assert_equal 2, result["sessions"].size
   end
 
   test "filters by group_acronym" do
     response = ListSessionsTool.call(server_context: {}, meeting_number: "124", group_acronym: "tls")
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal 1, result.size
-    assert_equal "tls", result.first["group"]
+    assert_equal 1, result["sessions"].size
+    assert_equal "tls", result["sessions"].first["group"]
   end
 
   test "returns expected session fields" do
     response = ListSessionsTool.call(server_context: {}, meeting_number: "124", group_acronym: "tls")
     result = JSON.parse(response.content.first[:text])
-    session = result.first
+    session = result["sessions"].first
 
     assert_equal 34365, session["id"]
     assert_equal "tls", session["name"]
@@ -42,6 +42,14 @@ class ListSessionsToolTest < ActiveSupport::TestCase
     response = ListSessionsTool.call(server_context: {}, meeting_number: "124", group_acronym: "nonexistent")
     result = JSON.parse(response.content.first[:text])
 
-    assert_equal [], result
+    assert_equal [], result["sessions"]
+  end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = ListSessionsTool.call(server_context: {}, meeting_number: "124", group_acronym: "tls")
+
+    assert_kind_of Hash, response.structured_content
+    assert_equal 1, response.structured_content[:sessions].size
+    assert_equal "tls", response.structured_content[:sessions].first[:group]
   end
 end
