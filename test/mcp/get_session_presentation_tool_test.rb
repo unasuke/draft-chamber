@@ -8,7 +8,7 @@ class GetSessionPresentationToolTest < ActiveSupport::TestCase
       server_context: {}, document_name: "slides-124-tls-chairs"
     )
     result = JSON.parse(response.content.first[:text])
-    presentation = result.first
+    presentation = result["presentations"].first
 
     assert_equal 1, presentation["order"]
     assert_equal "01", presentation["rev"]
@@ -27,11 +27,22 @@ class GetSessionPresentationToolTest < ActiveSupport::TestCase
       server_context: {}, document_name: "slides-124-tls-chairs"
     )
     result = JSON.parse(response.content.first[:text])
-    session = result.first["session"]
+    session = result["presentations"].first["session"]
 
     assert_equal 34365, session["id"]
     assert_equal "tls", session["group"]
     assert_equal "124", session["meeting_number"]
+  end
+
+  test "exposes structured_content with symbol-keyed data" do
+    response = GetSessionPresentationTool.call(
+      server_context: {}, document_name: "slides-124-tls-chairs"
+    )
+
+    assert_kind_of Hash, response.structured_content
+    presentation = response.structured_content[:presentations].first
+    assert_equal "slides-124-tls-chairs", presentation[:document][:name]
+    assert_equal 34365, presentation[:session][:id]
   end
 
   test "returns error for non-existent document" do

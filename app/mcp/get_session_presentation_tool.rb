@@ -13,6 +13,50 @@ class GetSessionPresentationTool < MCP::Tool
     required: %w[document_name]
   )
 
+  output_schema(
+    type: "object",
+    properties: {
+      presentations: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            order: { type: "integer" },
+            rev: { type: "string" },
+            session: {
+              type: "object",
+              properties: {
+                id: { type: "integer" },
+                name: { type: "string" },
+                group: { type: "string" },
+                meeting_number: { type: "string" }
+              },
+              required: [ "id" ]
+            },
+            document: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                title: { type: "string" },
+                type: { type: "string" },
+                rev: { type: "string" },
+                pages: { type: "integer" },
+                abstract: { type: "string" },
+                uploaded_filename: { type: "string" },
+                file_available: { type: "boolean" },
+                file_download_status: { type: "string" }
+              },
+              required: [ "name" ]
+            },
+            material_url: { type: "string" }
+          },
+          required: [ "order", "session", "document" ]
+        }
+      }
+    },
+    required: [ "presentations" ]
+  )
+
   TEXT_CONTENT_TYPES = %w[text/plain text/html text/markdown application/json].freeze
   IMAGE_CONTENT_TYPES = %w[image/png image/jpeg].freeze
 
@@ -32,15 +76,15 @@ class GetSessionPresentationTool < MCP::Tool
         return error_response("No presentation found for document '#{params[:document_name]}'")
       end
 
-      result = presentations.map { |sp| presentation_to_hash(sp, document) }
+      data = { presentations: presentations.map { |sp| presentation_to_hash(sp, document) } }
 
-      content = [ { type: "text", text: JSON.generate(result) } ]
+      content = [ { type: "text", text: JSON.generate(data) } ]
 
       if document.material_attached?
         content.concat(file_content_items(document))
       end
 
-      MCP::Tool::Response.new(content)
+      MCP::Tool::Response.new(content, structured_content: data)
     end
 
     private
