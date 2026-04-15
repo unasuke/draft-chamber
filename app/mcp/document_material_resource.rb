@@ -33,12 +33,6 @@ module DocumentMaterialResource
     ]
   end
 
-  def list_resources(_params)
-    DocumentMaterial.completed.includes(:document, file_attachment: :blob).filter_map do |material|
-      resource_hash(material)
-    end
-  end
-
   def read_resource(params)
     uri = params[:uri]
     match = uri.match(%r{\Afile:///([^/]+)/(.+)\z})
@@ -83,21 +77,5 @@ module DocumentMaterialResource
         [ { uri: uri, mimeType: content_type, blob: Base64.strict_encode64(material.file.download) } ]
       end
     end
-  end
-
-  def resource_hash(material)
-    return unless material.file.attached?
-
-    blob = material.file.blob
-    document = material.document
-
-    {
-      uri: "file:///#{document.name}/#{blob.filename}",
-      name: document.name,
-      title: document.title,
-      description: "#{document.document_type&.capitalize} - #{document.title}",
-      mimeType: blob.content_type,
-      size: blob.byte_size
-    }
   end
 end

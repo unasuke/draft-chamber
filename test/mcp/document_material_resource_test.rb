@@ -3,7 +3,7 @@
 require "test_helper"
 
 class DocumentMaterialResourceTest < ActiveSupport::TestCase
-  test "list_resources returns only completed materials" do
+  test "mcp_resources returns only completed materials" do
     create_material(documents(:tls_chairs_slides),
       content: "content", filename: "slides.txt", content_type: "text/plain")
 
@@ -16,30 +16,30 @@ class DocumentMaterialResourceTest < ActiveSupport::TestCase
       content_type: "text/plain"
     )
 
-    resources = DocumentMaterialResource.list_resources({})
+    resources = DocumentMaterialResource.mcp_resources
 
     assert_equal 1, resources.size
     resource = resources.first
-    assert_equal "file:///slides-124-tls-chairs/slides.txt", resource[:uri]
-    assert_equal "slides-124-tls-chairs", resource[:name]
-    assert_equal "TLS Chairs Slides", resource[:title]
-    assert_equal "text/plain", resource[:mimeType]
+    assert_kind_of MCP::Resource, resource
+    assert_equal "file:///slides-124-tls-chairs/slides.txt", resource.uri
+    assert_equal "slides-124-tls-chairs", resource.name
+    assert_equal "TLS Chairs Slides", resource.title
+    assert_equal "text/plain", resource.mime_type
   end
 
-  test "list_resources returns empty array when no completed materials exist" do
-    resources = DocumentMaterialResource.list_resources({})
+  test "mcp_resources returns empty array when no completed materials exist" do
+    resources = DocumentMaterialResource.mcp_resources
 
     assert_equal [], resources
   end
 
-  test "list_resources includes size and description" do
+  test "mcp_resources includes description derived from document type and title" do
     create_material(documents(:tls_chairs_slides),
       content: "Hello, IETF!", filename: "slides.txt", content_type: "text/plain")
 
-    resource = DocumentMaterialResource.list_resources({}).first
+    resource = DocumentMaterialResource.mcp_resources.first
 
-    assert_equal "Slides - TLS Chairs Slides", resource[:description]
-    assert resource[:size].positive?
+    assert_equal "Slides - TLS Chairs Slides", resource.description
   end
 
   test "read_resource returns text content for text files" do
