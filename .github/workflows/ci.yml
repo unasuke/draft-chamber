@@ -172,7 +172,7 @@ jobs:
           role-to-assume: arn:aws:iam::297776507902:role/PushECRFromGitHubActions
           aws-region: ap-northeast-1
 
-      - uses: aws-actions/amazon-ecr-login@v2
+      - uses: aws-actions/amazon-ecr-login@v2.1.2
         id: ecr-login
 
       - uses: docker/setup-buildx-action@v4
