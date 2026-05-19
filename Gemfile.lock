@@ -191,7 +191,7 @@ GEM
     jmespath (1.6.2)
     jsbundling-rails (1.3.1)
       railties (>= 6.0.0)
-    json (2.19.4)
+    json (2.19.5)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -294,7 +294,7 @@ GEM
       oauth2 (>= 2.0.2, < 3)
       omniauth (~> 2.0)
     ostruct (0.6.3)
-    pagy (43.5.3)
+    pagy (43.5.4)
       json
       uri
       yaml
@@ -591,6 +591,7 @@ CHECKSUMS
   bootsnap (1.24.3) sha256=f7fa3d20597e2f0aa52b0a1aba83fb54d4f79e9c2e210ec4fa1e8895514dcad8
   brakeman (8.0.4) sha256=7bf921fa9638544835df9aa7b3e720a9a72c0267f34f92135955edd80d4dcf6f
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
+  bundler (4.0.11) sha256=5bcec0fb78302e48d02ee46f10ee6e6942be647ba5b44a6d1ddfda9a240ce785
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
@@ -633,7 +634,7 @@ CHECKSUMS
   jbuilder (2.14.1) sha256=4eb26376ff60ef100cb4fd6fd7533cd271f9998327e86adf20fd8c0e69fabb42
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   jsbundling-rails (1.3.1) sha256=0fa03f6d051c694cbf55a022d8be53399879f2c4cf38b2968f86379c62b1c2ca
-  json (2.19.4) sha256=670a7d333fb3b18ca5b29cb255eb7bef099e40d88c02c80bd42a3f30fe5239ac
+  json (2.19.5) sha256=218a18553e4801d579ca7e0f5bc72bafd776d7397238a1fb4e74db5b0a812c59
   json-schema (6.2.0) sha256=e8bff46ed845a22c1ab2bd0d7eccf831c01fe23bb3920caa4c74db4306813666
   jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
   kamal (2.11.0) sha256=1408864425e0dec7e0a14d712a3b13f614e9f3a425b7661d3f9d287a51d7dd75
@@ -673,7 +674,7 @@ CHECKSUMS
   omniauth-github (2.0.1) sha256=8ff8e70ac6d6db9d52485eef52cfa894938c941496e66b52b5e2773ade3ccad4
   omniauth-oauth2 (1.9.0) sha256=ed15f6d9d20991807ce114cc5b9c1453bce3645b64e51c68c90cff5ff153fee8
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
-  pagy (43.5.3) sha256=f9d73e690648d484706661dcb815647775cf8330fcc5c6e62ec87b9df431290b
+  pagy (43.5.4) sha256=2bdf3fa6b1e0cac5bbafe5d077fb24eb971f72f3194f8c6863a0f3867261ce59
   parallel (1.27.0) sha256=4ac151e1806b755fb4e2dc2332cbf0e54f2e24ba821ff2d3dcf86bf6dc4ae130
   parser (3.3.10.2) sha256=6f60c84aa4bdcedb6d1a2434b738fe8a8136807b6adc8f7f53b97da9bc4e9357
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
