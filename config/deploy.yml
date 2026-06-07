@@ -62,6 +62,9 @@ logging:
   driver: awslogs
   options:
     awslogs-region: ap-northeast-1
+    # The instance is IPv6-only, so use the dual-stack endpoint.
+    # The default endpoint (logs.ap-northeast-1.amazonaws.com) is IPv4-only.
+    awslogs-endpoint: https://logs.ap-northeast-1.api.aws
     awslogs-group: /lightsail/draft-chamber/docker
     awslogs-create-group: "true"
     mode: non-blocking
