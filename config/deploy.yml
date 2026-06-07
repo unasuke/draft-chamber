@@ -55,6 +55,19 @@ env:
     APP_ORIGIN_HOST: draft-chamber-app.unasuke.dev
     CDN_HOST: "d30kpo81n8oc2w.cloudfront.net"
 
+# Send container logs to CloudWatch Logs via the awslogs driver.
+# Credentials are provided to dockerd on the server (systemd override), not to the container.
+# See docs/cloudwatch-logs-setup.md for the server-side setup.
+logging:
+  driver: awslogs
+  options:
+    awslogs-region: ap-northeast-1
+    awslogs-group: /lightsail/draft-chamber/docker
+    awslogs-create-group: "true"
+    mode: non-blocking
+    max-buffer-size: 4m
+    tag: "{{.Name}}"
+
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
 aliases:
