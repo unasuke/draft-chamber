@@ -58,8 +58,29 @@ data "aws_iam_policy_document" "push_ecr" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_user" "lightsail" {
   name = "Lightsail"
+}
+
+resource "aws_iam_user_policy" "lightsail" {
+  user   = aws_iam_user.lightsail.name
+  policy = data.aws_iam_policy_document.lightsail.json
+}
+
+data "aws_iam_policy_document" "lightsail" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = [
+      "arn:aws:logs:ap-northeast-1:${data.aws_caller_identity.current.account_id}:log-group:/lightsail/draft-chamber/*",
+    ]
+  }
 }
 
 resource "aws_iam_user" "draft_chamber_app_production" {
