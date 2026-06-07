@@ -69,7 +69,9 @@ logging:
     awslogs-create-group: "true"
     mode: non-blocking
     max-buffer-size: 4m
-    tag: "{{.Name}}"
+    # Include the container ID so that streams stay unique when multiple
+    # servers run containers with the same name.
+    tag: "{{.Name}}-{{.ID}}"
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
