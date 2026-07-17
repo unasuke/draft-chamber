@@ -82,6 +82,19 @@ class McpAuthTest < ActionDispatch::IntegrationTest
     assert_match(%r{resource_metadata="https?://[^"]+/\.well-known/oauth-protected-resource"}, www_auth)
   end
 
+  # --- DNS rebinding protection tests ---
+
+  test "returns 403 for disallowed Host header" do
+    token = create_access_token(user: users(:alice), resource: "http://evil.example.com/mcp")
+
+    host! "evil.example.com"
+    post "/mcp",
+      params: { jsonrpc: "2.0", id: 1, method: "initialize" }.to_json,
+      headers: bearer_headers(token)
+
+    assert_response :forbidden
+  end
+
   # --- RFC 8707 audience validation tests (V2) ---
 
   test "returns success with token bound to correct resource" do
