@@ -100,8 +100,19 @@ class McpApp
       DocumentMaterialResource.read_resource(params)
     end
 
-    transport = MCP::Server::Transports::StreamableHTTPTransport.new(server, stateless: true)
+    transport = MCP::Server::Transports::StreamableHTTPTransport.new(
+      server,
+      stateless: true,
+      allowed_hosts: allowed_hosts
+    )
     server.transport = transport
     transport
+  end
+
+  def allowed_hosts
+    hosts = []
+    hosts << ENV["APP_HOST"] if ENV["APP_HOST"].present?
+    hosts << "www.example.com" if Rails.env.test? # ActionDispatch::IntegrationTest default host
+    hosts
   end
 end
