@@ -91,14 +91,9 @@ class McpApp
       name: "draft-chamber",
       version: "0.1.0",
       tools: TOOLS,
-      resources: DocumentMaterialResource.mcp_resources,
-      resource_templates: DocumentMaterialResource.resource_templates,
+      capabilities: { tools: { listChanged: true }, logging: {} },
       server_context: { user: user }
     )
-
-    server.resources_read_handler do |params|
-      DocumentMaterialResource.read_resource(params)
-    end
 
     transport = MCP::Server::Transports::StreamableHTTPTransport.new(
       server,
