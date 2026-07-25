@@ -95,6 +95,37 @@ class McpAuthTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  test "allows request with APP_ORIGIN_HOST Host header" do
+    original_app_host = ENV["APP_HOST"]
+    original_origin_host = ENV["APP_ORIGIN_HOST"]
+    ENV["APP_HOST"] = "draft-chamber.unasuke.dev"
+    ENV["APP_ORIGIN_HOST"] = "draft-chamber-app.unasuke.dev"
+
+    token = create_access_token(
+      user: users(:alice),
+      resource: "https://draft-chamber.unasuke.dev/mcp"
+    )
+
+    host! "draft-chamber-app.unasuke.dev"
+    post "/mcp",
+      params: {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: {
+          protocolVersion: "2025-03-26",
+          capabilities: {},
+          clientInfo: { name: "test", version: "1.0" }
+        }
+      }.to_json,
+      headers: bearer_headers(token)
+
+    assert_response :success
+  ensure
+    ENV["APP_HOST"] = original_app_host
+    ENV["APP_ORIGIN_HOST"] = original_origin_host
+  end
+
   # --- RFC 8707 audience validation tests (V2) ---
 
   test "returns success with token bound to correct resource" do

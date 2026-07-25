@@ -112,6 +112,7 @@ class McpApp
   def allowed_hosts
     hosts = []
     hosts << ENV["APP_HOST"] if ENV["APP_HOST"].present?
+    hosts << ENV["APP_ORIGIN_HOST"] if ENV["APP_ORIGIN_HOST"].present?
     hosts << "www.example.com" if Rails.env.test? # ActionDispatch::IntegrationTest default host
     hosts
   end
