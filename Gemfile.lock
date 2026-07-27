@@ -225,7 +225,7 @@ GEM
       net-smtp
     marcel (1.1.0)
     matrix (0.4.3)
-    mcp (0.25.0)
+    mcp (1.0.0)
       json_schemer (>= 2.4)
     mini_mime (1.1.5)
     minitest (6.0.6)
@@ -380,12 +380,11 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
-    rubocop (1.85.1)
+    rubocop (1.88.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
-      mcp (~> 0.6)
-      parallel (~> 1.10)
+      parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
@@ -652,7 +651,7 @@ CHECKSUMS
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
-  mcp (0.25.0) sha256=8acf3a5f3b60b6fd6e5d9b8ac5eb85ac504766976cbadaca182d2ffe7d795d98
+  mcp (1.0.0) sha256=219909a79da4c6e4b04c567dc19f3541897ed494e2c466e372551bb264f693d2
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
   minitest-mock (5.27.0) sha256=7040ed7185417a966920987eaa6eaf1be4ea1fc5b25bb03ff4703f98564a55b0
@@ -709,7 +708,7 @@ CHECKSUMS
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
-  rubocop (1.85.1) sha256=3dbcf9e961baa4c376eeeb2a03913dca5e3987033b04d38fa538aa1e7406cc77
+  rubocop (1.88.2) sha256=8def251c90cd955feb4daa3edc0ab56893250c4ce90ef81e6c80c03f9a939bbf
   rubocop-ast (1.49.1) sha256=4412f3ee70f6fe4546cc489548e0f6fcf76cafcfa80fa03af67098ffed755035
   rubocop-itamae (0.2.1) sha256=faaa7271dcf2aafab8348795e17f04a0bda6ea2b0e080e1f798895ba7bae9170
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
