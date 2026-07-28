@@ -13,6 +13,11 @@ amazon:
   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
   region: ap-northeast-1
   bucket: draft-chamber-production-3a2bf32c
+  # The production host is IPv6-only. The regular S3 endpoint has no AAAA record,
+  # so every download would go through the NAT64 gateway (56s for a large PDF,
+  # well past the 30s proxy timeout). The dualstack endpoint resolves over IPv6
+  # directly, bypassing NAT64 entirely.
+  use_dualstack_endpoint: true
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
