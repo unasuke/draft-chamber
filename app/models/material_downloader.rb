@@ -45,7 +45,7 @@ class MaterialDownloader
 
   def build_connection
     Faraday.new do |faraday|
-      faraday.request :retry, max: 2, interval: 0.5, backoff_factor: 2
+      faraday.request :retry, max: 2, interval: 1.0, backoff_factor: 2
       faraday.options.timeout = 120
       faraday.options.open_timeout = 15
       faraday.adapter Faraday.default_adapter

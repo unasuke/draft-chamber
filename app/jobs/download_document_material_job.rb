@@ -3,7 +3,7 @@
 class DownloadDocumentMaterialJob < ApplicationJob
   queue_as :download
 
-  THROTTLE_DURATION = 0.5
+  THROTTLE_DURATION = 1.0
 
   discard_on ActiveRecord::RecordNotFound
   discard_on MaterialDownloader::NotFoundError
