@@ -66,4 +66,85 @@
       }
     }
   }
+
+  /* Rendered Markdown of an AI-generated summary. */
+  .markdown-body {
+    @apply text-base leading-relaxed text-gray-800;
+
+    > :first-child {
+      @apply mt-0;
+    }
+
+    h1 {
+      @apply mt-8 mb-3 text-2xl font-bold text-gray-900;
+    }
+
+    h2 {
+      @apply mt-6 mb-3 text-xl font-bold text-gray-900;
+    }
+
+    h3 {
+      @apply mt-6 mb-2 text-lg font-semibold text-gray-900;
+    }
+
+    h4, h5, h6 {
+      @apply mt-4 mb-2 text-base font-semibold text-gray-900;
+    }
+
+    p {
+      @apply my-3;
+    }
+
+    ul {
+      @apply my-3 list-disc pl-6;
+    }
+
+    ol {
+      @apply my-3 list-decimal pl-6;
+    }
+
+    li {
+      @apply my-1;
+    }
+
+    a {
+      @apply text-ietf-accent hover:underline;
+    }
+
+    code {
+      @apply rounded bg-gray-100 px-1 py-0.5 font-mono;
+    }
+
+    pre {
+      @apply my-4 overflow-x-auto rounded-lg bg-gray-100 p-4;
+
+      code {
+        @apply bg-transparent p-0;
+      }
+    }
+
+    blockquote {
+      @apply my-4 border-l-4 border-gray-300 pl-4 text-gray-600;
+    }
+
+    table {
+      @apply my-4 border border-gray-200;
+    }
+
+    th {
+      @apply border border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold;
+    }
+
+    td {
+      @apply border border-gray-200 px-3 py-2;
+    }
+
+    hr {
+      @apply my-6 border-gray-200;
+    }
+
+    img {
+      @apply my-4 max-w-full;
+    }
+  }
 }

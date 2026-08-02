@@ -70,6 +70,9 @@ gem "rack-cors"
 # HTML-aware ERB engine
 gem "reactionview"
 
+# Markdown rendering for AI-generated summaries
+gem "commonmarker"
+
 # Tailwind CSS
 gem "tailwindcss-rails"
 

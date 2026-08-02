@@ -1,0 +1,48 @@
+<% content_for(:title) { "Summaries - Draft Chamber" } %>
+
+<h1 class="mb-6 text-2xl font-bold text-gray-900">Summaries</h1>
+
+<% if @summaries.any? %>
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-ietf-blue">
+        <tr>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Title</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Meeting</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Group</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Client</th>
+          <th class="px-4 py-3 text-left text-md font-semibold text-white">Created</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% @summaries.each do |summary| %>
+          <tr class="hover:bg-ietf-light">
+            <td class="px-4 py-3 text-md">
+              <%= link_to summary.title, public_summary_path(summary.public_token), class: "font-medium text-ietf-accent hover:underline" %>
+            </td>
+            <td class="px-4 py-3 text-md">
+              <%= link_to summary.meeting_number, meeting_path(summary.meeting_number), class: "text-ietf-accent hover:underline" %>
+            </td>
+            <td class="px-4 py-3 text-md">
+              <% if summary.group_acronym.present? %>
+                <%= link_to summary.group_acronym, meeting_group_path(summary.meeting_number, summary.group_acronym), class: "text-ietf-accent hover:underline" %>
+              <% else %>
+                <span class="text-gray-400">-</span>
+              <% end %>
+            </td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= summary.client_name %></td>
+            <td class="px-4 py-3 text-md text-gray-600"><%= summary.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <%== @pagy.series_nav %>
+  </div>
+<% else %>
+  <p class="rounded-lg border border-gray-200 bg-white p-6 text-md text-gray-600">
+    No summaries yet. Create one with create_summary_tool from your MCP client.
+  </p>
+<% end %>
