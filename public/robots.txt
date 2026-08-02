@@ -1,2 +1,7 @@
+# Shared summary pages must stay crawlable so that crawlers can read the
+# noindex meta tag they serve. A disallowed URL is never fetched, so its
+# noindex is never seen, and search engines may still index the bare URL
+# when someone links to it.
 User-agent: *
+Allow: /s/
 Disallow: /
