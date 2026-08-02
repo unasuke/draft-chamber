@@ -5,7 +5,7 @@ class McpApp
   TOOLS = [
     ListMeetingsTool, GetMeetingTool, ListSessionsTool, GetSessionDetailTool,
     ListSessionPresentationsTool, GetSessionPresentationTool, ReadDocumentMaterialTool,
-    CreateStaleReportTool
+    CreateStaleReportTool, CreateSummaryTool, ListSummariesTool, GetSummaryTool
   ].freeze
 
   def call(env)
@@ -31,7 +31,7 @@ class McpApp
     end
 
     user = User.find(access_token.resource_owner_id)
-    build_transport(user: user).handle_request(request)
+    build_transport(user: user, oauth_application: access_token.application).handle_request(request)
   end
 
   private
@@ -86,13 +86,13 @@ class McpApp
     parts.join(", ")
   end
 
-  def build_transport(user:)
+  def build_transport(user:, oauth_application: nil)
     server = MCP::Server.new(
       name: "draft-chamber",
       version: "0.1.0",
       tools: TOOLS,
       capabilities: { tools: { listChanged: true }, logging: {} },
-      server_context: { user: user }
+      server_context: { user: user, oauth_application: oauth_application }
     )
 
     transport = MCP::Server::Transports::StreamableHTTPTransport.new(
