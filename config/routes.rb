@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resource :stale_report, only: [ :create ]
   end
   resources :session_presentations, only: :index
+  resources :summaries, only: [ :index, :destroy ]
+  get "/s/:public_token", to: "public_summaries#show", as: :public_summary
   # Stale report for meetings/groups show page
   post "/meetings/:meeting_id/groups/:group_id/stale_report",
        to: "stale_reports#create", as: :meeting_group_stale_report

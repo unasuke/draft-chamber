@@ -1,0 +1,47 @@
+tls_124_by_alice:
+  session: tls_at_124
+  user: alice
+  client_name: Claude Code
+  meeting_number: "124"
+  group_acronym: tls
+  title: TLS WG at IETF 124
+  body: |
+    # TLS WG at IETF 124
+
+    The working group discussed the following topics.
+
+    - Encrypted Client Hello deployment status
+    - Post-quantum key exchange
+  public_token: alicetls124token00000001
+
+tls_124_by_bob:
+  session: tls_at_124
+  user: bob
+  client_name: Claude Code
+  meeting_number: "124"
+  group_acronym: tls
+  title: Bob's take on TLS WG
+  body: |
+    Bob wrote this one.
+  public_token: bobtls124token0000000001
+
+orphaned:
+  user: alice
+  client_name: Claude Code
+  meeting_number: "124"
+  group_acronym: tls
+  title: Summary of a deleted session
+  body: |
+    The session this belongs to is gone.
+  public_token: orphanedtoken00000000001
+
+tls_123_by_alice:
+  session: tls_at_123
+  user: alice
+  client_name: unknown
+  meeting_number: "123"
+  group_acronym: tls
+  title: TLS WG at IETF 123
+  body: |
+    An older summary.
+  public_token: alicetls123token00000001

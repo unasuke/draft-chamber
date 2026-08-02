@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_174624) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_02_061834) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -239,6 +239,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_174624) do
     t.index ["user_id"], name: "index_stale_reports_on_user_id"
   end
 
+  create_table "summaries", force: :cascade do |t|
+    t.text "body", null: false
+    t.string "client_name", null: false
+    t.datetime "created_at", null: false
+    t.string "group_acronym"
+    t.string "meeting_number", null: false
+    t.integer "oauth_application_id"
+    t.string "public_token", null: false
+    t.integer "session_id"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["oauth_application_id"], name: "index_summaries_on_oauth_application_id"
+    t.index ["public_token"], name: "index_summaries_on_public_token", unique: true
+    t.index ["session_id"], name: "index_summaries_on_session_id"
+    t.index ["user_id"], name: "index_summaries_on_user_id"
+  end
+
   create_table "tracked_drafts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "document_id"
@@ -274,5 +292,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_174624) do
   add_foreign_key "sessions", "groups"
   add_foreign_key "sessions", "meetings"
   add_foreign_key "stale_reports", "users"
+  add_foreign_key "summaries", "oauth_applications", on_delete: :nullify
+  add_foreign_key "summaries", "sessions"
+  add_foreign_key "summaries", "users"
   add_foreign_key "tracked_drafts", "documents"
 end
