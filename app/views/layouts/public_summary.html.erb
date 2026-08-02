@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= render "layouts/google_analytics" %>
+    <title><%= content_for(:title) || "Draft Chamber" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Draft Chamber">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <meta property="og:title" content="Draft Chamber">
+    <meta property="og:description" content="An MCP server for IETF meeting materials">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="<%= image_url("icon.png") %>">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Draft Chamber">
+    <meta name="twitter:description" content="An MCP server for IETF meeting materials">
+    <meta name="twitter:image" content="<%= image_url("icon.png") %>">
+
+    <%= yield :head %>
+
+    <%= favicon_link_tag "icon.png" %>
+    <link rel="apple-touch-icon" href="<%= path_to_image("icon.png") %>">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <%# No navigation: a shared summary is read on its own, often by someone who has no account. %>
+  <body class="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased">
+    <% if flash[:notice].present? || flash[:alert].present? %>
+      <div class="fixed top-4 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 cursor-pointer px-4" data-controller="flash" data-action="click->flash#dismiss">
+        <% if flash[:notice].present? %>
+          <div class="mb-2 rounded-lg border border-green-200 bg-green-50 p-4 text-md text-green-700 shadow-lg">
+            <%= flash[:notice] %>
+          </div>
+        <% end %>
+        <% if flash[:alert].present? %>
+          <div class="mb-2 rounded-lg border border-red-200 bg-red-50 p-4 text-md text-red-700 shadow-lg">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <main class="mx-auto w-full max-w-4xl grow px-4 py-10 sm:px-6 lg:px-8">
+      <%= yield %>
+    </main>
+    <%= render "layouts/footer" %>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<% content_for(:title) { "#{@summary.title} - Draft Chamber" } %>
+<% content_for(:head) do %>
+  <meta name="robots" content="noindex, nofollow">
+<% end %>
+
+<nav class="mb-4 text-md text-gray-500">
+  <% if @summary.orphaned? %>
+    <span class="text-gray-700">Meeting <%= @summary.meeting_number %></span>
+    <% if @summary.group_acronym.present? %>
+      <span class="mx-1">&gt;</span>
+      <span class="text-gray-700"><%= @summary.group_acronym %></span>
+    <% end %>
+  <% else %>
+    <%= link_to "Meeting #{@summary.meeting_number}", meeting_path(@summary.meeting_number), class: "text-ietf-accent hover:underline" %>
+    <% if @summary.group_acronym.present? %>
+      <span class="mx-1">&gt;</span>
+      <%= link_to @summary.group_acronym, meeting_group_path(@summary.meeting_number, @summary.group_acronym), class: "text-ietf-accent hover:underline" %>
+    <% end %>
+  <% end %>
+</nav>
+
+<h1 class="mb-2 text-2xl font-bold text-gray-900"><%= @summary.title %></h1>
+
+<p class="mb-6 text-md text-gray-500">
+  Summarized by @<%= @summary.user.nickname || "(unknown)" %>
+  with <%= @summary.client_name %>
+  on <%= @summary.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %>
+</p>
+
+<% if @summary.orphaned? %>
+  <p class="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-md text-yellow-800">
+    The session this summary was written for is no longer in the database.
+  </p>
+<% end %>
+
+<article class="markdown-body rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+  <%= render_markdown(@summary) %>
+</article>
+
+<% if current_user && (current_user == @summary.user || current_user.admin?) %>
+  <div class="mt-6">
+    <%= button_to "Delete this summary", summary_path(@summary), method: :delete,
+          data: { turbo_confirm: "Delete this summary? The shared URL will stop working." },
+          class: "cursor-pointer rounded bg-red-600 px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-red-700" %>
+  </div>
+<% end %>
