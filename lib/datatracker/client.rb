@@ -41,6 +41,7 @@ module Datatracker
 
     def build_connection
       Faraday.new(url: config.base_url) do |faraday|
+        faraday.headers["User-Agent"] = config.user_agent
         faraday.request :json
         faraday.response :json
         faraday.request :retry, config.retry_options

@@ -45,6 +45,7 @@ class MaterialDownloader
 
   def build_connection
     Faraday.new do |faraday|
+      faraday.headers["User-Agent"] = Datatracker.configuration.user_agent
       faraday.request :retry, max: 2, interval: 1.0, backoff_factor: 2
       faraday.options.timeout = 120
       faraday.options.open_timeout = 15

@@ -46,6 +46,11 @@ class MaterialDownloaderTest < ActiveSupport::TestCase
     stubs.verify_stubbed_calls
   end
 
+  test "sends the configured User-Agent on its default connection" do
+    assert_equal Datatracker.configuration.user_agent,
+      MaterialDownloader.new.connection.headers["User-Agent"]
+  end
+
   test "raises NotFoundError on HTTP 404" do
     stubs = Faraday::Adapter::Test::Stubs.new do |stub|
       stub.get("/meeting/124/materials/nonexistent/") do
