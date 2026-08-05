@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_02_061834) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_142613) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_02_061834) do
     t.string "filename"
     t.text "processing_error", default: "", null: false
     t.string "processing_status", default: "not_applicable", null: false
+    t.datetime "text_extracted_at"
     t.datetime "updated_at", null: false
     t.index ["document_id"], name: "index_document_materials_on_document_id", unique: true
     t.index ["download_status"], name: "index_document_materials_on_download_status"
