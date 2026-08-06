@@ -33,6 +33,49 @@ class DocumentProcessorTest < ActiveSupport::TestCase
     end
   end
 
+  test "extract_page_texts splits pdftotext output on form feeds" do
+    mock_status = Minitest::Mock.new
+    mock_status.expect(:success?, true)
+    captured_args = nil
+
+    capture3_stub = ->(*args) {
+      captured_args = args
+      [ "Page one\f  Page two  \fPage three", "", mock_status ]
+    }
+
+    Open3.stub(:capture3, capture3_stub) do
+      result = @processor.extract_page_texts("/tmp/test.pdf")
+
+      assert_equal({ 1 => "Page one", 2 => "Page two", 3 => "Page three" }, result)
+      assert_equal Encoding::UTF_8, result[1].encoding
+    end
+
+    assert_equal [ "pdftotext", "-layout", "-l", DocumentProcessor::MAX_PAGES.to_s, "/tmp/test.pdf", "-" ], captured_args
+  end
+
+  test "extract_page_texts drops the trailing empty page without shifting page numbers" do
+    mock_status = Minitest::Mock.new
+    mock_status.expect(:success?, true)
+
+    Open3.stub(:capture3, [ "Page one\f\fPage three\f", "", mock_status ]) do
+      result = @processor.extract_page_texts("/tmp/test.pdf")
+
+      assert_equal({ 1 => "Page one", 2 => "", 3 => "Page three" }, result)
+    end
+  end
+
+  test "extract_page_texts raises ProcessingError on failure" do
+    mock_status = Minitest::Mock.new
+    mock_status.expect(:success?, false)
+
+    Open3.stub(:capture3, [ "", "error occurred", mock_status ]) do
+      error = assert_raises(DocumentProcessor::ProcessingError) do
+        @processor.extract_page_texts("/tmp/test.pdf")
+      end
+      assert_includes error.message, "pdftotext failed"
+    end
+  end
+
   test "convert_to_images calls pdftoppm and returns image data" do
     mock_status = Minitest::Mock.new
     mock_status.expect(:success?, true)

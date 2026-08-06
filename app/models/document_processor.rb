@@ -15,6 +15,21 @@ class DocumentProcessor
     stdout.encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
+  # Extracts per-page text from a PDF using pdftotext
+  # Returns a Hash of page_number (1-origin) => text
+  def extract_page_texts(pdf_path)
+    stdout, stderr, status = Open3.capture3(
+      "pdftotext", "-layout", "-l", MAX_PAGES.to_s, pdf_path.to_s, "-"
+    )
+    raise ProcessingError, "pdftotext failed: #{stderr}" unless status.success?
+
+    stdout
+      .encode("UTF-8", invalid: :replace, undef: :replace)
+      .split("\f")
+      .each_with_index
+      .to_h { |text, index| [ index + 1, text.strip ] }
+  end
+
   # Converts PDF pages to PNG images using pdftoppm
   # Returns array of hashes with :io, :filename, :content_type
   def convert_to_images(pdf_path)
