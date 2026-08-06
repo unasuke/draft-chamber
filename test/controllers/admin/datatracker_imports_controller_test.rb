@@ -136,6 +136,39 @@ class Admin::DatatrackerImportsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Full import for meeting 124/, flash[:notice])
   end
 
+  # === Backfill Slide Text ===
+
+  test "backfill_slide_text enqueues a job per pending slide material" do
+    sign_in_as(users(:alice))
+    DocumentMaterial.create!(
+      document: documents(:tls_chairs_slides),
+      download_status: :pending,
+      content_type: DocumentMaterial::PDF_CONTENT_TYPE,
+      processing_status: :processing_completed
+    )
+
+    assert_enqueued_with(job: ExtractSlideTextJob) do
+      post backfill_slide_text_admin_datatracker_imports_path
+    end
+    assert_redirected_to admin_datatracker_imports_path
+    assert_match(/Enqueued 1 slide materials/, flash[:notice])
+  end
+
+  test "backfill_slide_text reports zero when nothing is pending" do
+    sign_in_as(users(:alice))
+
+    assert_no_enqueued_jobs(only: ExtractSlideTextJob) do
+      post backfill_slide_text_admin_datatracker_imports_path
+    end
+    assert_match(/Enqueued 0 slide materials/, flash[:notice])
+  end
+
+  test "non-admin cannot trigger backfill_slide_text" do
+    sign_in_as(users(:bob))
+    post backfill_slide_text_admin_datatracker_imports_path
+    assert_redirected_to "/"
+  end
+
   # === Delete Meeting ===
 
   test "delete_meeting requires meeting_number" do

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         post :import_sessions
         post :import_presentations
         post :import_all
+        post :backfill_slide_text
         post :delete_meeting
       end
     end

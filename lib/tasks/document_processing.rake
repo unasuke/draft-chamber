@@ -16,4 +16,15 @@ namespace :document_processing do
 
     puts "Enqueued #{count} document materials for processing"
   end
+
+  desc "Backfill extracted text into already-processed slide pages"
+  task backfill_slide_text: :environment do
+    count = 0
+    DocumentMaterial.slide_text_pending.reorder(:id).find_each do |material|
+      ExtractSlideTextJob.set(priority: 100).perform_later(material.id)
+      count += 1
+    end
+
+    puts "Enqueued #{count} slide materials for text extraction"
+  end
 end
