@@ -32,13 +32,16 @@ class DocumentMaterial < ApplicationRecord
 
   validates :document_id, uniqueness: true
 
-  # Processed slide decks whose pages have no text yet, newest first
-  scope :slide_text_pending, -> {
+  # Slide decks whose pages have already been converted
+  scope :processed_slides, -> {
     joins(:document)
       .where(processing_status: :processing_completed)
       .where(documents: { document_type: :slides })
-      .where(text_extracted_at: nil)
-      .order(downloaded_at: :desc)
+  }
+
+  # Processed slide decks whose pages have no text yet, newest first
+  scope :slide_text_pending, -> {
+    processed_slides.where(text_extracted_at: nil).order(downloaded_at: :desc)
   }
 
   def file_required?

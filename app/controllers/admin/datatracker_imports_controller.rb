@@ -4,6 +4,7 @@ module Admin
   class DatatrackerImportsController < BaseController
     def index
       @meetings = Meeting.recent.limit(20)
+      @slide_text_progress = slide_text_progress
     end
 
     def import_groups
@@ -89,6 +90,13 @@ module Admin
     end
 
     private
+
+    def slide_text_progress
+      total = DocumentMaterial.processed_slides.count
+      pending = DocumentMaterial.slide_text_pending.count
+
+      { total: total, extracted: total - pending, pending: pending }
+    end
 
     def redirect_missing_meeting_number
       redirect_to admin_datatracker_imports_path, alert: "Meeting number is required."

@@ -88,10 +88,32 @@
   <h2 class="mb-4 text-xl font-bold text-gray-900">Document Processing</h2>
 
   <h3 class="mb-2 text-lg font-semibold text-gray-800">Backfill Slide Text</h3>
-  <p class="mb-2 text-md text-gray-600">
+  <p class="mb-3 text-md text-gray-600">
     Extracts text into slide pages that were processed before text extraction existed. The recurring job
     does this on its own; use this only to enqueue everything at once.
   </p>
+
+  <% if @slide_text_progress[:total].zero? %>
+    <p class="mb-4 text-md text-gray-600">No processed slide materials yet.</p>
+  <% else %>
+    <% percent = (100.0 * @slide_text_progress[:extracted] / @slide_text_progress[:total]).round(1) %>
+    <div class="mb-4 max-w-md">
+      <div class="mb-1 flex items-baseline justify-between text-md text-gray-700">
+        <span><%= number_with_delimiter(@slide_text_progress[:extracted]) %> / <%= number_with_delimiter(@slide_text_progress[:total]) %> extracted</span>
+        <span class="font-medium"><%= percent %>%</span>
+      </div>
+      <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+        <div class="h-full rounded-full bg-ietf-accent" style="width: <%= percent %>%"></div>
+      </div>
+      <p class="mt-1 text-md text-gray-600">
+        <% if @slide_text_progress[:pending].zero? %>
+          Nothing left to backfill.
+        <% else %>
+          <%= number_with_delimiter(@slide_text_progress[:pending]) %> remaining.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
   <%= form_with url: backfill_slide_text_admin_datatracker_imports_path, method: :post do |f| %>
     <%= f.submit "Backfill Slide Text", class: "cursor-pointer rounded bg-ietf-accent px-4 py-2 text-md font-medium text-white shadow-sm hover:bg-ietf-blue" %>
   <% end %>

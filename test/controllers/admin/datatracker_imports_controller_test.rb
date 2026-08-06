@@ -138,14 +138,41 @@ class Admin::DatatrackerImportsControllerTest < ActionDispatch::IntegrationTest
 
   # === Backfill Slide Text ===
 
+  test "index shows how far the slide text backfill has got" do
+    sign_in_as(users(:alice))
+    create_processed_slide_material(documents(:tls_chairs_slides), text_extracted_at: Time.current)
+    create_processed_slide_material(documents(:ungrouped_doc))
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "span", text: "1 / 2 extracted"
+    assert_select "span", text: "50.0%"
+    assert_select "p", text: /1 remaining/
+  end
+
+  test "index reports nothing left when every deck has text" do
+    sign_in_as(users(:alice))
+    create_processed_slide_material(documents(:tls_chairs_slides), text_extracted_at: Time.current)
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "p", text: /Nothing left to backfill/
+  end
+
+  test "index handles having no processed slide materials" do
+    sign_in_as(users(:alice))
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "p", text: /No processed slide materials yet/
+  end
+
   test "backfill_slide_text enqueues a job per pending slide material" do
     sign_in_as(users(:alice))
-    DocumentMaterial.create!(
-      document: documents(:tls_chairs_slides),
-      download_status: :pending,
-      content_type: DocumentMaterial::PDF_CONTENT_TYPE,
-      processing_status: :processing_completed
-    )
+    create_processed_slide_material(documents(:tls_chairs_slides))
 
     assert_enqueued_with(job: ExtractSlideTextJob) do
       post backfill_slide_text_admin_datatracker_imports_path
@@ -192,5 +219,17 @@ class Admin::DatatrackerImportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_datatracker_imports_path
     assert_match(/Deleted meeting/, flash[:notice])
     assert_nil Meeting.find_by(number: meeting.number)
+  end
+
+  private
+
+  def create_processed_slide_material(document, **attributes)
+    DocumentMaterial.create!(
+      document: document,
+      download_status: :pending,
+      content_type: DocumentMaterial::PDF_CONTENT_TYPE,
+      processing_status: :processing_completed,
+      **attributes
+    )
   end
 end
