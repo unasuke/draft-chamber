@@ -20,6 +20,7 @@ class ProcessDocumentMaterialJobTest < ActiveSupport::TestCase
       { io: StringIO.new("IMG1"), filename: "page-1.png", content_type: "image/png", page_number: 1, byte_size: 4 },
       { io: StringIO.new("IMG2"), filename: "page-2.png", content_type: "image/png", page_number: 2, byte_size: 4 }
     ], [ String ])
+    mock_processor.expect(:extract_page_texts, { 1 => "Motivation", 2 => "" }, [ String ])
 
     DocumentProcessor.stub(:new, mock_processor) do
       ProcessDocumentMaterialJob.perform_now(material.id)
@@ -28,13 +29,45 @@ class ProcessDocumentMaterialJobTest < ActiveSupport::TestCase
     material.reload
     assert_equal "processing_completed", material.processing_status
     assert_equal 2, material.converted_document_materials.count
+    assert_not_nil material.text_extracted_at
 
     page1 = material.converted_document_materials.ordered.first
     assert_equal 1, page1.page_number
     assert_equal "image/png", page1.content_type
     assert page1.file.attached?
+    assert_equal "Motivation", page1.extracted_text
+
+    page2 = material.converted_document_materials.ordered.last
+    assert_equal "", page2.extracted_text
 
     mock_processor.verify
+  end
+
+  test "keeps the page images when text extraction fails" do
+    material = create_material(@slides_document,
+      content_type: "application/pdf",
+      filename: "slides.pdf",
+      processing_status: :processing_pending
+    )
+
+    processor = Object.new
+    def processor.convert_to_images(_path)
+      [ { io: StringIO.new("IMG1"), filename: "page-1.png", content_type: "image/png", page_number: 1, byte_size: 4 } ]
+    end
+
+    def processor.extract_page_texts(_path)
+      raise DocumentProcessor::ProcessingError, "pdftotext crashed"
+    end
+
+    DocumentProcessor.stub(:new, processor) do
+      ProcessDocumentMaterialJob.perform_now(material.id)
+    end
+
+    material.reload
+    assert_equal "processing_completed", material.processing_status
+    assert_equal 1, material.converted_document_materials.count
+    assert_equal "", material.converted_document_materials.first.extracted_text
+    assert_not_nil material.text_extracted_at
   end
 
   test "processes text PDF by extracting text" do
@@ -59,6 +92,7 @@ class ProcessDocumentMaterialJobTest < ActiveSupport::TestCase
     assert_equal 1, converted.page_number
     assert_equal "text/plain", converted.content_type
     assert_equal "Extracted agenda text", converted.extracted_text
+    assert_not_nil material.text_extracted_at
 
     mock_processor.verify
   end
@@ -80,6 +114,7 @@ class ProcessDocumentMaterialJobTest < ActiveSupport::TestCase
       mock_processor.expect(:convert_to_images, [
         { io: StringIO.new("IMG1"), filename: "page-1.png", content_type: "image/png", page_number: 1, byte_size: 4 }
       ], [ String ])
+      mock_processor.expect(:extract_page_texts, { 1 => "Agenda" }, [ String ])
 
       DocumentProcessor.stub(:new, mock_processor) do
         ProcessDocumentMaterialJob.perform_now(material.id)

@@ -51,15 +51,19 @@ class ProcessDocumentMaterialJob < ApplicationJob
       byte_size: text.bytesize,
       extracted_text: text
     )
+    material.update!(text_extracted_at: Time.current)
   end
 
   def create_page_images(material, processor, pdf_path)
     images = processor.convert_to_images(pdf_path)
+    page_texts = extract_page_texts(processor, pdf_path)
+
     images.each do |image|
       converted = material.converted_document_materials.create!(
         page_number: image[:page_number],
         content_type: image[:content_type],
-        byte_size: image[:byte_size]
+        byte_size: image[:byte_size],
+        extracted_text: page_texts.fetch(image[:page_number], "")
       )
       converted.file.attach(
         io: image[:io],
@@ -67,5 +71,15 @@ class ProcessDocumentMaterialJob < ApplicationJob
         content_type: image[:content_type]
       )
     end
+
+    material.update!(text_extracted_at: Time.current)
+  end
+
+  # Returns an empty hash when the file cannot be processed at all
+  def extract_page_texts(processor, pdf_path)
+    processor.extract_page_texts(pdf_path)
+  rescue DocumentProcessor::ProcessingError => e
+    Rails.logger.warn("[ProcessDocumentMaterialJob] Text extraction failed for #{pdf_path}: #{e.message}")
+    {}
   end
 end
