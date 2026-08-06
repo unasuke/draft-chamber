@@ -13,11 +13,10 @@ class ExtractSlideTextJob < ApplicationJob
 
     processor = DocumentProcessor.new
     material.file.open do |tempfile|
-      pdf_path = material.presentation? ? processor.convert_presentation_to_pdf(tempfile.path) : tempfile.path
-      begin
-        apply_page_texts(material, processor.extract_page_texts(pdf_path))
-      ensure
-        File.delete(pdf_path) if material.presentation? && pdf_path && File.exist?(pdf_path)
+      if material.presentation?
+        extract_from_presentation(material, processor, tempfile)
+      else
+        apply_page_texts(material, processor.extract_page_texts(tempfile.path))
       end
     end
 
@@ -29,6 +28,13 @@ class ExtractSlideTextJob < ApplicationJob
   end
 
   private
+
+  def extract_from_presentation(material, processor, tempfile)
+    pdf_path = processor.convert_presentation_to_pdf(tempfile.path)
+    apply_page_texts(material, processor.extract_page_texts(pdf_path))
+  ensure
+    File.delete(pdf_path) if pdf_path && File.exist?(pdf_path)
+  end
 
   def apply_page_texts(material, page_texts)
     page_texts.each do |page_number, text|
