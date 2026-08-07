@@ -18,7 +18,7 @@ production:
     schedule: every 6 hours
   backfill_slide_text:
     class: BackfillSlideTextJob
-    schedule: every 3 minutes
+    schedule: every minute
 
 development:
   sync_meetings:
@@ -26,4 +26,4 @@ development:
     schedule: every 6 hours
   backfill_slide_text:
     class: BackfillSlideTextJob
-    schedule: every 3 minutes
+    schedule: every minute
