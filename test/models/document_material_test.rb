@@ -108,11 +108,48 @@ class DocumentMaterialTest < ActiveSupport::TestCase
     assert_not material.text?
   end
 
+  test "slide_text_pending returns processed slide materials without extracted text, newest first" do
+    older = create_pending_material(documents(:tls_chairs_slides), downloaded_at: 2.days.ago)
+    newer = create_pending_material(documents(:ungrouped_doc), downloaded_at: 1.hour.ago)
+
+    assert_equal [ newer, older ], DocumentMaterial.slide_text_pending.to_a
+  end
+
+  test "slide_text_pending excludes materials whose text has been extracted" do
+    create_pending_material(documents(:tls_chairs_slides), text_extracted_at: Time.current)
+
+    assert_empty DocumentMaterial.slide_text_pending
+  end
+
+  test "slide_text_pending excludes documents that are not slides" do
+    create_pending_material(documents(:tls_agenda))
+
+    assert_empty DocumentMaterial.slide_text_pending
+  end
+
+  test "slide_text_pending excludes materials that are not processed yet" do
+    create_pending_material(documents(:tls_chairs_slides), processing_status: :processing_pending)
+
+    assert_empty DocumentMaterial.slide_text_pending
+  end
+
   test "belongs to document" do
     material = DocumentMaterial.create!(
       document: documents(:tls_agenda),
       download_status: :pending
     )
     assert_equal documents(:tls_agenda), material.document
+  end
+
+  private
+
+  def create_pending_material(document, processing_status: :processing_completed, **attributes)
+    DocumentMaterial.create!(
+      document: document,
+      download_status: :pending,
+      content_type: DocumentMaterial::PDF_CONTENT_TYPE,
+      processing_status: processing_status,
+      **attributes
+    )
   end
 end

@@ -136,6 +136,66 @@ class Admin::DatatrackerImportsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Full import for meeting 124/, flash[:notice])
   end
 
+  # === Backfill Slide Text ===
+
+  test "index shows how far the slide text backfill has got" do
+    sign_in_as(users(:alice))
+    create_processed_slide_material(documents(:tls_chairs_slides), text_extracted_at: Time.current)
+    create_processed_slide_material(documents(:ungrouped_doc))
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "span", text: "1 / 2 extracted"
+    assert_select "span", text: "50.0%"
+    assert_select "p", text: /1 remaining/
+  end
+
+  test "index reports nothing left when every deck has text" do
+    sign_in_as(users(:alice))
+    create_processed_slide_material(documents(:tls_chairs_slides), text_extracted_at: Time.current)
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "p", text: /Nothing left to backfill/
+  end
+
+  test "index handles having no processed slide materials" do
+    sign_in_as(users(:alice))
+
+    get admin_datatracker_imports_url
+
+    assert_response :success
+    assert_select "p", text: /No processed slide materials yet/
+  end
+
+  test "backfill_slide_text enqueues a job per pending slide material" do
+    sign_in_as(users(:alice))
+    create_processed_slide_material(documents(:tls_chairs_slides))
+
+    assert_enqueued_with(job: ExtractSlideTextJob) do
+      post backfill_slide_text_admin_datatracker_imports_path
+    end
+    assert_redirected_to admin_datatracker_imports_path
+    assert_match(/Enqueued 1 slide materials/, flash[:notice])
+  end
+
+  test "backfill_slide_text reports zero when nothing is pending" do
+    sign_in_as(users(:alice))
+
+    assert_no_enqueued_jobs(only: ExtractSlideTextJob) do
+      post backfill_slide_text_admin_datatracker_imports_path
+    end
+    assert_match(/Enqueued 0 slide materials/, flash[:notice])
+  end
+
+  test "non-admin cannot trigger backfill_slide_text" do
+    sign_in_as(users(:bob))
+    post backfill_slide_text_admin_datatracker_imports_path
+    assert_redirected_to "/"
+  end
+
   # === Delete Meeting ===
 
   test "delete_meeting requires meeting_number" do
@@ -159,5 +219,17 @@ class Admin::DatatrackerImportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_datatracker_imports_path
     assert_match(/Deleted meeting/, flash[:notice])
     assert_nil Meeting.find_by(number: meeting.number)
+  end
+
+  private
+
+  def create_processed_slide_material(document, **attributes)
+    DocumentMaterial.create!(
+      document: document,
+      download_status: :pending,
+      content_type: DocumentMaterial::PDF_CONTENT_TYPE,
+      processing_status: :processing_completed,
+      **attributes
+    )
   end
 end

@@ -4,6 +4,7 @@ module Admin
   class DatatrackerImportsController < BaseController
     def index
       @meetings = Meeting.recent.limit(20)
+      @slide_text_progress = slide_text_progress
     end
 
     def import_groups
@@ -51,6 +52,17 @@ module Admin
         notice: "Full import for meeting #{meeting_number} job enqueued."
     end
 
+    def backfill_slide_text
+      count = 0
+      DocumentMaterial.slide_text_pending.reorder(:id).find_each do |material|
+        ExtractSlideTextJob.set(priority: 100).perform_later(material.id)
+        count += 1
+      end
+
+      redirect_to admin_datatracker_imports_path,
+        notice: "Enqueued #{count} slide materials for text extraction."
+    end
+
     def delete_meeting
       meeting_number = params[:meeting_number].presence
       return redirect_missing_meeting_number unless meeting_number
@@ -78,6 +90,13 @@ module Admin
     end
 
     private
+
+    def slide_text_progress
+      total = DocumentMaterial.processed_slides.count
+      pending = DocumentMaterial.slide_text_pending.count
+
+      { total: total, extracted: total - pending, pending: pending }
+    end
 
     def redirect_missing_meeting_number
       redirect_to admin_datatracker_imports_path, alert: "Meeting number is required."

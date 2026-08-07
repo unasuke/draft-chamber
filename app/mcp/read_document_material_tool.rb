@@ -46,10 +46,11 @@ class ReadDocumentMaterialTool < MCP::Tool
 
       Rails.cache.fetch([ "mcp/tool/converted", material.cache_key_with_version ]) do
         material.converted_document_materials.ordered.flat_map do |converted|
-          if converted.extracted_text.present?
-            { type: "text", text: converted.extracted_text }
-          elsif converted.file.attached?
+          # Slide pages carry both an image and extracted text; the image is what this tool returns.
+          if converted.file.attached?
             { type: "image", data: Base64.strict_encode64(converted.file.download), mimeType: converted.content_type }
+          elsif converted.extracted_text.present?
+            { type: "text", text: converted.extracted_text }
           end
         end.compact
       end

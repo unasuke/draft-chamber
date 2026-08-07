@@ -90,6 +90,26 @@ class ReadDocumentMaterialToolTest < ActiveSupport::TestCase
     assert_equal Base64.strict_encode64("IMG2"), response.content[1][:data]
   end
 
+  test "returns images for slide pages that also carry extracted text" do
+    material = create_material(documents(:tls_chairs_slides),
+      content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
+      processing_status: :processing_completed)
+
+    converted = material.converted_document_materials.create!(
+      page_number: 1, content_type: "image/png", byte_size: 4,
+      extracted_text: "Motivation"
+    )
+    converted.file.attach(io: StringIO.new("IMG1"), filename: "page-1.png", content_type: "image/png")
+
+    response = ReadDocumentMaterialTool.call(
+      server_context: {}, document_name: "slides-124-tls-chairs"
+    )
+
+    assert_equal 1, response.content.size
+    assert_equal "image", response.content.first[:type]
+    assert_equal Base64.strict_encode64("IMG1"), response.content.first[:data]
+  end
+
   test "returns processing message for PDF still being processed" do
     create_material(documents(:tls_chairs_slides),
       content: "%PDF", filename: "slides.pdf", content_type: "application/pdf",
