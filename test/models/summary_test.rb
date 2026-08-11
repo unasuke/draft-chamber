@@ -5,7 +5,8 @@ require "test_helper"
 class SummaryTest < ActiveSupport::TestCase
   def build_summary(**attributes)
     Summary.new({
-      session: sessions(:tls_at_124),
+      meeting: meetings(:ietf124),
+      group: groups(:tls),
       user: users(:alice),
       client_name: "Claude Code",
       meeting_number: "124",
@@ -56,15 +57,19 @@ class SummaryTest < ActiveSupport::TestCase
     assert_not build_summary(user: nil).valid?
   end
 
-  test "session is optional" do
-    assert build_summary(session: nil).valid?
+  test "meeting is optional" do
+    assert build_summary(meeting: nil).valid?
+  end
+
+  test "group is optional" do
+    assert build_summary(group: nil).valid?
   end
 
   test "oauth_application is optional" do
     assert build_summary(oauth_application: nil).valid?
   end
 
-  test "orphaned? is true when session is missing" do
+  test "orphaned? is true when meeting is missing" do
     assert summaries(:orphaned).orphaned?
     assert_not summaries(:tls_124_by_alice).orphaned?
   end
@@ -82,14 +87,24 @@ class SummaryTest < ActiveSupport::TestCase
     assert_equal [ newer, older ], ordered.to_a
   end
 
-  test "destroying a session nullifies the summary instead of deleting it" do
+  test "destroying a meeting nullifies the summary instead of deleting it" do
     summary = summaries(:tls_124_by_alice)
 
-    sessions(:tls_at_124).destroy!
+    meetings(:ietf124).destroy!
 
     assert Summary.exists?(summary.id)
-    assert_nil summary.reload.session_id
+    assert_nil summary.reload.meeting_id
     assert_equal "124", summary.meeting_number
+  end
+
+  test "destroying a group nullifies the summary instead of deleting it" do
+    summary = summaries(:tls_124_by_alice)
+
+    groups(:tls).destroy!
+
+    assert Summary.exists?(summary.id)
+    assert_nil summary.reload.group_id
+    assert_equal "tls", summary.group_acronym
   end
 
   test "destroying a user destroys their summaries" do

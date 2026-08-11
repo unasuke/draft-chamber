@@ -11,20 +11,30 @@ class CreateSummaryToolTest < ActiveSupport::TestCase
   def create_summary(**params)
     CreateSummaryTool.call(
       server_context: @server_context,
-      **{ session_id: sessions(:tls_at_124).datatracker_id, title: "TLS WG", body: "# TLS WG" }.merge(params)
+      **{ meeting_number: "124", group_acronym: "tls", title: "TLS WG", body: "# TLS WG" }.merge(params)
     )
   end
 
-  test "saves a summary for the session" do
+  test "saves a summary for the meeting and group" do
     assert_difference "Summary.count", 1 do
       create_summary
     end
 
     summary = Summary.order(:id).last
-    assert_equal sessions(:tls_at_124), summary.session
+    assert_equal meetings(:ietf124), summary.meeting
+    assert_equal groups(:tls), summary.group
     assert_equal @user, summary.user
     assert_equal "124", summary.meeting_number
     assert_equal "tls", summary.group_acronym
+  end
+
+  test "saves a summary without a group" do
+    create_summary(group_acronym: nil)
+
+    summary = Summary.order(:id).last
+    assert_nil summary.group
+    assert_nil summary.group_acronym
+    assert_equal meetings(:ietf124), summary.meeting
   end
 
   test "returns the shareable url and token" do
@@ -34,7 +44,6 @@ class CreateSummaryToolTest < ActiveSupport::TestCase
     summary = Summary.order(:id).last
     assert_equal summary.public_token, result["public_token"]
     assert_equal summary.public_url, result["url"]
-    assert_equal sessions(:tls_at_124).datatracker_id, result["session_id"]
     assert_equal "124", result["meeting_number"]
     assert_equal "tls", result["group"]
   end
@@ -49,7 +58,8 @@ class CreateSummaryToolTest < ActiveSupport::TestCase
 
     CreateSummaryTool.call(
       server_context: { user: @user, oauth_application: application },
-      session_id: sessions(:tls_at_124).datatracker_id,
+      meeting_number: "124",
+      group_acronym: "tls",
       title: "TLS WG",
       body: "# TLS WG"
     )
@@ -72,13 +82,22 @@ class CreateSummaryToolTest < ActiveSupport::TestCase
     end
   end
 
-  test "returns session_not_found for an unknown session" do
-    response = create_summary(session_id: 99_999_999)
+  test "returns meeting_not_found for an unknown meeting" do
+    response = create_summary(meeting_number: "9999")
     result = JSON.parse(response.content.first[:text])
 
     assert response.error?
-    assert_equal "session_not_found", result["error"]
-    assert_includes result["message"], "99999999"
+    assert_equal "meeting_not_found", result["error"]
+    assert_includes result["message"], "9999"
+  end
+
+  test "returns group_not_found for an unknown group" do
+    response = create_summary(group_acronym: "nosuchwg")
+    result = JSON.parse(response.content.first[:text])
+
+    assert response.error?
+    assert_equal "group_not_found", result["error"]
+    assert_includes result["message"], "nosuchwg"
   end
 
   test "returns validation_failed for a blank title" do

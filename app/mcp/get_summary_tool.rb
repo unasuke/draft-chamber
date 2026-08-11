@@ -32,7 +32,6 @@ class GetSummaryTool < MCP::Tool
       title: { type: "string" },
       body: { type: "string" },
       client_name: { type: "string" },
-      session_id: { type: "integer" },
       meeting_number: { type: "string" },
       group: { type: "string" },
       created_at: { type: "string" }
@@ -43,7 +42,7 @@ class GetSummaryTool < MCP::Tool
   class << self
     def call(server_context:, **params)
       summary = server_context[:user].summaries
-        .includes(:session)
+        .includes(:meeting, :group)
         .find_by(public_token: params[:public_token])
 
       unless summary
@@ -56,7 +55,6 @@ class GetSummaryTool < MCP::Tool
         title: summary.title,
         body: summary.body,
         client_name: summary.client_name,
-        session_id: summary.session&.datatracker_id,
         meeting_number: summary.meeting_number,
         group: summary.group_acronym,
         created_at: summary.created_at.iso8601
