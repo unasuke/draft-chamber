@@ -19,10 +19,6 @@ class ListSummariesTool < MCP::Tool
 
   input_schema(
     properties: {
-      session_id: {
-        type: "integer",
-        description: "Only return summaries for this Datatracker session ID"
-      },
       meeting_number: {
         type: "string",
         description: "Only return summaries for this meeting (e.g. '124')"
@@ -54,7 +50,6 @@ class ListSummariesTool < MCP::Tool
             url: { type: "string" },
             title: { type: "string" },
             client_name: { type: "string" },
-            session_id: { type: "integer" },
             meeting_number: { type: "string" },
             group: { type: "string" },
             created_at: { type: "string" }
@@ -73,7 +68,7 @@ class ListSummariesTool < MCP::Tool
       total = scope.count
 
       summaries = scope.recent
-        .includes(:session)
+        .includes(:meeting, :group)
         .limit(clamped_limit(params[:limit]))
         .offset(clamped_offset(params[:offset]))
 
@@ -89,9 +84,6 @@ class ListSummariesTool < MCP::Tool
 
     def filtered_scope(user, params)
       scope = user.summaries.linked
-      if params[:session_id]
-        scope = scope.joins(:session).where(sessions: { datatracker_id: params[:session_id] })
-      end
       scope = scope.where(meeting_number: params[:meeting_number]) if params[:meeting_number]
       scope = scope.where(group_acronym: params[:group_acronym]) if params[:group_acronym]
       scope
@@ -115,7 +107,6 @@ class ListSummariesTool < MCP::Tool
         url: summary.public_url,
         title: summary.title,
         client_name: summary.client_name,
-        session_id: summary.session&.datatracker_id,
         meeting_number: summary.meeting_number,
         group: summary.group_acronym,
         created_at: summary.created_at.iso8601

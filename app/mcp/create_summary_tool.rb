@@ -2,7 +2,7 @@
 
 class CreateSummaryTool < MCP::Tool
   description <<~TEXT
-    Save an AI-generated summary of an IETF session and return its shareable URL.
+    Save an AI-generated summary of an IETF meeting and return its shareable URL.
     Call this after reading session materials when the user wants to keep or share the summary.
     Each call creates a new summary; there is no update, so to correct one create a new summary
     and delete the old one from the web UI.
@@ -17,9 +17,13 @@ class CreateSummaryTool < MCP::Tool
 
   input_schema(
     properties: {
-      session_id: {
-        type: "integer",
-        description: "Datatracker session ID, as returned by list_sessions_tool"
+      meeting_number: {
+        type: "string",
+        description: "The meeting the summary is about (e.g. '124'), as returned by list_meetings_tool"
+      },
+      group_acronym: {
+        type: "string",
+        description: "The working group the summary is about (e.g. 'tls'). Omit for a summary that is not about one group."
       },
       title: {
         type: "string",
@@ -30,7 +34,7 @@ class CreateSummaryTool < MCP::Tool
         description: "The summary itself, written in Markdown (GFM tables and strikethrough are supported)"
       }
     },
-    required: %w[session_id title body]
+    required: %w[meeting_number title body]
   )
 
   output_schema(
@@ -39,7 +43,6 @@ class CreateSummaryTool < MCP::Tool
       public_token: { type: "string" },
       url: { type: "string" },
       title: { type: "string" },
-      session_id: { type: "integer" },
       meeting_number: { type: "string" },
       group: { type: "string" },
       created_at: { type: "string" }
@@ -49,12 +52,20 @@ class CreateSummaryTool < MCP::Tool
 
   class << self
     def call(server_context:, **params)
-      session = Session.includes(:meeting, :group).find_by(datatracker_id: params[:session_id])
-      unless session
-        return error_response("session_not_found", "Session with ID #{params[:session_id]} not found")
+      meeting = Meeting.find_by(number: params[:meeting_number])
+      unless meeting
+        return error_response("meeting_not_found", "Meeting #{params[:meeting_number]} not found")
       end
 
-      summary = build_summary(session, server_context, params)
+      group = nil
+      if params[:group_acronym].present?
+        group = Group.find_by(acronym: params[:group_acronym])
+        unless group
+          return error_response("group_not_found", "Group #{params[:group_acronym]} not found")
+        end
+      end
+
+      summary = build_summary(meeting, group, server_context, params)
       unless summary.save
         return error_response("validation_failed", summary.errors.full_messages.to_sentence)
       end
@@ -63,7 +74,6 @@ class CreateSummaryTool < MCP::Tool
         public_token: summary.public_token,
         url: summary.public_url,
         title: summary.title,
-        session_id: session.datatracker_id,
         meeting_number: summary.meeting_number,
         group: summary.group_acronym,
         created_at: summary.created_at.iso8601
@@ -77,16 +87,17 @@ class CreateSummaryTool < MCP::Tool
 
     private
 
-    def build_summary(session, server_context, params)
+    def build_summary(meeting, group, server_context, params)
       application = server_context[:oauth_application]
 
       Summary.new(
-        session: session,
+        meeting: meeting,
+        group: group,
         user: server_context[:user],
         oauth_application: application,
         client_name: application&.name.presence || Summary::UNKNOWN_CLIENT_NAME,
-        meeting_number: session.meeting.number,
-        group_acronym: session.group&.acronym,
+        meeting_number: meeting.number,
+        group_acronym: group&.acronym,
         title: params[:title],
         body: params[:body]
       )
