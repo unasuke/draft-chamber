@@ -5,7 +5,8 @@ class Summary < ApplicationRecord
 
   has_secure_token :public_token, length: 24
 
-  belongs_to :session, optional: true
+  belongs_to :meeting, optional: true
+  belongs_to :group, optional: true
   belongs_to :user
   belongs_to :oauth_application, class_name: "Doorkeeper::Application", optional: true
 
@@ -15,10 +16,10 @@ class Summary < ApplicationRecord
   validates :client_name, presence: true
 
   scope :recent, -> { order(created_at: :desc) }
-  scope :linked, -> { where.not(session_id: nil) }
+  scope :linked, -> { where.not(meeting_id: nil) }
 
   def orphaned?
-    session_id.nil?
+    meeting_id.nil?
   end
 
   def public_url
