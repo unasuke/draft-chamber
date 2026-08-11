@@ -42,7 +42,8 @@ class ListSummariesToolTest < ActiveSupport::TestCase
 
     assert_equal summaries(:tls_124_by_alice).public_url, entry["url"]
     assert_equal "Claude Code", entry["client_name"]
-    assert_equal sessions(:tls_at_124).datatracker_id, entry["session_id"]
+    assert_equal "124", entry["meeting_number"]
+    assert_equal "tls", entry["group"]
   end
 
   test "orders by created_at descending" do
@@ -54,17 +55,11 @@ class ListSummariesToolTest < ActiveSupport::TestCase
     assert_equal [ summaries(:tls_124_by_alice).title, summaries(:tls_123_by_alice).title ], titles
   end
 
-  test "filters by session_id" do
-    result = list(session_id: sessions(:tls_at_123).datatracker_id)
-
-    assert_equal [ summaries(:tls_123_by_alice).title ], result["summaries"].map { |s| s["title"] }
-    assert_equal 1, result["total"]
-  end
-
   test "filters by meeting_number" do
     result = list(meeting_number: "123")
 
     assert_equal [ summaries(:tls_123_by_alice).title ], result["summaries"].map { |s| s["title"] }
+    assert_equal 1, result["total"]
   end
 
   test "filters by group_acronym" do

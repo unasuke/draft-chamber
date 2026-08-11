@@ -27,7 +27,7 @@ class SummariesControllerTest < ActionDispatch::IntegrationTest
     get summaries_url
 
     assert_response :success
-    assert_select "td", text: /Summary of a deleted session/, count: 0
+    assert_select "td", text: /Summary of a deleted meeting/, count: 0
   end
 
   test "index links each summary to its shareable url" do

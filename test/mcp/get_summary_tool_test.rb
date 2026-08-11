@@ -21,15 +21,16 @@ class GetSummaryToolTest < ActiveSupport::TestCase
     assert_equal summary.body, result["body"]
     assert_equal summary.public_url, result["url"]
     assert_equal "Claude Code", result["client_name"]
-    assert_equal sessions(:tls_at_124).datatracker_id, result["session_id"]
+    assert_equal "124", result["meeting_number"]
+    assert_equal "tls", result["group"]
   end
 
-  test "returns an orphaned summary with a null session_id" do
+  test "returns an orphaned summary with its meeting_number intact" do
     summary = summaries(:orphaned)
     result = JSON.parse(get_summary(summary.public_token).content.first[:text])
 
+    assert summary.orphaned?
     assert_equal summary.title, result["title"]
-    assert_nil result["session_id"]
     assert_equal "124", result["meeting_number"]
   end
 

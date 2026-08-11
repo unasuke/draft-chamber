@@ -1,5 +1,6 @@
 tls_124_by_alice:
-  session: tls_at_124
+  meeting: ietf124
+  group: tls
   user: alice
   client_name: Claude Code
   meeting_number: "124"
@@ -15,7 +16,8 @@ tls_124_by_alice:
   public_token: alicetls124token00000001
 
 tls_124_by_bob:
-  session: tls_at_124
+  meeting: ietf124
+  group: tls
   user: bob
   client_name: Claude Code
   meeting_number: "124"
@@ -30,13 +32,14 @@ orphaned:
   client_name: Claude Code
   meeting_number: "124"
   group_acronym: tls
-  title: Summary of a deleted session
+  title: Summary of a deleted meeting
   body: |
-    The session this belongs to is gone.
+    The meeting this belongs to is gone.
   public_token: orphanedtoken00000000001
 
 tls_123_by_alice:
-  session: tls_at_123
+  meeting: ietf123
+  group: tls
   user: alice
   client_name: unknown
   meeting_number: "123"
