@@ -2,6 +2,7 @@
 require "rubygems"
 require "bundler/setup"
 
-ARGV.unshift("--ensure-latest")
+# Match Dependabot's 3-day bundler cooldown so CI does not fail before the update PR exists.
+ARGV.unshift("--ensure-latest", "3")
 
 load Gem.bin_path("brakeman", "brakeman")
