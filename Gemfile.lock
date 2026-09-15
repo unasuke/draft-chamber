@@ -558,6 +558,7 @@ DEPENDENCIES
   itamae-plugin-recipe-docker
   jbuilder
   jsbundling-rails
+  json (< 3)
   kamal
   mcp
   minitest-mock
