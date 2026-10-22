@@ -1,41 +1,44 @@
 version: 2
+
 updates:
   - package-ecosystem: bundler
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
-    cooldown:
-      default-days: 3
-    allow:
-      - dependency-type: "all"
     groups:
-      rails:
-        patterns:
-          - "rails"
-          - "actioncable"
-          - "actionmailbox"
-          - "actionmailer"
-          - "actionpack"
-          - "actiontext"
-          - "actionview"
-          - "activejob"
-          - "activemodel"
-          - "activerecord"
-          - "activestorage"
-          - "activesupport"
-          - "railties"
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-    cooldown:
-      default-days: 3
+      # A pull request each only adds reading. Keep separate what can actually break
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # esbuild and Hotwire
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
-    cooldown:
-      default-days: 3
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # The ruby image in the Dockerfile (ARG RUBY_VERSION)
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      actions:
+        update-types:
+          - minor
+          - patch
