@@ -10,7 +10,7 @@ module DatatrackerImportJob
   included do
     queue_as :default
 
-    limits_concurrency to: 1, key: "datatracker_api_sync", duration: 5.minutes
+    limits_concurrency to: 1, key: "datatracker_api_sync", duration: 1.hour
 
     retry_on Datatracker::ServerError, wait: 30.seconds, attempts: 3
     retry_on Faraday::TimeoutError, wait: 1.minute, attempts: 3
