@@ -8,6 +8,12 @@ class DownloadDocumentMaterialJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
   discard_on MaterialDownloader::NotFoundError
 
+  retry_on Datatracker::ThrottleError, wait: 1.minute, attempts: 3 do |job, error|
+    material = Document.find_by(id: job.arguments.first)&.document_material
+    material&.update!(download_status: :failed, download_error: error.message)
+    raise error
+  end
+
   def perform(document_id, meeting_number)
     document = Document.find(document_id)
 
@@ -49,6 +55,10 @@ class DownloadDocumentMaterialJob < ApplicationJob
       material.update!(processing_status: :processing_pending)
       ProcessDocumentMaterialJob.perform_later(material.id)
     end
+  rescue Datatracker::ThrottleError
+    # Leave it pending so the retry starts over from the download
+    material&.update!(download_status: :pending)
+    raise
   rescue MaterialDownloader::DownloadError => e
     material&.update!(download_status: :failed, download_error: e.message)
     raise
