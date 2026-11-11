@@ -54,6 +54,17 @@ module Datatracker
   end
 
   class RateLimitError < APIError
+    # Seconds to wait as instructed by the Retry-After header, or nil when absent or unparseable
+    def retry_after
+      value = response&.headers&.[]("retry-after").to_s.strip
+      return nil if value.empty?
+      return value.to_i if value.match?(/\A\d+\z/)
+
+      [ (Time.httpdate(value) - Time.now).ceil, 0 ].max
+    rescue ArgumentError
+      nil
+    end
+
     private
 
     def default_message
