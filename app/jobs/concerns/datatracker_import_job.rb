@@ -12,6 +12,7 @@ module DatatrackerImportJob
     retry_on Datatracker::ServerError, wait: 30.seconds, attempts: 3
     retry_on Faraday::TimeoutError, wait: 1.minute, attempts: 3
     retry_on Faraday::ConnectionFailed, wait: 1.minute, attempts: 3
+    retry_on Datatracker::ThrottleError, wait: 1.minute, attempts: 3
 
     around_perform :report_api_error_details
   end

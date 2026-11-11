@@ -44,4 +44,18 @@ class DatatrackerImportJobTest < ActiveJob::TestCase
 
     assert_equal "Forbidden (403)", raised.message
   end
+
+  test "retries in a minute on ThrottleError" do
+    job = TestJob.new
+    job.error_to_raise = Datatracker::ThrottleError.new("Failed to record the next datatracker request slot")
+
+    freeze_time do
+      job.perform_now
+
+      # retry_on adds up to 15% jitter to the wait
+      scheduled_at = enqueued_jobs.last[:at]
+      assert_operator scheduled_at, :>=, 1.minute.from_now.to_f
+      assert_operator scheduled_at, :<=, (1.minute * 1.15).from_now.to_f
+    end
+  end
 end
