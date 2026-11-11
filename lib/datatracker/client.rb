@@ -34,6 +34,11 @@ module Datatracker
     end
 
     def get(path, params = {})
+      Datatracker.throttle.wait!(
+        interval: config.request_interval,
+        store: config.throttle_store,
+        logger: config.logger
+      )
       connection.get(path, params)
     end
 
