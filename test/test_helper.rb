@@ -5,6 +5,8 @@ require "minitest/mock"
 
 OmniAuth.config.test_mode = true
 
+Datatracker.configuration.request_interval = 0
+
 module AuthTestHelper
   def sign_in_as(user)
     github_auth = user.github_authentication

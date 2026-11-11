@@ -3,6 +3,8 @@
 module Datatracker
   class Error < StandardError; end
 
+  class ThrottleError < Error; end
+
   class APIError < Error
     attr_reader :response, :status
 

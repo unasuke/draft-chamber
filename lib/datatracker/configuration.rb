@@ -2,7 +2,8 @@
 
 module Datatracker
   class Configuration
-    attr_accessor :base_url, :timeout, :open_timeout, :retry_options, :user_agent
+    attr_accessor :base_url, :timeout, :open_timeout, :retry_options, :user_agent,
+      :request_interval, :throttle_store, :logger
 
     def initialize
       @base_url = "https://datatracker.ietf.org"
@@ -16,6 +17,10 @@ module Datatracker
         backoff_factor: 2,
         exceptions: [ Faraday::TimeoutError, Faraday::ConnectionFailed ]
       }
+      # Minimum seconds between consecutive requests to datatracker, shared via throttle_store
+      @request_interval = 2.0
+      @throttle_store = ActiveSupport::Cache::MemoryStore.new
+      @logger = nil
     end
   end
 end
