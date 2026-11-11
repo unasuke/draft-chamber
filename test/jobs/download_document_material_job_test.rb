@@ -157,4 +157,46 @@ class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
     assert_equal "failed", material.download_status
     assert_equal "Download failed: HTTP 404", material.download_error
   end
+
+  test "returns material to pending and retries in a minute on ThrottleError" do
+    material = @document.create_document_material!(download_status: :pending)
+
+    throttled_downloader = Object.new
+    def throttled_downloader.download(_url)
+      raise Datatracker::ThrottleError, "Failed to record the next datatracker request slot"
+    end
+
+    freeze_time do
+      MaterialDownloader.stub(:new, throttled_downloader) do
+        DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
+      end
+
+      # retry_on adds up to 15% jitter to the wait
+      job = enqueued_jobs.find { it[:job] == DownloadDocumentMaterialJob }
+      assert_operator job[:at], :>=, 1.minute.from_now.to_f
+      assert_operator job[:at], :<=, (1.minute * 1.15).from_now.to_f
+    end
+
+    assert_equal "pending", material.reload.download_status
+  end
+
+  test "marks material as failed after ThrottleError exhausts its retries" do
+    material = @document.create_document_material!(download_status: :pending)
+
+    throttled_downloader = Object.new
+    def throttled_downloader.download(_url)
+      raise Datatracker::ThrottleError, "Failed to record the next datatracker request slot"
+    end
+
+    job = DownloadDocumentMaterialJob.new(@document.id, @meeting_number)
+    job.exception_executions = { "[Datatracker::ThrottleError]" => 2 }
+
+    MaterialDownloader.stub(:new, throttled_downloader) do
+      assert_raises(Datatracker::ThrottleError) { job.perform_now }
+    end
+
+    material.reload
+    assert_equal "failed", material.download_status
+    assert_equal "Failed to record the next datatracker request slot", material.download_error
+  end
 end

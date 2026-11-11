@@ -2,10 +2,12 @@
 
 require "faraday"
 require "faraday/retry"
+require "active_support/cache"
 
 require_relative "datatracker/configuration"
 require_relative "datatracker/error"
 require_relative "datatracker/response"
+require_relative "datatracker/throttle"
 require_relative "datatracker/client"
 require_relative "datatracker/resources/base"
 require_relative "datatracker/resources/group"
@@ -28,6 +30,10 @@ module Datatracker
 
     def reset_configuration!
       @configuration = Configuration.new
+    end
+
+    def throttle
+      @throttle ||= Throttle.new
     end
   end
 end

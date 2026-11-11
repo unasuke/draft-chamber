@@ -56,6 +56,12 @@ class MaterialDownloader
   def follow_redirects(url, redirect_count = 0)
     raise DownloadError, "Too many redirects" if redirect_count > MAX_REDIRECTS
 
+    config = Datatracker.configuration
+    Datatracker.throttle.wait!(
+      interval: config.request_interval,
+      store: config.throttle_store,
+      logger: config.logger
+    )
     response = connection.get(url)
 
     if (300..399).cover?(response.status) && response.headers["location"]

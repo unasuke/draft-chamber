@@ -130,4 +130,27 @@ class MaterialDownloaderTest < ActiveSupport::TestCase
     assert_equal "text/html", result[:content_type]
     stubs.verify_stubbed_calls
   end
+
+  test "waits for the shared throttle before each request including redirects" do
+    stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+      stub.get("/meeting/124/materials/slides-124-tls-chairs/") do
+        [ 302, { "location" => "https://datatracker.ietf.org/final-url/slides.pdf" }, "" ]
+      end
+      stub.get("/final-url/slides.pdf") do
+        [ 200, { "content-type" => "application/pdf" }, "PDF content" ]
+      end
+    end
+    conn = Faraday.new("https://datatracker.ietf.org") { |f| f.adapter :test, stubs }
+    downloader = MaterialDownloader.new(connection: conn)
+    config = Datatracker.configuration
+
+    calls = []
+    record = ->(**kwargs) { calls << kwargs }
+    Datatracker.throttle.stub(:wait!, record) do
+      downloader.download("https://datatracker.ietf.org/meeting/124/materials/slides-124-tls-chairs/")
+    end
+
+    expected = { interval: config.request_interval, store: config.throttle_store, logger: config.logger }
+    assert_equal [ expected, expected ], calls
+  end
 end

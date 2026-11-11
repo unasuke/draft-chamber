@@ -8,6 +8,10 @@ module Datatracker
         handle_response(response)
       end
 
+      def find_by_names(names)
+        list(name__in: names.join(","), limit: names.size)
+      end
+
       def search(query, params = {})
         list(params.merge(name__contains: query))
       end
