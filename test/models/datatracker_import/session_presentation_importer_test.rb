@@ -51,7 +51,7 @@ class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCa
     @mock_client.expect(:documents, @mock_docs_resource)
     mock_doc_response = Minitest::Mock.new
     mock_doc_response.expect(:objects, [ doc_api_object ])
-    @mock_docs_resource.expect(:find_by_name, mock_doc_response) { true }
+    @mock_docs_resource.expect(:find_by_names, mock_doc_response) { true }
 
     assert_difference "SessionPresentation.count", 1 do
       assert_difference "Document.count", 1 do
@@ -109,7 +109,7 @@ class DatatrackerImport::SessionPresentationImporterTest < ActiveSupport::TestCa
     @mock_client.expect(:documents, @mock_docs_resource)
     mock_doc_response = Minitest::Mock.new
     mock_doc_response.expect(:objects, [ doc_api_object ])
-    @mock_docs_resource.expect(:find_by_name, mock_doc_response) { true }
+    @mock_docs_resource.expect(:find_by_names, mock_doc_response) { true }
 
     assert_difference "SessionPresentation.count", 1 do
       assert_difference "Document.count", 1 do
