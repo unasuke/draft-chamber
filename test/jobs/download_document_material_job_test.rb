@@ -168,10 +168,13 @@ class DownloadDocumentMaterialJobTest < ActiveSupport::TestCase
 
     freeze_time do
       MaterialDownloader.stub(:new, throttled_downloader) do
-        assert_enqueued_with(job: DownloadDocumentMaterialJob, at: 1.minute.from_now) do
-          DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
-        end
+        DownloadDocumentMaterialJob.perform_now(@document.id, @meeting_number)
       end
+
+      # retry_on adds up to 15% jitter to the wait
+      job = enqueued_jobs.find { it[:job] == DownloadDocumentMaterialJob }
+      assert_operator job[:at], :>=, 1.minute.from_now.to_f
+      assert_operator job[:at], :<=, (1.minute * 1.15).from_now.to_f
     end
 
     assert_equal "pending", material.reload.download_status
