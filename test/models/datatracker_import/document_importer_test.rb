@@ -101,4 +101,16 @@ class DatatrackerImport::DocumentImporterTest < ActiveSupport::TestCase
       assert_equal 1, stats[:errors]
     end
   end
+
+  test "lets RateLimitError propagate to the job" do
+    documents = Object.new
+    def documents.find_by_names(_names)
+      raise Datatracker::RateLimitError.new(response: nil)
+    end
+    importer = DatatrackerImport::DocumentImporter.new(client: FakeClient.new(documents))
+
+    assert_raises(Datatracker::RateLimitError) do
+      importer.import(document_uris: [ "/api/v1/doc/document/slides-124-limited/" ])
+    end
+  end
 end

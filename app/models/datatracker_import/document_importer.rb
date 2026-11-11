@@ -12,13 +12,7 @@ module DatatrackerImport
       log("Importing #{names.size} documents (#{existing.size} already exist)...")
 
       names.each_slice(BATCH_SIZE) do |batch|
-        begin
-          objects = client.documents.find_by_names(batch).objects
-        rescue Datatracker::RateLimitError
-          log("Rate limited, sleeping 5s...")
-          sleep(5)
-          retry
-        end
+        objects = client.documents.find_by_names(batch).objects
         found = objects.to_h { [ it["name"], it ] }
 
         batch.each do |name|
