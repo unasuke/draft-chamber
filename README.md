@@ -5,7 +5,7 @@ It fetches data from the IETF Datatracker API and controls access via GitHub aut
 
 ## Tech Stack
 
-- Ruby 4.0.1 / Rails 8.1.2
+- Ruby 4.0.10 / Rails 8.1.2
 - SQLite3
 - Propshaft (asset pipeline)
 - esbuild + Hotwire (Turbo + Stimulus)
