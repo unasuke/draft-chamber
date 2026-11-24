@@ -84,8 +84,8 @@ GEM
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
     aws-eventstream (1.4.1)
-    aws-partitions (1.1310.0)
-    aws-sdk-core (3.271.1)
+    aws-partitions (1.1311.0)
+    aws-sdk-core (3.272.0)
       aws-eventstream (~> 1, >= 1.4.1)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -97,7 +97,7 @@ GEM
     aws-sdk-kms (1.145.0)
       aws-sdk-core (~> 3, >= 3.270.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.245.0)
+    aws-sdk-s3 (1.245.1)
       aws-sdk-core (~> 3, >= 3.269.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -186,7 +186,7 @@ GEM
     herb (0.11.2-x86_64-linux-musl)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    image_processing (2.2.0)
+    image_processing (2.2.1)
     importmap-rails (2.2.3)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -619,10 +619,10 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
   aws-eventstream (1.4.1) sha256=ceb6a99c61df4bb00344e54aed0351574beca24f87a0d1487d1d2ed80929ce96
-  aws-partitions (1.1310.0) sha256=8f97a525563ec4803d55d02f54f9749a17f8428aa0978afe0b59e61f4ae8e3f6
-  aws-sdk-core (3.271.1) sha256=ee006612eb374da44bfe580f28063e7bdc66cb45875f71b2d2a879012a089c48
+  aws-partitions (1.1311.0) sha256=de5d8bb04d3f184317e7c02bbf1ee4ee5f5095fe1461b8fbd618ebba607a6f93
+  aws-sdk-core (3.272.0) sha256=decc1b6385865ea0756bb3d5926e7cef4628d8ec2b76d6748fd71df50997590d
   aws-sdk-kms (1.145.0) sha256=ddbe86fca434f9a28bd0480b68fc0ce8bae555b6fd41b370bb00caa2dcf58853
-  aws-sdk-s3 (1.245.0) sha256=16f76ae1d8eb7cab0d0034c053398c1ae98d08f5b14feaa8628ac4e6cab9faf5
+  aws-sdk-s3 (1.245.1) sha256=f668ce78afffb2ce8bf22a63a44c8685c9a3c345d596d1bf88efca3e5edaf83a
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt_pbkdf (1.1.2) sha256=c2414c23ce66869b3eb9f643d6a3374d8322dfb5078125c82792304c10b94cf6
@@ -681,7 +681,7 @@ CHECKSUMS
   herb (0.11.2-x86_64-linux-gnu) sha256=2627fe909e7e6b0548926573d87a2e12b6d65bc85964832d34abf5ba165bfc37
   herb (0.11.2-x86_64-linux-musl) sha256=aa6e7aa38d44de757d3076e331234f55ed2f392c2bd0203a3aa4ceea0b6bdd3e
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
-  image_processing (2.2.0) sha256=e0cb9892a4395ac2b7bb2fac5c6f5bc63361f2f18ed08773e21fce5b111c6974
+  image_processing (2.2.1) sha256=b844efd3b2d52b4b9e670ed847fc9128e3c24d8f4c44df3624f54553a1486bb4
   importmap-rails (2.2.3) sha256=7101be2a4dc97cf1558fb8f573a718404c5f6bcfe94f304bf1f39e444feeb16a
   io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   irb (1.19.0) sha256=55ee56acbdd6c9fe06a2e6909f46a24e5c41f45f16906bab04e8049cf46f1d27
